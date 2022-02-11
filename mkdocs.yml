@@ -1,0 +1,76 @@
+site_name: LTC Infrastructure
+site_url: https://issues.ltc.bcit.ca/ltc-infrastructure
+
+repo_name: ltc-infrastructure/documentation
+repo_url: https://issues.ltc.bcit.ca/ltc-infrastructure/documentation.git
+
+# Set to false for local docs development
+strict: false
+
+theme:
+  name: material
+  palette: 
+    - scheme: default
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline 
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  # Necessary for search to work properly
+  include_search_page: false
+  search_index_only: true
+  language: en
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    logo: fontawesome/brands/connectdevelop
+    repo: fontawesome/brands/git-alt
+  features:
+    - navigation.sections
+    - navigation.tracking
+    # - navigation.indexes
+    - navigation.top
+
+plugins:
+  - search
+
+markdown_extensions:
+  - meta
+  - abbr
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - admonition
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - index.md
+  - services.md
+  - Development Workflow:
+    - 0_dev-workflow/index.md
+    - 0_dev-workflow/getting-started-dev.md
+    - 0_dev-workflow/deployment-release.md
+    - 0_dev-workflow/pipeline-details.md
+  - Kubernetes:
+    - 1_kubernetes/index.md
+    - 1_kubernetes/cluster-specifics.md
+  - Infrastructure:
+    - 2_infrastructure/index.md
+    - 2_infrastructure/infrastructure-details.md
+    - 2_infrastructure/configuration-projects.md
+    - 2_infrastructure/infrastructure-dev.md

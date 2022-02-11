@@ -1,3 +1,3 @@
-# Documentation
+# LTC Infrastructure Documentation
 
-All things about LTC Infrastructure
+Information about the structure and makeup of the LTC's server infrastructure.
