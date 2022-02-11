@@ -1,25 +1,25 @@
 # Getting Started
 
-Rather than building every functional component into one large monolithic application, our approach is to build smaller apps that have one purpose, and then connect them together with API calls. This makes it easier to update a specific component without having to change to something that already works well.
+Whether it's a small interaction for an single course, or a larger, more complicated application for an entire program, we develop and build containerized apps that can be deployed on Kubernetes.
 
-!!! tip ""
+!!! tip "Development Strategy"
+
+    Rather than building every functional component into one large monolith, our approach is to build smaller apps that have one purpose, and then connect them together with API calls. This makes it easier to update a specific component without having to change to something that already works well.
 
     For example, an authentication component that interfaces with a front-end does not need to be part of the same code base as a data conversion engine that is part of the back-end.
 
-However, this approach presents a challenge for local development unless you can spin up an environment that has all the components needed to run the app.
+Containerizing everything can present a challenge when developing locally unless you can also create up an environment that has all the components needed to run the app.
 
 Enter Docker.
 
-Docker makes it easier to compartmentalize apps by providing a tool stack that builds and runs standardized "images" - small containers of executable code that can be deployed on any platform.
+Docker makes it easier to containerize apps by providing a tool stack that builds and runs standardized "images" - small containers of executable code that can be deployed on any platform.
 
 Docker also helps avoid deployment trouble because of a mismatch between a local dev environment and the deployment server environment.
 
 
-## Requirements
+## Development Requirements
 
-To get started, download and install the following:
-
-- [Docker desktop](https://www.docker.com/products/docker-desktop)
+To get started, download and install [Docker desktop](https://www.docker.com/products/docker-desktop).
 
 
 ## Workflow
@@ -31,39 +31,52 @@ A typical "dev loop" involves committing code, building an image, running tests,
 We use Docker to:
 
 - develop locally using the `docker compose` command
-- build a development image 
+- build a development image
+- scan the image for vulnerabilities
 - push the image to the LTC private registry
 
-Once an image is stored in the registry it can be deployed as a ***release*** on the Kubernetes cluster.
+Once an image is stored in the registry it can be deployed as a ***release*** on the Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring your project to deploy automatically using a CI/CD pipeline, described next.
 
 
-### Repository structure
+### Repository Structure
 
-For us, a pattern has emerged that is loosely based on GitFlow:
+For us, a pattern has emerged that is loosely based on GitFlow. Projects have two persistent branches, and new bugfixes or features are added to ephemeral branches:
 
-- `feature` branches are forked from a `main` branch and merged after code review and approval
-- `main` branch code is built and deployed to the `staging` cluster
-- a `merge request`is pulled into a `release` branch, which gets tested, approved, and deployed to the `prod` cluster
+- a `main` branch, where code deployed to the `staging` cluster
+- a `release` branch, where code gets tested, approved, and deployed to the `prod` cluster
+- `feature` branches are forked from the `main` branch and merged after code review and approval
+
+This workflow helps us keep track of bugfixes, new features, and major changes (and the work done to resolve those issues) without maintaining an overly-complex branching practice.
 
 ![versioning workflow](../assets/git-workflow-simple.png#only-light)
 ![versioning workflow](../assets/git-workflow-simple-dark.png#only-dark)
 
-This workflow generally involves the following steps:
+!!! example "Development Workflow"
 
-1. Creating or cloning a project
-1. Creating an Issue
-1. Creating a Merge Request and Branch
-1. Checking out the branch locally
-1. Running Docker to create a dev environment
-1. Programming with a single purpose - see [separation of concerns](https://nalexn.github.io/separation-of-concerns/)
-1. Committing with descriptive messaging
-1. Building an image
-1. Pushing the image to the project registry
-1. Requesting a code review
-1. Approved Merge Requests trigger a CI/CD pipeline that deploys a workload to a cluster
+    After creating or cloning a project, our workflow involves the following steps:
+
+    1. Creating an Issue, a Merge Request (MR), and new branch
+    1. Committing and syncing
+        * pushing work to GitLab triggers a CI/CD pipeline that:
+            1. Builds an image, tagged with the git commit hash
+            1. Pushes the image to the project registry
+            1. Deploys the workload to a *dev* cluster
+    1. Request a code review and approval
+    1. Merge into `main`
+        * Merging MR's into the `main` branch triggers a CI/CD pipeline that:
+            1. Builds an image, tagged with the label `latest`
+            1. Pushes the image to the project registry
+            1. Deploys the workload to the *staging* cluster
+    1. Create a "release" MR
+    1. Request a code review and approval
+    1. Merge into `release`
+        * Merging MR's into the `release` branch triggers a CI/CD pipeline that:
+            1. Builds an image, tagged with the label `stable`
+            1. Pushes the image to the project registry
+            1. Deploys the workload to the *production* cluster
 
 
-### Using Docker
+### Details About Using Docker
 
 Docker can be used in a few different ways. A nice way to try out an app is to run it using `docker` instead of installing it.
 
@@ -102,10 +115,8 @@ See [Docker Compose File Basics](https://takacsmark.com/docker-compose-tutorial-
           - 8080:8080
     ```
 
-`docker compose` files are pretty unique, but a few examples can be found in the `Templates`>`docker compose examples` project.
 
-
-## Building Images
+### Building Images
 
 When you are ready to build an image and push it to a registry, navigate to the GitLab project page and look for the `Packages and Registries` menu link. Click on `Container Registry` and look for the CLI commands to login to the registry, build (and tag) the image, and push it.
 

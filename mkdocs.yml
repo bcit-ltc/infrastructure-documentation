@@ -60,7 +60,7 @@ markdown_extensions:
 
 nav:
   - index.md
-  - services.md
+  - services-systems.md
   - Development Workflow:
     - 0_dev-workflow/index.md
     - 0_dev-workflow/getting-started-dev.md
