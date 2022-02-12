@@ -1,5 +1,9 @@
 ## Infrastructure Details
 
+!!! warning "Under Construction"
+
+    This page is still being written
+
 
 ### Virtual Machines
 
@@ -14,9 +18,16 @@ Most nodes are configured to be members of a [Kubernetes](https://kubernetes.io/
 
 ## VM (Node) Roles
 
+RKE2 is deployed on nodes destined to be Kubernetes members using the [rke2-ansible playbook](https://github.com/rancherfederal/rke2-ansible), and the configuration files are located in the [VM Node Configuration](https://issues.ltc.bcit.ca/ltc-infrastructure/vm-node-configuration) project.
+
+
 The `ansible-rke2` collection is used to configure and provision the kubernetes clusters. See the `ansible-rke2/inventory` folder for a list of the current nodes, categorized by cluster.
 
 * See the [RKE2 documentation](https://docs.rke2.io/).
+
+After deploying RKE2, Rancher is installed via Helm using the Helm chart found in the [Rancher](https://issues.ltc.bcit.ca/ltc-infrastructure/rancher) project.
+
+* See the [helm-install-rancher](helm-install-rancher) `values.yaml` file which is deployed using Terraform
 
 
 ### Manager nodes

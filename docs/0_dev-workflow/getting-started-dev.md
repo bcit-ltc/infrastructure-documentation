@@ -24,7 +24,7 @@ To get started, download and install [Docker desktop](https://www.docker.com/pro
 
 ## Workflow
 
-A typical "dev loop" involves committing code, building an image, running tests, and deploying the image to a registry.
+A typical container "dev loop" involves committing code, building an image, running tests, and deploying the image to a registry.
 
 ![Development Loop](../assets/dev-loop.png)
  

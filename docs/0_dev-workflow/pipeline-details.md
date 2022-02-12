@@ -1,5 +1,10 @@
 # CI/CD Pipeline Details
 
+!!! warning "Under Construction"
+
+    This page is still being written
+    
+
 The default LTC pipeline runs the following jobs:
 
 1. gather_info
@@ -8,6 +13,18 @@ The default LTC pipeline runs the following jobs:
 1. test
 1. deploy
 1. cleanup
+
+
+
+!!! example "Triggering a CI/CD Pipeline"
+
+    1. Create an Issue
+    1. Create a Merge Request and a branch
+
+        ![MR-Branch](../assets/mr-branch.png)
+    1. Open a code editor and checkout the new branch
+    1. Develop locally using `docker compose up` and `skaffold dev`
+    1. Commit changes and push to GitLab
 
 
 

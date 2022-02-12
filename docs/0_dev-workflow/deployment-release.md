@@ -1,6 +1,8 @@
 # Deployments and Releases
 
-After an image has been built it is ready for deployment. An image is a static asset, but when it is running it is called a container.
+After an image is built, it is ready to be scheduled on a cluster as a workload. An image is a static collection of application "layers" that have been packaged according to a standardized specification. When an image is running, it is called a container.
+
+Images by themselves don't have information to tell the cluster how they should scheduled. So when we are deploying an image to a cluster, we need to generate configuration files that specify to the cluster how to run the workload. The canonical Kubernetes resource that specifies how to run an image is called a **Deployment**.
 
 This page describes the general steps involved in creating a deployment, as well as things to consider when the deployment is tagged as a ***Release***.
 
@@ -8,7 +10,7 @@ This page describes the general steps involved in creating a deployment, as well
 
     **Image**
 
-    :   An application packaged in layers according to the Open Container Initiative (OCI) spec
+    :   An application packaged in layers according to the Open Container Initiative (OCI) specification
 
     **Container**
 
@@ -16,24 +18,62 @@ This page describes the general steps involved in creating a deployment, as well
 
     **Deployment**
 
-    :   An image that is configured to run on a Kubernetes cluster
+    :   A type of Kubernetes resource that specifies how to run an image on a cluster
+
+    **Workload (also known as a Pod)**
+
+    :   A deployment that is scheduled and running on a cluster
 
     **Release**
 
     :   A deployment that receives traffic
 
 
-## Creating Deployment Files
+## Deploying a Workload
 
-When an image is ready to be scheduled on a Kubernetes cluster there are a few configuration files that need to be defined for the workload to run. Together, these files - and the image they reference - are considered a ***Deployment***.
+When an image is ready to be scheduled on a Kubernetes cluster, there are a few configuration files that need to be defined for the workload to run. Together, these files - and the image they refer to - are considered a **deployment**. When the deployment is scheduled and running on a cluster, it's called a **workload**.
 
-A typical deployment has the following configuration files:
+![deployment image](../assets/deployment.png#only-light){ align=right }
+![deployment image](../assets/deployment-dark.png#only-dark){ align=right }
 
-* `deployment.yaml`
-* `service.yaml`
-* `ingress.yaml`
+!!! info ""
 
-!!! example "Simple `deployment.yaml`"
+    A typical deployment has the following configuration files:
+
+    * `ingress.yaml`
+    * `service.yaml`
+    * `deployment.yaml`
+
+A Kubernetes resource called a **deployment** tells the cluster how to run the image, and resources like **service**, and **ingress** define how the cluster should connect to the workload.
+
+!!! danger "Beware! Confusing Terminology"
+
+    The term "deployment" can be used to describe a couple of different things:
+
+    * the process of getting the image to the cluster and configuring it to run (usually via a CI/CD pipeline)
+    * a Kubernetes resource that specifies how an image should run
+    * a workload
+
+    The context will help you determine which meaning is relevant.
+
+
+### Workload Configuration Files
+
+Configuration files are YAML formatted; they define the types of Kubernetes resources to create. Although they can be named anything, the names in our example files correspond to the type of resource that is created.
+
+**`deployment.yaml`**
+
+:   A resource that defines how an image should be configured to run.
+
+**`service.yaml`**
+
+:   A resource that abstracts the networking connection details away from a workload to create a persistent, reliable endpoint.
+
+**`ingress.yaml`**
+
+:   A resource that creates an endpoint to receive traffic from outside the cluster and route it to an internal resource, like a workload.
+
+!!! example "An example deployment configuration file"
 
     ```yaml
     apiVersion: apps/v1
@@ -52,32 +92,16 @@ A typical deployment has the following configuration files:
             - containerPort: 80
     ```
 
-Each configuration file defines how the Kubernetes cluster should create the resource.
-
-**`deployment.yaml`**
-
-:   Defines how an image should be configured to run; running images are also called **workloads**
-
-**`service.yaml`**
-
-:   A service abstracts the networking details away from a workload to create a persistent, reliable endpoint
-
-**`ingress.yaml`**
-
-:   Ingress refers to a resource that accepts traffic external to the cluster and routes it to an internal resource
-
-
-How should these files be created? They can be created from scratch, but there are also tools that simplify the initial steps.
-
-- [Skaffold](https://skaffold.dev)
-- [Kubernetes-cli tools (eg. `kubectl`, `kustomize`)](https://kubernetes.io/docs/tasks/tools/)
+So how or where do we get these files? They can be created from scratch, but there are also tools that simplify the initial spec definition. The next section describes how this happens.
 
 
 ## Working with Kubernetes
 
-Besides the image and the deployment configuration files, you need a cluster to deploy to! An easy way to get started is to download and run a local Kubernetes distribution, but because Kubernetes is resource-intensive, it's generally not a good idea to keep it running continuously.
+>   * See the [Kubernetes section](../1_kubernetes/index.md) for more details about our Kubernetes architecture.
 
-Some popular flavours that will get you going are:
+Besides the image and the workload configuration files, you need a cluster to deploy to! An easy way to get started is to download and run a local Kubernetes distribution, but because Kubernetes is resource-intensive, it's generally not a good idea to keep it running continuously; start one up, use it, and then stop it to preserve battery!
+
+Some popular flavours that launch local Kubernetes clusters on your local machine are:
 
 * [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 * [Rancher Desktop](https://rancherdesktop.io/)
@@ -86,12 +110,15 @@ Some popular flavours that will get you going are:
 
 Once you have a local cluster up and running, install a couple of command-line utilities.
 
+- [Kubernetes-cli tools (eg. `kubectl`, `kustomize`)](https://kubernetes.io/docs/tasks/tools/)
+- [Skaffold](https://skaffold.dev)
+
 
 ### kubectl
 
-Workloads, services, ingresses, and other Kubernetes resources can be created and destroyed from the command line using the `kubectl` command.
+Deployments, services, ingresses, and other Kubernetes resources can be created and destroyed from the command line using the `kubectl` command.
 
-See [kubectl documentation](https://kubectl.docs.kubernetes.io/guides/introduction/kubectl/).
+>   * See [kubectl documentation](https://kubectl.docs.kubernetes.io/guides/introduction/kubectl/).
 
 !!! note "Installing `kubectl`"
 
@@ -105,7 +132,7 @@ See [kubectl documentation](https://kubectl.docs.kubernetes.io/guides/introducti
 
 !!! note ""
 
-    `kubectx` is also a time-saving tool that helps switch contexts if you are testing a deployment. Might as well install it now too.
+    `kubectx` is also a time-saving tool that helps switch contexts if you are testing a deployment. You might as well install it now too.
 
 With the CLI utilities installed, and with a local cluster running, check connectivity:
 
@@ -115,12 +142,12 @@ With the CLI utilities installed, and with a local cluster running, check connec
 
 If you don't see any namespaces, troubleshoot before moving on.
 
-If everything looks good, you're ready to make deployment configuration files!
+If everything looks good, you're ready to make your configuration files!
 
 
 ### Skaffold
 
-[Skaffold](https://skaffold.dev) is a tool that helps create and test deployment files. By setting a default registry and connecting to a remote cluster, you can validate that your deployment creates resources as expected.
+[Skaffold](https://skaffold.dev) is a tool that helps create and test deployment configuration files. By setting a default registry and connecting to a remote cluster, you can validate that your deployment will create the resources that you expect.
 
 !!! tip "Getting Started with Skaffold"
 
@@ -132,11 +159,9 @@ If everything looks good, you're ready to make deployment configuration files!
     
         skaffold config set default-repo registry.dev.ltc.bcit.ca/{yourProjectPath}
 
-If you do want to make code changes and rebuild the image, Skaffold can continuously watch folders for code changes and automate the rebuilding and pushing of an image to a cluster.
+One of the best features of Skaffold is the `dev` mode. This mode alleviates the mundane tasks of rebuilding an image, pushing it to a registry, and then deploying it to a cluster. Skaffold continuously watches folders for code changes and automatically takes care of the rebuilding, pushing to a registry, and deployment to a cluster!
 
     skaffold dev
-
-- a template `skaffold.yaml` file can be found in `Templates`>`skaffold.yaml` project
 
 
 ### Kubernetes Contexts
@@ -160,20 +185,15 @@ $ rm ~/.kube/config.bak
 ```
 
 
+## Kustomize
+
+[Kustomize](https://kustomize.io) is a tool to build deployment configuration files for different contexts without duplicating content. Kustomize uses overlays to change deployment parameters from one configuration for a dev cluster to slightly different configuration for a production cluster.
+
+
 ## CI/CD Pipelines
 
 CI/CD stands for "continuous integration/continuous deployment", and it refers to an integration between the code base and the deployment environment. A CI/CD pipeline is a set of `jobs` that are configured to run automatically every time a new commit is pushed to a repository. These jobs can do many things, including testing code, building images, and pushing a deployment to a cluster. Examples of popular CI/CD pipeline tools are Drone, CircleCI, and TravisCI. GitLab comes with a built-in CI/CD sub-system; it relies on a "runner" and a `.gitlab-ci.yml` configuration file.
 
-When an app is ready to be tested on a cluster, a commit to a repo configured with a `.gitlab-ci.yml` file triggers a pipeline that builds the app and then deploys it to a `dev` cluster.
+When an app is ready to be tested on a cluster, a commit to a repo configured with a `.gitlab-ci.yml` file triggers a pipeline that builds the app and then deploys it to a cluster.
 
-A [separate document](pipeline-details.md) explains the details involved in each step of the template pipeline config file.
-
-!!! example "Triggering a CI/CD Pipeline"
-
-    1. Create an Issue
-    1. Create a Merge Request and a branch
-
-        ![MR-Branch](../assets/mr-branch.png)
-    1. Open a code editor and checkout the new branch
-    1. Develop locally using `docker compose up` and `skaffold dev`
-    1. Commit changes and push to GitLab
+The next section, [CI/CD Pipeline Details](pipeline-details.md) explains the details involved in each step of the template pipeline configuration file.
