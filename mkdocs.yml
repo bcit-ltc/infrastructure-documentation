@@ -68,7 +68,7 @@ nav:
     - 0_dev-workflow/pipeline-details.md
   - Kubernetes:
     - 1_kubernetes/index.md
-    - 1_kubernetes/cluster-specifics.md
+    - 1_kubernetes/role-cluster-details.md
   - Infrastructure:
     - 2_infrastructure/index.md
     - 2_infrastructure/infrastructure-details.md

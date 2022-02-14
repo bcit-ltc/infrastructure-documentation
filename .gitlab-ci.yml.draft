@@ -19,7 +19,7 @@
 
 variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   DEV_CLUSTER_NAME: "dev-cp"  # options: dev-cp, dev-vsm
-  PROD_NAMESPACE: ""      # combine apps into one namespace if following microservice pattern; otherwise, set to ""
+  PROD_NAMESPACE: ""          # combine apps into one namespace if following microservice pattern; otherwise, set to ""
 #
 #
 #

@@ -14,8 +14,6 @@ The default LTC pipeline runs the following jobs:
 1. deploy
 1. cleanup
 
-
-
 !!! example "Triggering a CI/CD Pipeline"
 
     1. Create an Issue

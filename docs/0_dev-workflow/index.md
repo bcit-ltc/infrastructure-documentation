@@ -17,7 +17,7 @@ The LTC's infrastructure is designed to make it easy to adopt a modern, automate
 
 ----
 
-This diagram is an overview of the major components of the development workflow:
+This diagram is an overview of the major components of our development workflow:
 
 [![Development workflow](../assets/dev-workflow-overview.png#only-light)](../assets/dev-workflow-overview.png)
 [![Development workflow](../assets/dev-workflow-overview-dark.png#only-dark)](../assets/dev-workflow-overview-dark.png)

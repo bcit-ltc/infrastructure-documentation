@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: qcon-api
+  name: documentation
   labels:
-    app: qcon-api
+    app: documentation
 spec:
   selector:
     matchLabels:
-      app: qcon-api
+      app: documentation
   replicas: 1
   template:
     metadata:
       labels:
-        app: qcon-api
+        app: documentation
     spec:
-      serviceAccountName: qcon-api
+      serviceAccountName: documentation
       containers:
-        - name: qcon-api
-          image: qcon-api
+        - name: documentation
+          image: documentation
           resources:
             requests:
               cpu: 100m
@@ -29,7 +29,7 @@ spec:
               port: 8000
             initialDelaySeconds: 20
             periodSeconds: 30
-          livenessProbe:                  
+          livenessProbe:
             tcpSocket:
               port: 8000
             initialDelaySeconds: 30

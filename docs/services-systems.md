@@ -82,12 +82,3 @@ Several applications are still served from aging (and bloated) virtual machines;
 **test1.ltc.bcit.ca**
 > [http://test.ltc.bcit.ca](http://test.ltc.bcit.ca)
 
-
-## Other Systems and Services
-
-Other important services and systems that are used or managed by the LTC include:
-
-* [Teamwork](https://bcit.teamwork.com): A project management platform
-* [Desk](https://bcit.teamwork.com/desk/dashboard): A cloud-based email communication platform
-* [Kaltura](https://mediaspace.bcit.ca): A video hosting platform
-* [Brightspace by D2L](https://learn.bcit.ca): Branded as the *Learning Hub*, an Online course management system

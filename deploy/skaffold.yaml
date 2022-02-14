@@ -1,7 +1,7 @@
 ##### Development Settings (remote cluster deploy validation) #####
 #
 # 1. Set skaffold config:
-#    `skaffold config set default-repo registry.dev.ltc.bcit.ca/web-apps/qcon/qcon-api`
+#    `skaffold config set default-repo registry.dev.ltc.bcit.ca/ltc-infrastructure/documentation`
 #
 # 2. Login to image registry:
 #     `docker login registry.dev.ltc.bcit.ca`
@@ -17,13 +17,13 @@
 apiVersion: skaffold/v2beta11
 kind: Config
 metadata:
-  name: qcon-api
+  name: documentation
 build:
   tagPolicy:
     gitCommit:
       prefix: dev-
   artifacts:
-  - image: qcon-api
+  - image: documentation
     context: ../
   local:
     useBuildkit: true

@@ -1,8 +1,8 @@
-## Infrastructure Details
-
 !!! warning "Under Construction"
 
     This page is still being written
+
+## Infrastructure Details
 
 
 ### Virtual Machines
