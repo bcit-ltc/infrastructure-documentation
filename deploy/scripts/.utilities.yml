@@ -11,7 +11,10 @@
   image: alpine/git:latest
   script:
     - |
-      if [[ ! -z "git rev-list --tags" ]] && [[ -z "$CI_COMMIT_TAG" ]]; then
+      TAGS_EXIST=git rev-list --tags
+
+      # If tags exist but $CI_COMMIT_TAG doesn't = dev/staging pipeline
+      if [[ -z "$TAGS_EXIST" ]] && [[ ! -z "$CI_COMMIT_TAG" ]]; then
 
         GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))-$CI_COMMIT_SHORT_SHA"
         IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
@@ -22,6 +25,7 @@
           \n  - Setting IMAGE_TAG to $CI_COMMIT_SHORT_SHA \
           \n"
       
+      # $CI_COMMIT_TAG variable only exists when a new tag is applied; production pipeline
       elif [[ -n "$CI_COMMIT_TAG" ]]; then
 
         GIT_TAG="$CI_COMMIT_TAG"
@@ -34,7 +38,7 @@
           \n"
 
       else
-
+        # If no tags exist, bypass
         GIT_TAG="0.0.0"
         IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
 
