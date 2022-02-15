@@ -20,8 +20,11 @@
           \n  - Setting GIT_TAG to $GIT_TAG \
           \n  - Setting IMAGE_TAG to $IMAGE_TAG \
           \n"
-      else
+      elseif [[ -n "git rev-list --tags" ]]; then
         GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))-$CI_COMMIT_SHORT_SHA"
+        IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
+      else
+        GIT_TAG="0"
         IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
       fi
 
