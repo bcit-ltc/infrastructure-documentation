@@ -11,7 +11,7 @@
   image: alpine/git:latest
   script:
     - |
-      TAGS_EXIST='git rev-list --tags'
+      TAGS_EXIST="$(git rev-list --tags)"
       echo "$TAGS_EXIST"
 
       # If tags exist but $CI_COMMIT_TAG doesn't = dev/staging pipeline
@@ -22,8 +22,8 @@
 
         echo -e " \
           \nDev or Staging BUILD_ENV detected. \
-          \n  - Setting GIT_TAG to $GIT_TAG-$CI_COMMIT_SHORT_SHA \
-          \n  - Setting IMAGE_TAG to $CI_COMMIT_SHORT_SHA \
+          \n  - Setting GIT_TAG=$GIT_TAG-$CI_COMMIT_SHORT_SHA \
+          \n  - Setting IMAGE_TAG=$CI_COMMIT_SHORT_SHA \
           \n"
       
       # $CI_COMMIT_TAG variable only exists when a new tag is applied; production pipeline
@@ -34,8 +34,8 @@
 
         echo -e " \
           \nProduction BUILD_ENV detected. \
-          \n  - Setting GIT_TAG to $GIT_TAG \
-          \n  - Setting IMAGE_TAG to $IMAGE_TAG \
+          \n  - Setting GIT_TAG=$GIT_TAG \
+          \n  - Setting IMAGE_TAG=$IMAGE_TAG \
           \n"
 
       else
@@ -45,8 +45,8 @@
 
         echo -e " \
           \nNo tag detected; Dev/staging env. \
-          \n  - Setting GIT_TAG to 0.0.0 \
-          \n  - Setting IMAGE_TAG to $CI_COMMIT_SHORT_SHA \
+          \n  - Setting GIT_TAG=0.0.0 \
+          \n  - Setting IMAGE_TAG=$CI_COMMIT_SHORT_SHA \
           \n"
       fi
 
