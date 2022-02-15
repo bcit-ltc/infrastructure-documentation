@@ -7,4 +7,5 @@ spec:
   selector:
     app: documentation
   ports:
-    - port: 8000
+    - name: documentation
+      port: 80

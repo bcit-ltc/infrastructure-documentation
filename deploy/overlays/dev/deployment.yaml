@@ -4,3 +4,17 @@ metadata:
   name: documentation
   labels:
     env: dev
+spec:
+  selector:
+    matchLabels:
+      app: documentation
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: documentation
+    spec:
+      serviceAccountName: documentation
+      containers:
+        - name: documentation
+          image: documentation

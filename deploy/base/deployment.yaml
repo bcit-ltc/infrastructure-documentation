@@ -23,15 +23,15 @@ spec:
               cpu: 100m
               memory: 100Mi
           ports:
-            - containerPort: 8000
+            - containerPort: 80
           readinessProbe:
             tcpSocket:
-              port: 8000
+              port: 80
             initialDelaySeconds: 20
             periodSeconds: 30
           livenessProbe:
             tcpSocket:
-              port: 8000
+              port: 80
             initialDelaySeconds: 30
             periodSeconds: 30
           volumeMounts:
