@@ -11,7 +11,8 @@
   image: alpine/git:latest
   script:
     - |
-      TAGS_EXIST=git rev-list --tags
+      TAGS_EXIST='git rev-list --tags'
+      echo "$TAGS_EXIST"
 
       # If tags exist but $CI_COMMIT_TAG doesn't = dev/staging pipeline
       if [[ -z "$TAGS_EXIST" ]] && [[ ! -z "$CI_COMMIT_TAG" ]]; then
