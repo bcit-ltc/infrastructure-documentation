@@ -12,16 +12,18 @@
   script:
     - |
       if [[ ! -z "git rev-list --tags" ]] && [[ -z "$CI_COMMIT_TAG" ]]; then
+
         GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))-$CI_COMMIT_SHORT_SHA"
-        IMAGE_TAG="$CI_COMMIT_SHORT_SHA";
+        IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
 
         echo -e " \
-          \nDev/Staging BUILD_ENV detected. \
+          \nDev or Staging BUILD_ENV detected. \
           \n  - Setting GIT_TAG to $GIT_TAG-$CI_COMMIT_SHORT_SHA \
           \n  - Setting IMAGE_TAG to $CI_COMMIT_SHORT_SHA \
-          \n";
+          \n"
       
       elif [[ -n "$CI_COMMIT_TAG" ]]; then
+
         GIT_TAG="$CI_COMMIT_TAG"
         IMAGE_TAG="$(echo $GIT_TAG | sed 's/^v//')"
 
@@ -31,7 +33,8 @@
           \n  - Setting IMAGE_TAG to $IMAGE_TAG \
           \n"
 
-      else [[ -n "git rev-list --tags" ]]; then
+      else
+
         GIT_TAG="0.0.0"
         IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
 
@@ -109,6 +112,7 @@
           CLUSTER_ID="$RANCHER_PROD_CLUSTER_ID"
           PROJECT_ID="$RANCHER_PROD_DEFAULT_PROJECT_ID"
           TLS_SECRET_NAME="star-dev-ltc-bcit-ca"
+
       else
           echo -e " \
             \$BUILD_ENV is not set correctly \
