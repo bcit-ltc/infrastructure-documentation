@@ -23,7 +23,7 @@
      - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
      - kubectl get pods
    tags:
-     - production
+     - dev-cp
 
 
 # variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
