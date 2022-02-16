@@ -20,8 +20,10 @@
      name: bitnami/kubectl:latest
      entrypoint: [""]
    script:
-   - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
-   - kubectl get pods
+     - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
+     - kubectl get pods
+   tags:
+     - production
 
 
 # variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
