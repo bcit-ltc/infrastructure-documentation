@@ -22,6 +22,7 @@
    script:
      - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
      - kubectl get pods
+     - kubectl get ns
    tags:
      - dev-cp
 
