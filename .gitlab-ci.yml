@@ -17,8 +17,8 @@ variables:                  # other global variables are set in GitLab Admin: ht
 
 
 include:
-  - project: 'deployments/packages'
-    file: '/build-scripts/.gitlab-ci-template.yml'
+  - project: 'deployments/build-scripts'
+    file: '.gitlab-ci-template.yml'
 
 
 stages:
@@ -70,6 +70,7 @@ deploy:review:                        # Deploy feature branch image to a dev clu
     # - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
     #     IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
     - kpt pkg tree
+    - ls -lah
     # - kpt fn render
     # - kpt live init
     # - kpt live apply
