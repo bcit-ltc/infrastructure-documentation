@@ -9,10 +9,13 @@ variables:                                          # global variables are set i
 # image: bitnami/kubectl
 
 
-# include:
-#   - local: 'deploy/scripts/.build-image.yml'
+include:
+  - local: '.gitlab-ci/build-scripts/.utilities.yml'
+  - local: '.gitlab-ci/build-scripts/.build-image.yml'
 #   - local: 'deploy/scripts/.semantic-release.yml'
-#   - local: 'deploy/scripts/.utilities.yml'
+# include:
+#   - project: 'deployments/packages'
+#     file: '/build-scripts/.gitlab-ci-template.yml'
 
 
 stages:
@@ -27,10 +30,10 @@ build:review:
   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git
   variables:
     BUILD_ENV: dev
-  before_script:
-    - mkdir -p ./deploy
-    - kpt pkg get https://issues.ltc.bcit.ca/deployments/packages.git/build-scripts@v0.1 ./deploy/build-scripts
-    - ls -lah
+  # before_script:
+  #   - mkdir -p ./deploy
+  #   - kpt pkg get https://issues.ltc.bcit.ca/deployments/packages.git/build-scripts@v0.1 ./deploy/build-scripts
+  #   - ls -lah
   extends:
     - .get_version
     - .build_image
