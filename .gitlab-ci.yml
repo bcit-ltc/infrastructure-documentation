@@ -23,8 +23,8 @@ include:
 
 stages:
   - gather_info
+  - analyze_for_tagging
   - build
-  - test
   - deploy
   - cleanup
 
@@ -36,8 +36,6 @@ build:environment:
 
 build:review:                     # Build image with Kaniko
   stage: build
-  variables:
-    BUILD_ENV: dev
   extends:
     - .build_image
     - .feature_branch_rules
@@ -59,44 +57,28 @@ build:review:                     # Build image with Kaniko
 #   tags:
 #     - production
 
-# deploy:review:                        # Deploy feature branch image to a dev cluster
-#   image: gcr.io/kpt-dev/kpt:v1.0.0-beta.13
-#   stage: deploy
-#   needs: ["deploy:scripts"]
-#   extends:
-#     - deploy:scripts
-#     - .feature_branch_rules
-#   variables:
-#     BUILD_ENV: dev
-#   script:
-#     # retrieve dev env package
-#     - kpt pkg get https://issues.ltc.bcit.ca/deployments/qcon/qcon-api-dev@v0.1
-#     # apply `setters` with image tag, version, and namespace name
-#     - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
-#         IMAGE_TAG="1.3.2" VERSION="v1.3.2-d1a11257" NAMESPACE_NAME="214-branch..."
-#     # hydrate manifests
-#     #   * set ingress nginx config-snippet annotations
-#     #   * update ingress path to point to branch name
-#     #   * add env vars to deployment
-#     #   * add labels
-#     #   * ensure all resources added to the same namespace
-#     #   * update image for deployment
-#     - kpt fn render
-#     # initialize for deployment
-#     - kpt live init
-#     # deploy
-#     - kpt live apply
-#   environment:
-#     name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
-#     url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
-#     kubernetes:
-#       namespace: $CI_COMMIT_REF_SLUG
-#     on_stop: stop_review
-#     auto_stop_in: 1 week
-#   # after_script:
-#   #   - echo "Unset ENV variables after app deployment complete using kubectl set env [REPLICASET_NAME]"
-# # TODO: Remove the environment variable ENV from container 'c1' in all deployment configs
-# # kubectl set env deployments --all --containers="c1" ENV-
+deploy:review:                        # Deploy feature branch image to a dev cluster
+  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl
+  stage: deploy
+  extends:
+    - .feature_branch_rules
+  variables:
+    BUILD_ENV: dev
+  script:
+    # - mkdir -p ./deploy
+    # - kpt pkg get https://issues.ltc.bcit.ca/deployments/packages.git/documentation/dev@v0.1 ./deploy
+    # - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
+    #     IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
+    # - kpt fn render
+    # - kpt live init
+    # - kpt live apply
+    - kpt version
+    - kubectl config get-contexts
+  environment:
+    name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
+    url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
+    # on_stop: stop_review
+    # auto_stop_in: 1 week
 
 
 # build_latest:                         # Build image with Kaniko
