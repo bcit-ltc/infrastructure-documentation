@@ -1,6 +1,7 @@
 # LTC GitLab CI/CD Pipeline
 
 
+
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
   PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
@@ -33,11 +34,11 @@ build:environment:
   extends: .get_version
 
 
-# build:review:                     # Build image with Kaniko
-#   stage: build
-#   extends:
-#     - .build_image
-#     - .feature_branch_rules
+build:review:                     # Build image with Kaniko
+  stage: build
+  extends:
+    - .build_image
+    - .feature_branch_rules
 
 
 # build:review:
@@ -67,8 +68,7 @@ deploy:review:                        # Deploy feature branch image to a dev clu
     - kubectl config get-contexts
     - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
     - mkdir -p ./deploy
-    - git clone https://issues.ltc.bcit.ca/deployments/packages.git
-    - kpt pkg get https://github.com/GoogleContainerTools/kpt/package-examples/nginx@v0.7 ./deploy
+    - kpt pkg get https://{CI_SERVER_HOST}/deployments/packages.git/${CI_PROJECT_PATH}/${BUILD_ENV}@v0.1 ./deploy
     # - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
     #     IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
     - kpt pkg tree deploy
