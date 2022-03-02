@@ -4,7 +4,7 @@ variables:                                          # global variables are set i
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
-  CI_DEBUG_TRACE: "true"
+  CI_DEBUG_TRACE: "false"
   
 # image: bitnami/kubectl
 
