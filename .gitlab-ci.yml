@@ -31,10 +31,10 @@ build:review:
     - mkdir -p ./deploy
     - kpt pkg get https://issues.ltc.bcit.ca/deployments/packages.git/build-scripts@v0.1 ./deploy/build-scripts
     - ls -lah
-  # extends:
-  #   - .get_version
-  #   - .build_image
-  #   - .feature_branch_rules
+  extends:
+    - .get_version
+    - .build_image
+    # - .feature_branch_rules
   tags:
     - production
 
