@@ -1,20 +1,19 @@
-#
+# LTC GitLab CI/CD Pipeline
 
-variables:                                          # global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
+variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
+  CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
+  PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
+#
+#
+############### Edit below here at your peril! ###############
+#
+#
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
   CI_DEBUG_TRACE: "false"
-  
-# image: bitnami/kubectl
 
 
-# include:
-#   - local: '.gitlab-ci/build-scripts/.utilities.yml'
-#   - local: '.gitlab-ci/build-scripts/.build-image.yml'
-#   - local: '.gitlab-ci/build-scripts/.rules.yml'
-#   - local: '.gitlab-ci/build-scripts/.semantic-release.yml'
-# #   - local: 'deploy/scripts/.semantic-release.yml'
 include:
   - project: 'deployments/packages'
     file: '/build-scripts/.gitlab-ci-template.yml'
@@ -27,7 +26,8 @@ stages:
   - deploy
   - cleanup
 
-get_env_vars:
+
+build:environment:
   stage: gather_info
   extends: .get_version
 
@@ -39,6 +39,7 @@ build:review:                     # Build image with Kaniko
   extends:
     - .build_image
     - .feature_branch_rules
+
 
 # build:review:
 #   stage: build
