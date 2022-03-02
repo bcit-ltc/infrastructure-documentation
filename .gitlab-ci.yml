@@ -65,10 +65,10 @@ deploy:review:                        # Deploy feature branch image to a dev clu
     BUILD_ENV: dev
   script:
     - mkdir -p ./deploy
-    - kpt pkg get "https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/documentation.git/@v0.1 ./deploy"
+    - kpt pkg get "https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/documentation.git/@v0.1
     # - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
     #     IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
-    - kpt pkg tree deploy
+    - kpt pkg tree
     # - kpt fn render
     # - kpt live init
     # - kpt live apply
