@@ -4,12 +4,13 @@
 
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
-  PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
+  # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
 #
 #
 ############### Edit below here at your peril! ###############
 #
 #
+  DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
