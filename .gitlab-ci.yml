@@ -65,17 +65,16 @@ deploy:review:                        # Deploy feature branch image to a dev clu
   variables:
     BUILD_ENV: dev
   script:
-    # - mkdir -p ./deploy
-    # - kpt pkg get https://issues.ltc.bcit.ca/deployments/packages.git/documentation/dev@v0.1 ./deploy
-    # - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
-    #     IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
+    - kubectl config get-contexts
+    - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
+    - mkdir -p ./deploy
+    - kpt pkg get https://issues.ltc.bcit.ca/deployments/packages.git/documentation/dev@v0.1 ./deploy
+    - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
+        IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
+    - ls -lah
     # - kpt fn render
     # - kpt live init
     # - kpt live apply
-    - kpt version
-    - kubectl config get-contexts
-    - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
-    - kubectl get ns
   # environment:
   #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
   #   url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
