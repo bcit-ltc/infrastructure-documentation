@@ -1,26 +1,8 @@
 # LTC GitLab CI/CD Pipeline
 
-
-
-variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
-  CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
-  # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
-#
-#
-############### Edit below here at your peril! ###############
-#
-#
-  DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/
-  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
-  GIT_FETCH_EXTRA_FLAGS: "--tags"
-  PIPELINE_DEBUG: "true"
-  CI_DEBUG_TRACE: "false"
-
-
 include:
   - project: 'deployments/build-scripts'
     file: '.gitlab-ci-template.yml'
-
 
 stages:
   - gather_info
@@ -29,18 +11,15 @@ stages:
   - deploy
   - cleanup
 
-
 build:environment:
   stage: gather_info
   extends: .get_version
-
 
 # build:review:                     # Build image with Kaniko
 #   stage: build
 #   extends:
 #     - .build_image
 #     - .feature_branch_rules
-
 
 # build:review:
 #   stage: build
@@ -66,12 +45,14 @@ deploy:review:                        # Deploy feature branch image to a dev clu
   variables:
     BUILD_ENV: dev
   script:
-    - mkdir -p ./deploy
-    - kpt pkg get "$DEPLOYMENT_PACKAGE_URL/@v0.1" "./deploy"
+    - mkdir -p ./deployment
+    - kpt pkg get "$DEPLOYMENT_PACKAGE_URL/@v0.1" "./deployment"
     # - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
     #     IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
     - kpt pkg tree
     - ls -lah
+    - ls -lah deployment
+    - ls -lah deployment/dev
     # - kpt fn render
     # - kpt live init
     # - kpt live apply
@@ -200,3 +181,14 @@ deploy:review:                        # Deploy feature branch image to a dev clu
 #       when: manual
 #   tags:
 #     - $DEV_CLUSTER_NAME
+
+
+# Pipeline variables
+variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
+  CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
+  # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
+  DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/
+  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
+  GIT_FETCH_EXTRA_FLAGS: "--tags"
+  PIPELINE_DEBUG: "true"
+  CI_DEBUG_TRACE: "false"
