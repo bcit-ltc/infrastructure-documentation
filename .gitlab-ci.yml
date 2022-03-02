@@ -30,11 +30,13 @@ build:review:
   before_script:
     - mkdir -p ./deploy
     - kpt pkg get https://issues.ltc.bcit.ca/deployments/packages.git/build-scripts@v0.1 ./deploy/build-scripts
-  extends:
-    - .get_version
-    - .build_image
-    - .feature_branch_rules
-
+    - ls -lah
+  # extends:
+  #   - .get_version
+  #   - .build_image
+  #   - .feature_branch_rules
+  tags:
+    - production
 
 # deploy:review:                        # Deploy feature branch image to a dev cluster
 #   image: gcr.io/kpt-dev/kpt:v1.0.0-beta.13
