@@ -68,10 +68,11 @@ deploy:review:                        # Deploy feature branch image to a dev clu
     - kubectl config get-contexts
     - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
     - mkdir -p ./deploy
-    - kpt pkg get https://${GITLAB_USER_LOGIN}:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git/documentation/dev@v0.1 ./deploy
+    - kpt pkg get https://${GITLAB_USER_LOGIN}:${GITLAB_TOKEN}@${CI_SERVER_HOST}/deployments/packages.git/${CI_PROJECT_PATH}/${BUILD_ENV}@v0.1 ./deploy
     # - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
     #     IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
     - kpt pkg tree deploy
+https://issues.ltc.bcit.ca/deployments/packages.git
     # - kpt fn render
     # - kpt live init
     # - kpt live apply
