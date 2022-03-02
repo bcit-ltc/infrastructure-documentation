@@ -74,6 +74,8 @@ deploy:review:                        # Deploy feature branch image to a dev clu
     # - kpt live apply
     - kpt version
     - kubectl config get-contexts
+    - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
+    - kubectl get ns
   # environment:
   #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
   #   url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
