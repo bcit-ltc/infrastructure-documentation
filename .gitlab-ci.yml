@@ -58,20 +58,15 @@ build:environment:
 #     - production
 
 deploy:review:                        # Deploy feature branch image to a dev cluster
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl
   stage: deploy
   extends:
+    - .set_kubectl_context
     - .feature_branch_rules
   variables:
     BUILD_ENV: dev
   script:
-    - kubectl config get-contexts
-    - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent
     - mkdir -p ./deploy
     - kpt pkg get "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/deployments/packages.git/${CI_PROJECT_PATH}/${BUILD_ENV}@v0.1 ./deploy"
-    # - git clone https://issues.ltc.bcit.ca/deployments/packages.git
-    # - git clone git@issues.ltc.bcit.ca:ltc-infrastructure/documentation.git
-    # - kpt pkg get git@issues.ltc.bcit.ca:ltc-infrastructure/documentation.git/${CI_PROJECT_PATH}/${BUILD_ENV}@v0.1 ./deploy
     # - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
     #     IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
     - kpt pkg tree deploy
