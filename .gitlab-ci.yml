@@ -44,7 +44,8 @@ docker_test:
     - docker:19.03.12-dind
   script:
     - docker run hello-world
-
+  tags:
+    - production
 
 # deploy:review:                        # Deploy feature branch image to a dev cluster
 #   stage: deploy
