@@ -45,6 +45,7 @@ deploy:review:                        # Deploy feature branch image to a dev clu
   variables:
     BUILD_ENV: dev
   script:
+    - docker --version
     - mkdir -p ./deployment
     - kpt pkg get "$DEPLOYMENT_PACKAGE_URL/@v0.1" "./deployment"
     - kpt pkg tree deployment
