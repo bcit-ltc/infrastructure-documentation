@@ -37,20 +37,29 @@ build:environment:
 #   tags:
 #     - production
 
-deploy:review:                        # Deploy feature branch image to a dev cluster
+docker_test:
   stage: deploy
-  extends:
-    - .set_kubectl_context
-    - .feature_branch_rules
-  variables:
-    BUILD_ENV: dev
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
   script:
-    - docker --version
-    - mkdir -p ./deployment
-    - kpt pkg get "$DEPLOYMENT_PACKAGE_URL/@v0.1" "./deployment"
-    - kpt pkg tree deployment
-    - kpt fn eval deployment --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
-        IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
+    - docker run hello-world
+
+
+# deploy:review:                        # Deploy feature branch image to a dev cluster
+#   stage: deploy
+#   extends:
+#     - .set_kubectl_context
+#     - .feature_branch_rules
+#   variables:
+#     BUILD_ENV: dev
+#   script:
+#     - docker --version
+#     - mkdir -p ./deployment
+#     - kpt pkg get "$DEPLOYMENT_PACKAGE_URL/@v0.1" "./deployment"
+#     - kpt pkg tree deployment
+#     - kpt fn eval deployment --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
+#         IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
     # - kpt fn render
     # - kpt live init
     # - kpt live apply
