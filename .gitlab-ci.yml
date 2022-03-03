@@ -39,13 +39,13 @@ build:environment:
 
 access-service:
   stage: build
-  image: docker:19.03.1
+  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   services:
-    - registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
+    - docker:19.03.12-dind
   variables:
     FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
   script: |
-    docker run -v /var/run/docker.sock:/var/run/docker.sock hello-world
+    docker --version
   tags:
     - production
 
