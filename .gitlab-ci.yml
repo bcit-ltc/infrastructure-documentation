@@ -45,14 +45,15 @@ access-service:
   variables:
     FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
   script: |
-    docker run --rm --name curl \
+    docker run --rm --name hello \
+      -v /var/run/docker.sock:/var/run/docker.sock \
       --volume  "$(pwd)":"$(pwd)"    \
       --workdir "$(pwd)"             \
       --network=host                 \
       hello-world
   tags:
     - production
-    
+
 # docker_test:
 #   stage: deploy
 #   image: docker:19.03.12
