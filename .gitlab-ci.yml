@@ -41,16 +41,11 @@ access-service:
   stage: build
   image: docker:19.03.1
   services:
-    - docker:dind                    # necessary for docker run
+    - registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   variables:
     FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
   script: |
-    docker run --rm --name hello \
-      -v /var/run/docker.sock:/var/run/docker.sock \
-      --volume  "$(pwd)":"$(pwd)"    \
-      --workdir "$(pwd)"             \
-      --network=host                 \
-      hello-world
+    docker run -v /var/run/docker.sock:/var/run/docker.sock hello-world
   tags:
     - production
 
