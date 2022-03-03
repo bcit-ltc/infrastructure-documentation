@@ -37,15 +37,31 @@ build:environment:
 #   tags:
 #     - production
 
-docker_test:
-  stage: deploy
-  image: docker:19.03.12
+access-service:
+  stage: build
+  image: docker:19.03.1
   services:
-    - docker:19.03.12-dind
-  script:
-    - docker run hello-world
+    - docker:dind                    # necessary for docker run
+  variables:
+    FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
+  script: |
+    docker run --rm --name curl \
+      --volume  "$(pwd)":"$(pwd)"    \
+      --workdir "$(pwd)"             \
+      --network=host                 \
+      hello-world
   tags:
     - production
+    
+# docker_test:
+#   stage: deploy
+#   image: docker:19.03.12
+#   services:
+#     - docker:19.03.12-dind
+#   script:
+#     - docker run hello-world
+#   tags:
+#     - production
 
 # deploy:review:                        # Deploy feature branch image to a dev cluster
 #   stage: deploy
