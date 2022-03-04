@@ -46,6 +46,8 @@ access-service:
     FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
   script: |
     docker --version
+    
+    docker run hello-world
   tags:
     - production
 
@@ -55,7 +57,6 @@ access-service:
 #   services:
 #     - docker:19.03.12-dind
 #   script:
-#     - docker run hello-world
 #   tags:
 #     - production
 
