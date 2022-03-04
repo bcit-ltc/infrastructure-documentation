@@ -47,7 +47,7 @@ access-service:
   script: |
     docker --version
     
-    docker -v /var/run/docker.sock:/var/run/docker.sock run hello-world
+    docker run -v /var/run/docker.sock:/var/run/docker.sock hello-world
   tags:
     - production
 
