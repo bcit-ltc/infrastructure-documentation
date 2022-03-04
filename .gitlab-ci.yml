@@ -39,7 +39,7 @@ build:environment:
 
 docker-test:
   stage: build
-  image: docker:19.03.12-dind
+  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   variables:
     FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
     DOCKER_HOST: tcp://dev-manager1.ltc.bcit.ca:2375
