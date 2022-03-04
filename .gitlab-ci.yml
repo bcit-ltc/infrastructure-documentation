@@ -45,7 +45,7 @@ docker-test:
     DOCKER_HOST: tcp://docker:2375
   script: |
     docker --version
-    
+    export DOCKER_HOST=tcp://docker:2375
     docker run -v /var/run/docker.sock:/var/run/docker.sock hello-world
   tags:
     - production
