@@ -42,10 +42,10 @@ docker-test:
   image: docker:19.03.12-dind
   variables:
     FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
-    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_HOST: tcp://dev-manager1.ltc.bcit.ca:2375
   script:
     - docker --version
-    - docker run -v /var/run/docker.sock:/var/run/docker.sock hello-world
+    - docker run hello-world
   tags:
     - dev-cp
 
