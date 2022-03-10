@@ -13,7 +13,7 @@ include:
 stages:
   - gather_info
   # - analyze_for_tagging
-  # - build
+  - build
   # - deploy
   # - cleanup
 
@@ -21,11 +21,11 @@ build:environment:
   stage: gather_info
   extends: .get_version
 
-# build:review:                     # Build image with Kaniko
-#   stage: build
-#   extends:
-#     - .build_image
-#     - .feature_branch_rules
+build:review:                     # Build image with Kaniko
+  stage: build
+  extends:
+    - .build_image
+    - .feature_branch_rules
 
 # build:review:
 #   stage: build
