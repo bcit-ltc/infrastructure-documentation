@@ -1,15 +1,21 @@
 # LTC GitLab CI/CD Pipeline
 
+# General Steps
+# 1. Gather info
+
+
+
+
 include:
   - project: 'deployments/build-scripts'
     file: '.gitlab-ci-template.yml'
 
 stages:
   - gather_info
-  - analyze_for_tagging
-  - build
-  - deploy
-  - cleanup
+  # - analyze_for_tagging
+  # - build
+  # - deploy
+  # - cleanup
 
 build:environment:
   stage: gather_info
@@ -37,17 +43,18 @@ build:environment:
 #   tags:
 #     - production
 
-docker-test:
-  stage: build
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
-  variables:
-    FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
-    DOCKER_HOST: tcp://dev-manager1.ltc.bcit.ca:2375
-  script:
-    - docker --version
-    - kpt fn eval wordpress -i set-labels:v0.1 -- env=dev
-  tags:
-    - dev-cp
+# docker-test:
+#   stage: build
+#   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
+#   variables:
+#     FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
+#     DOCKER_HOST: tcp://dev-gate3.ltc.bcit.ca:2376
+#   script:
+#     - export VAULT_TOKEN="$(vault write -field=token auth/gitlab-jwt/login role=$VAULT_AUTH_ROLE jwt=$CI_JOB_JWT)"
+#     - docker --version
+#     - kpt fn eval wordpress -i set-labels:v0.1 -- env=dev
+#   tags:
+#     - dev-cp
 
 # docker_test:
 #   stage: deploy
