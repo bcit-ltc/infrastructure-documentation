@@ -59,6 +59,7 @@ deploy for review:
     - *use_context  
     - kpt live init $BUILD_ENV
     - kpt live apply $BUILD_ENV
+    - kpt live destroy $BUILD_ENV
   # environment:
   #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
   #   url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
