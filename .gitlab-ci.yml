@@ -62,6 +62,8 @@ deploy for review:
     - kpt live init $BUILD_ENV
     # - kpt live apply --inventory-policy=adopt $BUILD_ENV
     # - kpt live destroy $BUILD_ENV
+    - ls -lah
+    - ls -lah dev
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
