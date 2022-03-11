@@ -40,12 +40,15 @@ review build:
     BUILD_ENV: dev
     DOCKER_HOST: tcp://${DOCKER_DAEMON_HOST}:2376
     DOCKER_TLS_VERIFY: 1
+  extends:
+    - .feature_branch_rules
+  needs:
+  - job: prepare docker
+    artifacts: true
   # before_script:
   #   - mkdir -p ./deploy
   #   - kpt pkg get git@issues.ltc.bcit.ca:ltc-infrastructure/documentation.git/build-scripts@v0.1 ./deploy/build-scripts
   #   - ls -lah
-  extends:
-    - .feature_branch_rules
   script:
     - ls -lah
     - echo $DOCKER_HOST
