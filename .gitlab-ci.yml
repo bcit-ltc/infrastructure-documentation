@@ -47,7 +47,7 @@ hydrate deployment:
 
 deploy for review:
   stage: deploy
-  image: gcr.io/kpt-dev/kpt:v1.0.0-beta.13
+  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   variables:
     BUILD_ENV: dev
   extends:
