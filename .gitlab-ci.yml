@@ -15,6 +15,7 @@ stages:
   - build
   - hydrate
   - deploy
+  - test
   # - cleanup
 
 # get environment:
@@ -81,6 +82,7 @@ hydrate deployment:
 
 
 test kubectl:
+  stage: test
   image: 
     name: line/kubectl-kustomize
     entrypoint: [""]
