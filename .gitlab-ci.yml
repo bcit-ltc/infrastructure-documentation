@@ -60,7 +60,9 @@ review build:
     - cd dev
 
     - kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -o ../deploy -- \
-        VERSION=blah NAMESPACE=$CI_COMMIT_REF_SLUG HOST=${CI_PROJECT_NAME}.dev-cp.reviews.dev.ltc.bcit.ca
+        VERSION=$GIT_TAG \
+        NAMESPACE=$CI_COMMIT_REF_SLUG \
+        HOST=${CI_PROJECT_NAME}.dev-cp.reviews.dev.ltc.bcit.ca
 
     - ls -lah
     - cd ..
