@@ -42,20 +42,20 @@ hydrate deployment:
     - .feature_branch_rules
 
 
-# deploy for review:
-#   stage: deploy
-#   image: gcr.io/kpt-dev/kpt:v1.0.0-beta.13
-#   variables:
-#     BUILD_ENV: dev
-#   extends:
-#     - .feature_branch_rules
-#   needs:
-#   - job: hydrate deployment
-#     artifacts: true
-#   script:
-#     - *use_kubectl_context
-#     - kpt live init $BUILD_ENV
-#     - kpt live apply $BUILD_ENV
+deploy for review:
+  stage: deploy
+  image: gcr.io/kpt-dev/kpt:v1.0.0-beta.13
+  variables:
+    BUILD_ENV: dev
+  extends:
+    - .feature_branch_rules
+  needs:
+  - job: hydrate deployment
+    artifacts: true
+  script:
+    - *use_kubectl_context
+    - kpt live init $BUILD_ENV
+    - kpt live apply $BUILD_ENV
   # environment:
   #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
   #   url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
@@ -166,11 +166,7 @@ hydrate deployment:
 #   extends: .feature_branch_rules
 #   script:
 #     - |
-#       kubectl delete ns $CI_COMMIT_REF_SLUG
-#       echo -e " \
-#         \n########################################### \
-#         \n  $CI_COMMIT_REF_SLUG environment stopped  \
-#         \n###########################################"
+#       kpt live destroy $BUILD_ENV
 #   environment:
 #     name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
 #     kubernetes:
