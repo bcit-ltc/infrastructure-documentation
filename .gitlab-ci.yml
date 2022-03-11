@@ -52,7 +52,7 @@ review build:
     - |
         mkdir ~/.docker && cp certs/* ~/.docker/
 
-        mkdir deploy
+        ls -lah
 
         kpt pkg get $DEPLOYMENT_PACKAGE_URL/@v0.5
 
