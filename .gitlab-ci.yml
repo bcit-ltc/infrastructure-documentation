@@ -59,12 +59,13 @@ review deployment:
   stage: deploy
   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   variables:
-    DOCKER_HOST: tcp://dev-gate3.ltc.bcit.ca:2376
+    DOCKER_HOST: dev-gate3.ltc.bcit.ca
+    DOCKER_REMOTE_URL: tcp://${DOCKER_HOST}:2376
     DOCKER_TLS_VERIFY: 1
     VAULT_USER: pki-ltc-cert-issuer
   secrets:
     CERT_ISSUER_PASSWORD:
-      vault: pki-ltc-cert-issuer/password@ltc-infrastructure
+      vault: ${VAULT_USER}/password@ltc-infrastructure
       file: false
   script: |
     # retrieve token to generate pki certs
@@ -78,20 +79,22 @@ review deployment:
       ${VAULT_SERVER_URL}/v1/auth/userpass/login/${VAULT_USER} \
         | jq -r .auth.client_token)"
 
-    echo $VAULT_TOKEN
+    curl \
+      --header "X-Vault-Token:${VAULT_TOKEN}" \
+      --request POST \
+      --silent \
+      --show-error \
+      --fail \
+      --data '{ "common_name": "" }' \
+      --output /dev/null \
+      ${VAULT_SERVER_URL}/v1/pki-ltc/sica/issue/pki-ltc-cert \
+      > client-certs.json
 
-    # curl \
-    #   --header "X-Vault-Token:${VAULT_TOKEN}" \
-    #   --request POST \
-    #   --data '{ "common_name": "dev-gate3.ltc.bcit.ca" }' \
-    #   ${VAULT_SERVER_URL}/v1/pki-ltc/sica/issue/pki-ltc-cert \
-    #   > client-certs.json
+    cat client-certs.json | jq -r .data.certificate > ~/.docker/cert.pem && \
+    cat client-certs.json | jq -r .data.private_key > ~/.docker/key.pem && \
+    cat client-certs.json | jq -r .data.issuing_ca > ~/.docker/ca.pem
 
-    # cat client-certs.json | jq -r .data.certificate > ~/.docker/cert.pem && \
-    # cat client-certs.json | jq -r .data.private_key > ~/.docker/key.pem && \
-    # cat client-certs.json | jq -r .data.issuing_ca > ~/.docker/ca.pem
-
-    # docker ps
+    docker ps
 
     # kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
     #     VERSION="v2.1.2-d1a11257" \
