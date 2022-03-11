@@ -57,7 +57,7 @@ stages:
 
 review deployment:
   stage: deploy
-  image: docker pull finbourne/curl-jq:latest
+  image: finbourne/curl-jq:latest
   variables:
     DOCKER_HOST: tcp://dev-gate3.ltc.bcit.ca:2376
     DOCKER_DAEMON_HOST: dev-gate3.ltc.bcit.ca
