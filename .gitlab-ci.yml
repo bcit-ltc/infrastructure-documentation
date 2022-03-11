@@ -89,11 +89,11 @@ review deployment:
         ${VAULT_SERVER_URL}/v1/pki-ltc/sica/issue/pki-ltc-cert \
         > client-certs.json
 
-      # cat client-certs.json | jq -r .data.certificate > ~/.docker/cert.pem && \
-      # cat client-certs.json | jq -r .data.private_key > ~/.docker/key.pem && \
-      # cat client-certs.json | jq -r .data.issuing_ca > ~/.docker/ca.pem
+      cat client-certs.json | jq -r .data.certificate > ~/.docker/cert.pem && \
+      cat client-certs.json | jq -r .data.private_key > ~/.docker/key.pem && \
+      cat client-certs.json | jq -r .data.issuing_ca > ~/.docker/ca.pem
 
-      # docker ps
+      docker ps
 
     # kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
     #     VERSION="v2.1.2-d1a11257" \
