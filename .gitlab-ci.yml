@@ -51,14 +51,15 @@ review build:
   script:
     - mkdir ~/.docker && cp certs/* ~/.docker/
     - kpt pkg get $DEPLOYMENT_PACKAGE_URL/@v0.5 ./deployment
-    - "kpt fn eval ./deployment --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
-        VERSION='$GIT_TAG' \
-        IMAGE='$CI_REGISTRY_IMAGE' \
-        TAG='$IMAGE_TAG' \
-        NAMESPACE='$CI_COMMIT_REF_SLUG' \
-        HOST='$CI_PROJECT_NAME.dev-cp.reviews.dev.ltc.bcit.ca'"
+    - 'kpt fn eval ./deployment --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
+        VERSION="$GIT_TAG" \
+        IMAGE="$CI_REGISTRY_IMAGE" \
+        TAG="$IMAGE_TAG" \
+        NAMESPACE="$CI_COMMIT_REF_SLUG" \
+        HOST="$CI_PROJECT_NAME.dev-cp.reviews.dev.ltc.bcit.ca"'
+    - ls -lah
     - ls -lah ./deployment
-    - cat ./deployment/kpt-set-image.yaml
+    - cat ./deployment/kpt-ingress-replace-path.yaml
 
     # kpt fn render
     # kpt live init
