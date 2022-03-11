@@ -64,8 +64,10 @@ review build:
         ls -lah
 
         ls -lah ./deployment
-        
+
         cat ./deployment/kpt-ingress-replace-path.yaml
+
+        cat ./deployment/namespace.yaml
 
     # kpt fn render
     # kpt live init
