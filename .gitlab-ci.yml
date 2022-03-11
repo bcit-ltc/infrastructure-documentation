@@ -103,7 +103,7 @@ review deployment:
     # kpt live init
     # kpt live apply
   tags:
-    - $DEV_CLUSTER_NAME
+    - $CLUSTER_NAME
 
 # deploy:review:                        # Deploy feature branch image to a dev cluster
 #   stage: deploy
