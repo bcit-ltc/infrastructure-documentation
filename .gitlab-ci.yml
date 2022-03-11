@@ -79,7 +79,9 @@ review deployment:
         ${VAULT_SERVER_URL}/v1/auth/userpass/login/${VAULT_USER} \
           | jq -r .auth.client_token)"
 
-      mkdir certs && curl \
+      mkdir certs && cd certs
+      
+      curl \
         --header "X-Vault-Token:${VAULT_TOKEN}" \
         --request POST \
         --silent \
@@ -87,11 +89,11 @@ review deployment:
         --fail \
         --data '{ "common_name": "'${DOCKER_DAEMON_HOST}'" }' \
         ${VAULT_SERVER_URL}/v1/pki-ltc/sica/issue/pki-ltc-cert \
-        > certs/client-certs.json
+        > client-certs.json
 
-      cat client-certs.json | jq -r .data.certificate > certs/cert.pem && \
-      cat client-certs.json | jq -r .data.private_key > certs/key.pem && \
-      cat client-certs.json | jq -r .data.issuing_ca > certs/ca.pem
+      cat client-certs.json | jq -r .data.certificate > cert.pem && \
+      cat client-certs.json | jq -r .data.private_key > key.pem && \
+      cat client-certs.json | jq -r .data.issuing_ca > ca.pem
 
   artifacts:
     paths:
