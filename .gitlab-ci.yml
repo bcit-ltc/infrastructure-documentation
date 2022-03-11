@@ -47,25 +47,17 @@ review build:
     artifacts: true
   # before_script:
   #   - mkdir -p ./deploy
-  #   - kpt pkg get git@issues.ltc.bcit.ca:ltc-infrastructure/documentation.git/build-scripts@v0.1 ./deploy/build-scripts
   #   - ls -lah
   script:
-    - mkdir ~/.docker
-    - cp certs/* ~/.docker/
-    - ls -lah
-    - ls -lah ~
-    - ls -lah ~/.docker
-    - docker version
-    - docker ps
-
-
-
-    # kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
-    #     VERSION="v2.1.2-d1a11257" \
-    #     IMAGE="" \
-    #     TAG="${IMAGE_TAG}" \
-    #     NAMESPACE="testing-kyle" \
-    #     HOST="documentation.dev-cp.reviews.dev.ltc.bcit.ca"
+    - mkdir ~/.docker && cp certs/* ~/.docker/
+    - kpt pkg get $DEPLOYMENT_PACKAGE_URL/@v0.5 ./deployment && cd ./deployment
+    - kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
+        VERSION="$GIT_TAG" \
+        IMAGE="$CI_REGISTRY_IMAGE" \
+        TAG="$IMAGE_TAG" \
+        NAMESPACE="$CI_COMMIT_REF_SLUG" \
+        HOST="$CI_PROJECT_NAME.dev-cp.reviews.dev.ltc.bcit.ca"
+    
     # kpt fn render
     # kpt live init
     # kpt live apply
@@ -81,7 +73,6 @@ review build:
 #   script:
 #     - docker --version
 #     - mkdir -p ./deployment
-#     - kpt pkg get "$DEPLOYMENT_PACKAGE_URL/@v0.1" "./deployment"
 #     - kpt pkg tree deployment
 #     - kpt fn eval deployment --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
 #         IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
