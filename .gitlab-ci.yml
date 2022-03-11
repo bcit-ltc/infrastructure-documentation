@@ -48,12 +48,12 @@ deploy for review:
   variables:
     BUILD_ENV: dev
   extends:
+    - .set_kubectl_context
     - .feature_branch_rules
   needs:
   - job: hydrate deployment
     artifacts: true
   script:
-    - *use_kubectl_context
     - kpt live init $BUILD_ENV
     - kpt live apply $BUILD_ENV
   # environment:
