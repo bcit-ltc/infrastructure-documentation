@@ -41,6 +41,9 @@ hydrate deployment:
     - .render_manifests
     - .feature_branch_rules
 
+.use_context: &use_context
+  - kubectl config get-contexts 
+  - kubectl config use-context ${CI_PROJECT_ROOT_NAMESPACE}/gitlab-kubernetes-agent:gitlab-kubernetes-agent
 
 deploy for review:
   stage: deploy
@@ -48,12 +51,12 @@ deploy for review:
   variables:
     BUILD_ENV: dev
   extends:
-    - .set_kubectl_context
     - .feature_branch_rules
   needs:
   - job: hydrate deployment
     artifacts: true
   script:
+    - *use_context  
     - kpt live init $BUILD_ENV
     - kpt live apply $BUILD_ENV
   # environment:
