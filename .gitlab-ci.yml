@@ -52,14 +52,12 @@ review build:
     - |
         mkdir ~/.docker && cp certs/* ~/.docker/
 
-        kpt pkg get $DEPLOYMENT_PACKAGE_URL/@v0.5 ./deployment
+        kpt pkg get $DEPLOYMENT_PACKAGE_URL/@v0.5 ./deployment && cd deployment
 
-        kpt fn eval ./deployment --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
-          VERSION="$GIT_TAG" \
-          IMAGE="$CI_REGISTRY_IMAGE" \
-          TAG="$IMAGE_TAG" \
-          NAMESPACE="test" \
-          HOST="$CI_PROJECT_NAME.dev-cp.reviews.dev.ltc.bcit.ca"
+        kpt fn eval --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \          
+        VERSION="$GIT_TAG" NAMESPACE="$CI_COMMIT_REF_SLUG" HOST="$CI_PROJECT_NAME.dev-cp.reviews.dev.ltc.bcit.ca"
+
+        cd ..
         
         ls -lah
 
