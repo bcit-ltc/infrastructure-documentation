@@ -15,7 +15,7 @@ stages:
   - build
   - hydrate
   - deploy
-  - test
+  # - test
   # - cleanup
 
 # get environment:
@@ -34,32 +34,13 @@ prepare hydration:
     - .configure_docker_connection
     - .feature_branch_rules
 
-.use_context: &use_context
-  - kubectl config get-contexts 
-  - kubectl config use-context "$KUBE_CONTEXT"
-
 
 hydrate deployment:
   stage: hydrate
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
-  variables:
-    BUILD_ENV: dev
-    DOCKER_HOST: tcp://${DOCKER_DAEMON_HOST}:2376
-    DOCKER_TLS_VERIFY: 1
   extends:
+    - .render_manifests
     - .feature_branch_rules
-  needs:
-  - job: prepare hydration
-    artifacts: true
-  script:
-    - mkdir ~/.docker && cp certs/* ~/.docker/
-    - kpt pkg get $DEPLOYMENT_PACKAGE_URL/@v0.5 $BUILD_ENV
-    - kpt fn eval $BUILD_ENV --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
-        VERSION=$GIT_TAG NAMESPACE=$CI_COMMIT_REF_SLUG HOST=${CI_PROJECT_NAME}.dev-cp.reviews.dev.ltc.bcit.ca
-    - kpt fn render $BUILD_ENV
-  artifacts:
-    paths:
-      - $BUILD_ENV/
+
 
 # deploy for review:
 #   stage: deploy
@@ -72,25 +53,14 @@ hydrate deployment:
 #   - job: hydrate deployment
 #     artifacts: true
 #   script:
-#     - kpt live init
-#     - kpt live apply
+#     - *use_kubectl_context
+#     - kpt live init $BUILD_ENV
+#     - kpt live apply $BUILD_ENV
   # environment:
   #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
   #   url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
     # on_stop: stop_review
     # auto_stop_in: 1 week
-
-
-test kubectl:
-  stage: test
-  image: 
-    name: line/kubectl-kustomize
-    entrypoint: [""]
-  script:
-    - *use_context
-    - kubectl get ns
-  tags:
-    - dev-cp
 
 
 # build_latest:                         # Build image with Kaniko
