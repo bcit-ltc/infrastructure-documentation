@@ -66,10 +66,6 @@ review deployment:
     CERT_ISSUER_PASSWORD:
       vault: pki-ltc-cert-issuer/password@ltc-infrastructure
       file: false
-#   secrets:
-#     TLS_CRT:
-#       vault: ssl-certificates/star-dev-ltc-bcit-ca-bundle.crt.base64@ltc-infrastructure
-#       file: false      
   script: |
     # retrieve token to generate pki certs
     export VAULT_TOKEN="$(curl \
