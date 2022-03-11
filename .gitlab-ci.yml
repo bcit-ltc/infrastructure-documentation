@@ -57,7 +57,7 @@ stages:
 
 review deployment:
   stage: deploy
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
+  image: docker pull finbourne/curl-jq:latest
   variables:
     DOCKER_HOST: tcp://dev-gate3.ltc.bcit.ca:2376
     DOCKER_DAEMON_HOST: dev-gate3.ltc.bcit.ca
@@ -100,6 +100,7 @@ review deployment:
       - certs/
 
       # docker ps
+      # docker pull rancher/curlimages-curl:7.73.0
 
     # kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
     #     VERSION="v2.1.2-d1a11257" \
