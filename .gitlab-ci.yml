@@ -13,6 +13,7 @@ include:
 stages:
   - gather_info
   - build
+  - hydrate
   - deploy
   # - cleanup
 
@@ -26,15 +27,19 @@ stages:
 #     - .build_image
 #     - .feature_branch_rules
 
-prepare docker:
-  stage: deploy
+prepare hydration:
+  stage: hydrate
   extends:
     - .configure_docker_connection
     - .feature_branch_rules
 
+.use_context: &use_context
+  - kubectl config get-contexts 
+  - kubectl config use-context "$KUBE_CONTEXT"
 
-review build:
-  stage: deploy
+
+hydrate deployment:
+  stage: hydrate
   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   variables:
     BUILD_ENV: dev
@@ -45,45 +50,45 @@ review build:
   needs:
   - job: prepare docker
     artifacts: true
-  # before_script:
-  #   - mkdir -p ./deploy
-  #   - ls -lah
   script:
     - mkdir ~/.docker && cp certs/* ~/.docker/
-
-    - ls -lah
-
     - kpt pkg get $DEPLOYMENT_PACKAGE_URL/@v0.5 deploy
-
     - kpt fn eval deploy --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
         VERSION=$GIT_TAG NAMESPACE=$CI_COMMIT_REF_SLUG HOST=${CI_PROJECT_NAME}.dev-cp.reviews.dev.ltc.bcit.ca
+    - kpt fn render
+  artifacts:
+    paths:
+      - deploy/
 
-    # kpt fn render
-    # kpt live init
-    # kpt live apply
-
-
-# deploy:review:                        # Deploy feature branch image to a dev cluster
+# deploy for review:
 #   stage: deploy
-#   extends:
-#     - .set_kubectl_context
-#     - .feature_branch_rules
+#   image: gcr.io/kpt-dev/kpt:v1.0.0-beta.13
 #   variables:
 #     BUILD_ENV: dev
+#   extends:
+#     - .feature_branch_rules
+#   needs:
+#   - job: hydrate deployment
+#     artifacts: true
 #   script:
-#     - docker --version
-#     - mkdir -p ./deployment
-#     - kpt pkg tree deployment
-#     - kpt fn eval deployment --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- \
-#         IMAGE_TAG="$IMAGE_TAG" VERSION="$GIT_TAG" NAMESPACE_NAME="$CI_COMMIT_REF_SLUG"
-    # - kpt fn render
-    # - kpt live init
-    # - kpt live apply
+#     - kpt live init
+#     - kpt live apply
   # environment:
   #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
   #   url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
     # on_stop: stop_review
     # auto_stop_in: 1 week
+
+
+test kubectl:
+  image: 
+    name: line/kubectl-kustomize
+    entrypoint: [""]
+  script:
+    - *use_context
+    - kubectl get ns
+  tags:
+    - dev-cp
 
 
 # build_latest:                         # Build image with Kaniko
@@ -245,3 +250,4 @@ variables:                  # other global variables are set in GitLab Admin: ht
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
   CI_DEBUG_TRACE: "false"
+  KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:dev_cp"
