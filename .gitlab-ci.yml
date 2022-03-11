@@ -50,8 +50,11 @@ review build:
   #   - kpt pkg get git@issues.ltc.bcit.ca:ltc-infrastructure/documentation.git/build-scripts@v0.1 ./deploy/build-scripts
   #   - ls -lah
   script:
+    - mkdir ~/.docker
+    - cp certs/* ~/.docker/
     - ls -lah
-    - echo $DOCKER_HOST
+    - ls -lah ~
+    - ls -lah ~/.docker
     - docker version
     - docker ps
 
