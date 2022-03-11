@@ -56,19 +56,19 @@ review build:
 
         kpt pkg get $DEPLOYMENT_PACKAGE_URL/@v0.5
 
+        ls -lah
+
         kpt fn eval dev --include-meta-resources --image gcr.io/kpt-fn/apply-setters:v0.2.0 \
         -o deploy -- \          
         VERSION="$GIT_TAG" NAMESPACE="$CI_COMMIT_REF_SLUG" HOST="$CI_PROJECT_NAME.dev-cp.reviews.dev.ltc.bcit.ca"
 
-        cd ..
-
         ls -lah
 
-        ls -lah ./deployment
+        ls -lah deploy
 
-        cat ./deployment/kpt-ingress-replace-path.yaml
+        cat deploy/kpt-ingress-replace-path.yaml
 
-        cat ./deployment/namespace.yaml
+        cat deploy/namespace.yaml
 
     # kpt fn render
     # kpt live init
