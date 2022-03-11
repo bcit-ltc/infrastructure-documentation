@@ -59,8 +59,8 @@ review deployment:
   stage: deploy
   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   variables:
-    DOCKER_HOST: dev-gate3.ltc.bcit.ca
-    DOCKER_REMOTE_URL: tcp://${DOCKER_HOST}:2376
+    DOCKER_HOST: tcp://dev-gate3.ltc.bcit.ca:2376
+    DOCKER_DAEMON_HOST: dev-gate3.ltc.bcit.ca
     DOCKER_TLS_VERIFY: 1
     VAULT_USER: pki-ltc-cert-issuer
   secrets:
@@ -85,7 +85,7 @@ review deployment:
       --silent \
       --show-error \
       --fail \
-      --data '{ "common_name": "" }' \
+      --data '{ "common_name": "'${DOCKER_DAEMON_HOST}'" }' \
       --output /dev/null \
       ${VAULT_SERVER_URL}/v1/pki-ltc/sica/issue/pki-ltc-cert \
       > client-certs.json
