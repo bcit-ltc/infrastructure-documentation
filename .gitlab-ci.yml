@@ -79,7 +79,7 @@ review deployment:
         ${VAULT_SERVER_URL}/v1/auth/userpass/login/${VAULT_USER} \
           | jq -r .auth.client_token)"
 
-      curl \
+      mkdir certs && curl \
         --header "X-Vault-Token:${VAULT_TOKEN}" \
         --request POST \
         --silent \
@@ -87,13 +87,17 @@ review deployment:
         --fail \
         --data '{ "common_name": "'${DOCKER_DAEMON_HOST}'" }' \
         ${VAULT_SERVER_URL}/v1/pki-ltc/sica/issue/pki-ltc-cert \
-        > client-certs.json
+        > certs/client-certs.json
 
-      cat client-certs.json | jq -r .data.certificate > ~/.docker/cert.pem && \
-      cat client-certs.json | jq -r .data.private_key > ~/.docker/key.pem && \
-      cat client-certs.json | jq -r .data.issuing_ca > ~/.docker/ca.pem
+      cat client-certs.json | jq -r .data.certificate > certs/cert.pem && \
+      cat client-certs.json | jq -r .data.private_key > certs/key.pem && \
+      cat client-certs.json | jq -r .data.issuing_ca > certs/ca.pem
 
-      docker ps
+  artifacts:
+    paths:
+      - certs/
+
+      # docker ps
 
     # kpt fn eval --image gcr.io/kpt-fn/apply-setters:v0.2.0 -- --include-meta-resources \
     #     VERSION="v2.1.2-d1a11257" \
