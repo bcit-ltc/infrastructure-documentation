@@ -63,9 +63,13 @@ review deployment:
     DOCKER_TLS_VERIFY: 1
     VAULT_USER: pki-ltc-cert-issuer
   secrets:
-    CERT-ISSUER-PASSWORD:
-      vault: pki-ltc-cert-issuer/username@ltc-infrastructure
+    CERT_ISSUER_PASSWORD:
+      vault: pki-ltc-cert-issuer/password@ltc-infrastructure
       file: false
+#   secrets:
+#     TLS_CRT:
+#       vault: ssl-certificates/star-dev-ltc-bcit-ca-bundle.crt.base64@ltc-infrastructure
+#       file: false      
   script: |
     # retrieve token to generate pki certs
     export VAULT_TOKEN="$(curl \
@@ -73,7 +77,7 @@ review deployment:
       --silent \
       --show-error \
       --fail \
-      --data '{ "password":"'${CERT-ISSUER-PASSWORD}'"}' \
+      --data '{ "password":"'${CERT_ISSUER_PASSWORD}'"}' \
       --output /dev/null \
       ${VAULT_SERVER_URL}/v1/auth/userpass/login/${VAULT_USER} \
         | jq -r .auth.client_token)"
