@@ -69,9 +69,9 @@ deploy for review:
     key: $CI_COMMIT_REF_SLUG
     paths:
       - $BUILD_ENV/Kptfile
-  # artifacts:
-  #   paths:
-  #     - $BUILD_ENV/Kptfile
+  artifacts:
+    paths:
+      - $BUILD_ENV/Kptfile
   # environment:
   #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
   #   url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
