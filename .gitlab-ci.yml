@@ -76,20 +76,18 @@ review deployment:
         --show-error \
         --fail \
         --data '{ "password":"'${CERT_ISSUER_PASSWORD}'"}' \
-        --output /dev/null \
         ${VAULT_SERVER_URL}/v1/auth/userpass/login/${VAULT_USER} \
           | jq -r .auth.client_token)"
 
-      # curl \
-      #   --header "X-Vault-Token:${VAULT_TOKEN}" \
-      #   --request POST \
-      #   --silent \
-      #   --show-error \
-      #   --fail \
-      #   --data '{ "common_name": "dev-gate3.ltc.bcit.ca" }' \
-      #   --output /dev/null \
-      #   ${VAULT_SERVER_URL}/v1/pki-ltc/sica/issue/pki-ltc-cert \
-      #   > client-certs.json
+      curl \
+        --header "X-Vault-Token:${VAULT_TOKEN}" \
+        --request POST \
+        --silent \
+        --show-error \
+        --fail \
+        --data '{ "common_name": "'${DOCKER_DAEMON_HOST}'" }' \
+        ${VAULT_SERVER_URL}/v1/pki-ltc/sica/issue/pki-ltc-cert \
+        > client-certs.json
 
       # cat client-certs.json | jq -r .data.certificate > ~/.docker/cert.pem && \
       # cat client-certs.json | jq -r .data.private_key > ~/.docker/key.pem && \
