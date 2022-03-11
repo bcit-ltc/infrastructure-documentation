@@ -48,7 +48,7 @@ hydrate deployment:
   extends:
     - .feature_branch_rules
   needs:
-  - job: prepare docker
+  - job: prepare hydration
     artifacts: true
   script:
     - mkdir ~/.docker && cp certs/* ~/.docker/
