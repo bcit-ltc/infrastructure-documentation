@@ -58,7 +58,7 @@ deploy for review:
   script:
     - *use_context  
     - kpt live init $BUILD_ENV
-    - kpt live apply --force $BUILD_ENV
+    - kpt live apply --inventory-policy=adopt $BUILD_ENV
     - kpt live destroy $BUILD_ENV
   # environment:
   #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
