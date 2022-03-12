@@ -54,10 +54,12 @@ deployment check:
   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   stage: deploy
   script:
-    - >
+    - |
       kubectl config use-context ${CI_PROJECT_ROOT_NAMESPACE}/gitlab-kubernetes-agent:gitlab-kubernetes-agent
 
-      export DEPLOYED="$(kubectl get resourcegroup -o json -n $CI_COMMIT_REF_SLUG | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }')"
+      kubectl get resourcegroup -o json -n $CI_COMMIT_REF_SLUG > inventory.json
+      
+      cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }'
 
       if [ -z $DEPLOYED ]; then
         echo $DEPLOYED >> $BUILD_ENV/Kptfile
