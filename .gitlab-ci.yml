@@ -51,6 +51,7 @@ hydrate deployment:
 
 
 deployment check:
+  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   stage: deploy
   script:
     - >
@@ -77,8 +78,8 @@ deploy for review:
   extends:
     - .feature_branch_rules
   needs:
-  - job: hydrate deployment
-    artifacts: true
+    - job: deployment check
+      artifacts: true
   script:
     - kpt live apply $BUILD_ENV --dry-run
     # - kpt live destroy $BUILD_ENV
