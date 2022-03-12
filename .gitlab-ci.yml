@@ -59,11 +59,12 @@ deploy for review:
     artifacts: true
   script:
     - cat dev/Kptfile
-    - *use_context  
-    - kpt live init $BUILD_ENV
+    - *use_context
+    - "kubectl get resourcegroup -o json -n $CI_COMMIT_REF_SLUG | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }' | yq e -P - >> Kptfile"
+    - cat dev/Kptfile
+    # - kpt live init $BUILD_ENV
     # - kpt live apply --inventory-policy=adopt $BUILD_ENV
     # - kpt live destroy $BUILD_ENV
-    - cat dev/Kptfile
     - ls -lah dev
   cache:
     key: $CI_COMMIT_REF_SLUG
