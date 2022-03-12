@@ -60,8 +60,9 @@ deploy for review:
   script:
     - cat dev/Kptfile
     - *use_context
-    - kubectl get resourcegroup -o json -n $CI_COMMIT_REF_SLUG
-    #  | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }' | yq e -P - >> Kptfile"
+    - kubectl get resourcegroup -o json -n $CI_COMMIT_REF_SLUG > inventory.json
+    - "cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }' \
+      | yq e -P - >> $BUILD_ENV/Kptfile"
     - cat dev/Kptfile
     # - kpt live init $BUILD_ENV
     # - kpt live apply --inventory-policy=adopt $BUILD_ENV
