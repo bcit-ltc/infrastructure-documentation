@@ -78,9 +78,9 @@ deployment check:
 
     - cat dev/Kptfile
 
-  # artifacts:
-  #   paths:
-  #     - $BUILD_ENV/
+  artifacts:
+    paths:
+      - $BUILD_ENV/
   tags:
     - production
 
