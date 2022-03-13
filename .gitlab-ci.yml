@@ -60,6 +60,8 @@ deployment check:
       
     - ls -lah
 
+    - cat inventory.json
+
     - cat dev/Kptfile
 
     - "export DEPLOYED=\"$(cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }')\""
