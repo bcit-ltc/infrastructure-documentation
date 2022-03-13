@@ -53,6 +53,8 @@ hydrate deployment:
 deployment check:
   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   stage: deploy
+  variables:
+    BUILD_ENV: dev
   script:
     - kubectl config use-context ${CI_PROJECT_ROOT_NAMESPACE}/gitlab-kubernetes-agent:gitlab-kubernetes-agent
 
