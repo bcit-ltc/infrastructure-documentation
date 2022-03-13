@@ -64,11 +64,11 @@ deployment check:
 
     - cat dev/Kptfile
 
-    - "export DEPLOYED=\"$(cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }')\""
+    - "cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }' > deployed.txt"
 
-    - echo $DEPLOYED > deployed.txt
+    - cat deployed.txt
 
-    - if [ -n $DEPLOYED ]; then echo $DEPLOYED >> $BUILD_ENV/Kptfile; else kpt live init $BUILD_ENV; fi
+    - if [ $(cat deployed.txt | grep inventoryID) ]; then cat deployed.txt >> $BUILD_ENV/Kptfile; else kpt live init $BUILD_ENV; fi
 
     - cat deployed.txt
 
