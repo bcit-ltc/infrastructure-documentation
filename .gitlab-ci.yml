@@ -66,7 +66,7 @@ deployment check:
 
     - cat dev/Kptfile
 
-    - "cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }' > deployed.txt"
+    - "cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }' | yq e -P - > deployed.txt"
 
     - cat deployed.txt
 
