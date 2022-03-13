@@ -58,10 +58,18 @@ deployment check:
 
     - kubectl get resourcegroup -o json -n $CI_COMMIT_REF_SLUG > inventory.json
       
+    - ls -lah
+
     - "export DEPLOYED=\"$(cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }')\""
 
-    - echo $DEPLOYED
+    - echo $DEPLOYED > deployed.txt
+
     - if [ -z $DEPLOYED ]; then echo $DEPLOYED >> $BUILD_ENV/Kptfile; else kpt live init $BUILD_ENV; fi
+
+    - cat deployed.txt
+
+    - ls -lah
+
   # artifacts:
   #   paths:
   #     - $BUILD_ENV/
