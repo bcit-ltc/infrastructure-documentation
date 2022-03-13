@@ -70,7 +70,7 @@ deployment check:
 
     - cat deployed.txt
 
-    - if [ "$(cat deployed.txt | grep inventoryID)" ]; then cat deployed.txt >> $BUILD_ENV/Kptfile; else kpt live init $BUILD_ENV; fi
+    - if [[ $(cat deployed.txt | grep inventoryID) ]]; then cat deployed.txt >> $BUILD_ENV/Kptfile; else kpt live init $BUILD_ENV; fi
 
     - cat deployed.txt
 
