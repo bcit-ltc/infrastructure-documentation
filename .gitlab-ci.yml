@@ -66,7 +66,7 @@ deployment check:
 
     - echo $DEPLOYED > deployed.txt
 
-    - if [ -z $DEPLOYED ]; then echo $DEPLOYED >> $BUILD_ENV/Kptfile; else kpt live init $BUILD_ENV; fi
+    - if [ -n $DEPLOYED ]; then echo $DEPLOYED >> $BUILD_ENV/Kptfile; else kpt live init $BUILD_ENV; fi
 
     - cat deployed.txt
 
