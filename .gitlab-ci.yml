@@ -60,6 +60,8 @@ deployment check:
       
     - ls -lah
 
+    - cat dev/Kptfile
+
     - "export DEPLOYED=\"$(cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }')\""
 
     - echo $DEPLOYED > deployed.txt
@@ -70,13 +72,15 @@ deployment check:
 
     - ls -lah
 
+    - cat dev/Kptfile
+
   # artifacts:
   #   paths:
   #     - $BUILD_ENV/
   tags:
     - production
 
-deploy for review:
+.deploy for review:
   stage: deploy
   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   variables:
