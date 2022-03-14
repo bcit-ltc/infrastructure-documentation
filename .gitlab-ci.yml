@@ -59,7 +59,7 @@ deploy latest:
     BUILD_ENV: staging
   extends:
     - .deploy_latest
-    - .set_gitlab_environment
+    - .set_gitlab_review_environment
     - .main_branch_rules
   needs:
   - job: get environment
