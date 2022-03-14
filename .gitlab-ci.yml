@@ -53,6 +53,8 @@ hydrate deployment:
     - .render_manifests
     - .feature_branch_rules
   needs:
+  - job: get environment
+    artifacts: true
   - job: prepare hydration
     artifacts: true
 
