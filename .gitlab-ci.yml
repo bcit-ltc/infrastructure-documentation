@@ -47,6 +47,7 @@ deploy review:
   needs:
   - job: get environment
     artifacts: true
+  - job: build image
   script:
     - kpt live apply $BUILD_ENV
 
