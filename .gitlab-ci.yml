@@ -83,7 +83,6 @@ deploy review:
 #     kubernetes:
 #       namespace: $PROD_NAMESPACE      # update to '$CI_PROJECT_NAME' if projects are independent
 
-
 # semver_tag:                           # Creates a semantic-version tag that is applied to the release branch
 #   stage: analyze_for_tagging
 #   extends: 
@@ -101,7 +100,6 @@ deploy review:
 #           @semantic-release/release-notes-generator, \
 #           @semantic-release/gitlab'"
 
-
 # build_stable:                         # Build image with Kaniko
 #   stage: build
 #   variables:
@@ -109,7 +107,6 @@ deploy review:
 #   extends:
 #     - .build_image
 #     - .release_branch_rules
-
 
 # deploy_production:                    # Deploy `stable` image to production cluster
 #   stage: deploy
@@ -147,7 +144,6 @@ stop_review:                          # Stop review environment
   stage: cleanup
   extends:
     - .stop_environment
-
 
 ## Pipeline variables
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
