@@ -138,7 +138,6 @@ deploy review:
 #     kubernetes:
 #       namespace: $PROD_NAMESPACE      # update to '$CI_PROJECT_NAME' if projects are independent
 
-
 ## Removes deployment (and all assets in the namespace)
 stop_review:                          # Stop review environment
   stage: cleanup
