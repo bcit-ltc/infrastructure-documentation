@@ -22,37 +22,52 @@ get environment:
   stage: gather info
   extends: .get_version
 
-## Build image and push to project registry
+## Build feat/fix branch image and push to project registry
 build image:
   stage: build
   extends:
     - .build_image
     - .feature_branch_rules
 
-## Deploy package
+## Deploy feat/fix branch package
 deploy review:
   stage: deploy
   variables:
     BUILD_ENV: dev
   extends:
     - .deploy_review
-    - .set_gitlab_environment
+    - .set_gitlab_review_environment
     - .feature_branch_rules
   needs:
   - job: get environment
     artifacts: true
   - job: build image
-  cache:
-    key: $CI_COMMIT_REF_SLUG
 
 
-# build_latest:                         # Build image with Kaniko
-#   stage: build
-#   variables:
-#     BUILD_ENV: staging
-#   extends:
-#     - .build_image
-#     - .main_branch_rules
+## Build main branch image and push to project registry
+build latest:
+  stage: build
+  extends:
+    - .build_image
+    - .main_branch_rules
+
+
+## Deploy main branch package
+deploy latest:
+  stage: deploy
+  variables:
+    BUILD_ENV: staging
+  extends:
+    - .deploy_latest
+    - .set_gitlab_environment
+    - .main_branch_rules
+  needs:
+  - job: get environment
+    artifacts: true
+  - job: build image
+
+
+
 
 # deploy_latest:                        # Deploy `latest` image to staging cluster
 #   stage: deploy
