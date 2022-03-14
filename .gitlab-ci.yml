@@ -6,12 +6,10 @@
 # 3. Generate deployment package
 # 4. Deploy
 
-
 # Common scripts
 include:
   - project: 'deployments/build-scripts'
     file: '.gitlab-ci-template.yml'
-
 
 stages:
   - gather info
