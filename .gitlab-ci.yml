@@ -34,15 +34,11 @@ build image:
 
 # Deploy package
 deploy review:
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   stage: deploy
   variables:
     BUILD_ENV: dev
   extends:
-    - .configure_docker_connection
-    - .render_manifests
-    - .check_inventory
-    - .deploy_package
+    - .deploy_review
     - .set_gitlab_environment
     - .feature_branch_rules
   needs:
