@@ -42,6 +42,8 @@ deploy review:
   - job: get environment
     artifacts: true
   - job: build image
+  cache:
+    key: $CI_COMMIT_REF_SLUG
 
 
 # build_latest:                         # Build image with Kaniko

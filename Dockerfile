@@ -11,6 +11,7 @@ RUN set -ex; \
 
 ######################
 FROM nginx
+
 LABEL maintainer courseproduction@bcit.ca
 
 COPY --from=docs-base /public /usr/share/nginx/html
