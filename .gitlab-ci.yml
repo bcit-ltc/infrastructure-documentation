@@ -31,55 +31,26 @@ build image:
     - .build_image
     - .feature_branch_rules
 
-# Pre-hydration step to connect to remote Docker daemon
-prepare hydration:
-  stage: hydrate
-  extends:
-    - .configure_docker_connection
-    - .feature_branch_rules
 
-# Hydrate package (Kubernetes manifests)
-# Sets vars:
-#   - HOST: eg. $CI_PROJECT_NAME.$CLUSTER_NAME.reviews.dev.ltc.bcit.ca
-#   - NAMESPACE: eg. feature-1-pipeline-test
-#   - IMAGE: eg. registry.dev.ltc.bcit.ca/ltc-infrastructure/documentation
-#   - TAG: 97e5363f
-#   - VERSION: 97e5363f
-hydrate deployment:
-  stage: hydrate
+# Deploy package
+deploy review:
+  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
+  stage: deploy
   variables:
     BUILD_ENV: dev
   extends:
+    - .configure_docker_connection
     - .render_manifests
+    - .check_inventory
+    - .set_gitlab_environment
     - .feature_branch_rules
   needs:
   - job: get environment
     artifacts: true
-  - job: prepare hydration
-    artifacts: true
-
-# Determine if deployment already exists
-deployment check:
-  stage: deploy
-  variables:
-    BUILD_ENV: dev
-  extends:
-    - .check_inventory
-    - .feature_branch_rules
-
-# Deploy package
-deploy for review:
-  stage: deploy
-  variables:
-    BUILD_ENV: dev
-  extends:
-    - .set_environment
-    - .feature_branch_rules
-  needs:
-    - job: deployment check
-      artifacts: true
   script:
     - kpt live apply $BUILD_ENV
+
+
 
 # build_latest:                         # Build image with Kaniko
 #   stage: build
