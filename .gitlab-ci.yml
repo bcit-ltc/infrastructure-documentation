@@ -1,12 +1,12 @@
 # LTC GitLab CI/CD Pipeline
 
-# General Steps
+## General Steps
 # 1. Gather info
 # 2. Build Image
 # 3. Generate deployment package
 # 4. Deploy
 
-# Common scripts
+## Common scripts
 include:
   - project: 'deployments/build-scripts'
     file: '.gitlab-ci-template.yml'
@@ -17,19 +17,19 @@ stages:
   - deploy
   - cleanup
 
-# Determine git tag
+## Determine git tag
 get environment:
   stage: gather info
   extends: .get_version
 
-# Build image and push to project registry
+## Build image and push to project registry
 build image:
   stage: build
   extends:
     - .build_image
     - .feature_branch_rules
 
-# Deploy package
+## Deploy package
 deploy review:
   stage: deploy
   variables:
@@ -141,14 +141,14 @@ deploy review:
 #       namespace: $PROD_NAMESPACE      # update to '$CI_PROJECT_NAME' if projects are independent
 
 
-# Removes deployment (and all assets in the namespace)
+## Removes deployment (and all assets in the namespace)
 stop_review:                          # Stop review environment
   stage: cleanup
   extends:
     - .stop_environment
 
 
-# Pipeline variables
+## Pipeline variables
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
