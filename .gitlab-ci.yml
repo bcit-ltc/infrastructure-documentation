@@ -17,12 +17,10 @@ stages:
   - deploy
   - cleanup
 
-
 # Determine git tag
 get environment:
   stage: gather info
   extends: .get_version
-
 
 # Build image and push to project registry
 build image:
