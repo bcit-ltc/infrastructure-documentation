@@ -29,7 +29,6 @@ build image:
     - .build_image
     - .feature_branch_rules
 
-
 # Deploy package
 deploy review:
   stage: deploy
@@ -148,7 +147,6 @@ stop_review:                          # Stop review environment
   extends:
     - .stop_review
     - .feature_branch_rules
-
 
 
 # Pipeline variables
