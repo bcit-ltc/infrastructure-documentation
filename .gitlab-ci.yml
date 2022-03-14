@@ -147,21 +147,10 @@ deploy review:
 # Removes deployment (and all assets in the namespace)
 stop_review:                          # Stop review environment
   stage: cleanup
-  variables:
-    STOP: "true"
   extends:
-    - .check_inventory
+    - .stop_review
     - .feature_branch_rules
-  script:
-    - kpt live destroy $BUILD_ENV
-  environment:
-    name: $CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
-    action: stop
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
-      when: manual
-  tags:
-    - $CLUSTER_NAME
+
 
 
 # Pipeline variables
@@ -173,4 +162,4 @@ variables:                  # other global variables are set in GitLab Admin: ht
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
   CI_DEBUG_TRACE: "false"
-#  KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
+  KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
