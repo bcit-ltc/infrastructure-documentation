@@ -189,36 +189,6 @@ stop_review:                          # Stop review environment
     - $CLUSTER_NAME
 
 
-
-# build:review:
-#   stage: build
-#   image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git
-#   variables:
-#     BUILD_ENV: dev
-#   # before_script:
-#   #   - mkdir -p ./deploy
-#   #   - kpt pkg get git@issues.ltc.bcit.ca:ltc-infrastructure/documentation.git/build-scripts@v0.1 ./deploy/build-scripts
-#   #   - ls -lah
-#   extends:
-#     - .get_version
-#     - .build_image
-#     # - .feature_branch_rules
-#   tags:
-#     - production
-
-# docker-test:
-#   stage: build
-#   variables:
-#     FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
-#     DOCKER_HOST: tcp://dev-gate3.ltc.bcit.ca:2376
-#   script:
-#     - export VAULT_TOKEN="$(vault write -field=token auth/gitlab-jwt/login role=$VAULT_AUTH_ROLE jwt=$CI_JOB_JWT)"
-#     - docker --version
-#     - kpt fn eval wordpress -i set-labels:v0.1 -- env=dev
-#   tags:
-#     - dev-cp
-
-
 # Pipeline variables
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
