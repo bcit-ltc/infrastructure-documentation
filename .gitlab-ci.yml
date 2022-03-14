@@ -42,15 +42,13 @@ deploy review:
     - .configure_docker_connection
     - .render_manifests
     - .check_inventory
+    - .deploy_package
     - .set_gitlab_environment
     - .feature_branch_rules
   needs:
   - job: get environment
     artifacts: true
   - job: build image
-  script:
-    - kpt live apply $BUILD_ENV
-
 
 
 # build_latest:                         # Build image with Kaniko
