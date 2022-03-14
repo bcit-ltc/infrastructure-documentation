@@ -153,7 +153,7 @@ variables:                  # other global variables are set in GitLab Admin: ht
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
   DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/$BUILD_ENV
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
-  # VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
+  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
   KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
