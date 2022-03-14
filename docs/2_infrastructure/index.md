@@ -2,7 +2,7 @@
 title: Overview
 ---
 
-[![architecture](../assets/ltc-infrastructure-feb2022.png#only-light)](../assets/ltc-infrastructure-feb2022.png)
+[![architecture](../assets/ltc-infrastructure-feb2022-light.png#only-light)](ltc-infrastructure-feb2022.md)
 [![architecture](../assets/ltc-infrastructure-feb2022-dark.png#only-dark)](ltc-infrastructure-feb2022-dark.md)
 
 !!! note ""
