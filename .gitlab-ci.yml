@@ -44,7 +44,10 @@ hydrate deployment:
   extends:
     - .render_manifests
     - .feature_branch_rules
-
+  needs:
+  - job: prepare hydration
+    artifacts: true
+    
 
 deployment check:
   stage: deploy
