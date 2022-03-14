@@ -71,12 +71,12 @@ deploy for review:
   variables:
     BUILD_ENV: dev
   extends:
-    - .set_kubectl_context
     - .feature_branch_rules
   needs:
     - job: deployment check
       artifacts: true
   script:
+    - kubectl config use-context ${CI_PROJECT_ROOT_NAMESPACE}/gitlab-kubernetes-agent:gitlab-kubernetes-agent
     - kpt live apply $BUILD_ENV
   environment:
     name: $CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
@@ -185,8 +185,10 @@ deploy for review:
 
 stop_review:                          # Stop review environment
   stage: cleanup
+  variables:
+    STOP: "true"
   extends:
-    - .set_kubectl_context
+    - .check_inventory
     - .feature_branch_rules
   script:
     - kpt live destroy $BUILD_ENV
