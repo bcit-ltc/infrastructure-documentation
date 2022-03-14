@@ -145,8 +145,7 @@ deploy review:
 stop_review:                          # Stop review environment
   stage: cleanup
   extends:
-    - .stop_review
-    - .feature_branch_rules
+    - .stop_environment
 
 
 # Pipeline variables
