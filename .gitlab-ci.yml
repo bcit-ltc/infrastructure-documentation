@@ -39,6 +39,12 @@ prepare hydration:
     - .feature_branch_rules
 
 
+# Set vars:
+#   - HOST: eg. $CI_PROJECT_NAME.$CLUSTER_NAME.reviews.dev.ltc.bcit.ca
+#   - NAMESPACE: eg. feature-1-pipeline-test
+#   - IMAGE: eg. registry.dev.ltc.bcit.ca/ltc-infrastructure/documentation
+#   - TAG: 97e5363f
+#   - VERSION: 97e5363f
 hydrate deployment:
   stage: hydrate
   variables:
