@@ -2,8 +2,9 @@
 
 # General Steps
 # 1. Gather info
-#   - determine if git tag exists; set env vars
 # 2. Build Image
+# 3. Generate deployment package
+# 4. Deploy
 
 
 include:
@@ -65,7 +66,7 @@ deployment check:
     - .check_inventory
     - .feature_branch_rules
 
-
+# Deploy package
 deploy for review:
   stage: deploy
   variables:
@@ -178,6 +179,7 @@ deploy for review:
 #       namespace: $PROD_NAMESPACE      # update to '$CI_PROJECT_NAME' if projects are independent
 
 
+# Removes deployment (and all assets in the namespace)
 stop_review:                          # Stop review environment
   stage: cleanup
   variables:
