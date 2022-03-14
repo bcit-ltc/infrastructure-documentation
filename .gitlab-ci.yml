@@ -6,23 +6,25 @@
 # 3. Generate deployment package
 # 4. Deploy
 
+
 # Common scripts
 include:
   - project: 'deployments/build-scripts'
     file: '.gitlab-ci-template.yml'
 
+
 stages:
-  - gather_info
+  - gather info
   - build
-  - hydrate
   - deploy
-  # - test
   - cleanup
+
 
 # Determine git tag
 get environment:
-  stage: gather_info
+  stage: gather info
   extends: .get_version
+
 
 # Build image and push to project registry
 build image:
