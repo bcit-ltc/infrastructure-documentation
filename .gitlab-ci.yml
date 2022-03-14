@@ -4,11 +4,10 @@
 # 1. Gather info
 
 
-
-
 include:
   - project: 'deployments/build-scripts'
     file: '.gitlab-ci-template.yml'
+
 
 stages:
   - gather_info
@@ -18,15 +17,18 @@ stages:
   # - test
   # - cleanup
 
+
 get environment:
   stage: gather_info
   extends: .get_version
+
 
 build image:                     # Build image with Kaniko
   stage: build
   extends:
     - .build_image
     - .feature_branch_rules
+
 
 prepare hydration:
   stage: hydrate
@@ -37,73 +39,39 @@ prepare hydration:
 
 hydrate deployment:
   stage: hydrate
+  variables:
+    BUILD_ENV: dev
   extends:
     - .render_manifests
     - .feature_branch_rules
-  # cache:
-  #   key: $CI_COMMIT_REF_SLUG
-  #   paths:
-  #     - $BUILD_ENV/
-
-# .use_context: &use_context
-#   - kubectl config get-contexts 
-#   - kubectl config use-context ${CI_PROJECT_ROOT_NAMESPACE}/gitlab-kubernetes-agent:gitlab-kubernetes-agent
 
 
 deployment check:
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   stage: deploy
-  variables:
-    BUILD_ENV: dev
-  script:
-    - kubectl config use-context ${CI_PROJECT_ROOT_NAMESPACE}/gitlab-kubernetes-agent:gitlab-kubernetes-agent
-
-    - kubectl get resourcegroup -o json -n $CI_COMMIT_REF_SLUG > inventory.json
-      
-    - ls -lah
-
-    - cat inventory.json
-
-    - cat dev/Kptfile
-
-    - "cat inventory.json | jq '{inventory: {namespace: .items[].metadata.name,name: .items[].metadata.name, inventoryID: .items[].metadata.labels.\"cli-utils.sigs.k8s.io/inventory-id\"} }' | yq e -P - > deployed.txt"
-
-    - cat deployed.txt
-
-    - if [[ $(cat deployed.txt | grep inventoryID) ]]; then cat deployed.txt >> $BUILD_ENV/Kptfile; else kpt live init $BUILD_ENV; fi
-
-    - cat deployed.txt
-
-    - ls -lah
-
-    - cat dev/Kptfile
-
-  artifacts:
-    paths:
-      - $BUILD_ENV/
-  tags:
-    - production
-
-deploy for review:
-  stage: deploy
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   variables:
     BUILD_ENV: dev
   extends:
+    - .check_inventory
+    - .feature_branch_rules
+
+
+deploy for review:
+  stage: deploy
+  variables:
+    BUILD_ENV: dev
+  extends:
+    - .set_kubectl_context
     - .feature_branch_rules
   needs:
     - job: deployment check
       artifacts: true
   script:
-    - kubectl config use-context ${CI_PROJECT_ROOT_NAMESPACE}/gitlab-kubernetes-agent:gitlab-kubernetes-agent
-
-    - kpt live apply $BUILD_ENV --dry-run
-    # - kpt live destroy $BUILD_ENV
-  # environment:
-  #   name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
-  #   url: http://$CI_PROJECT_NAME.$DEV_CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
-    # on_stop: stop_review
-    # auto_stop_in: 1 week
+    - kpt live apply $BUILD_ENV
+  environment:
+    name: $CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
+    url: http://$CI_PROJECT_NAME.$CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
+    on_stop: stop_review
+    auto_stop_in: 1 week
 
 
 # build_latest:                         # Build image with Kaniko
@@ -204,22 +172,21 @@ deploy for review:
 #       namespace: $PROD_NAMESPACE      # update to '$CI_PROJECT_NAME' if projects are independent
 
 
-# stop_review:                          # Stop review environment
-#   stage: cleanup
-#   extends: .feature_branch_rules
-#   script:
-#     - |
-#       kpt live destroy $BUILD_ENV
-#   environment:
-#     name: $DEV_CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
-#     kubernetes:
-#       namespace: $CI_COMMIT_REF_SLUG
-#     action: stop
-#   rules:
-#     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
-#       when: manual
-#   tags:
-#     - $DEV_CLUSTER_NAME
+stop_review:                          # Stop review environment
+  stage: cleanup
+  extends:
+    - .set_kubectl_context
+    - .feature_branch_rules
+  script:
+    - kpt live destroy $BUILD_ENV
+  environment:
+    name: $CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
+    action: stop
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
+      when: manual
+  tags:
+    - $CLUSTER_NAME
 
 
 
