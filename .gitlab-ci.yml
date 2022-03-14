@@ -79,7 +79,6 @@ deploy for review:
   script:
     - kpt live apply $BUILD_ENV
 
-
 # build_latest:                         # Build image with Kaniko
 #   stage: build
 #   variables:
@@ -87,7 +86,6 @@ deploy for review:
 #   extends:
 #     - .build_image
 #     - .main_branch_rules
-
 
 # deploy_latest:                        # Deploy `latest` image to staging cluster
 #   stage: deploy
