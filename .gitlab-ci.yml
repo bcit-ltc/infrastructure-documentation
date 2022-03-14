@@ -2,6 +2,8 @@
 
 # General Steps
 # 1. Gather info
+#   - determine if git tag exists; set env vars
+# 2. Build Image
 
 
 include:
@@ -47,7 +49,7 @@ hydrate deployment:
   needs:
   - job: prepare hydration
     artifacts: true
-    
+
 
 deployment check:
   stage: deploy
