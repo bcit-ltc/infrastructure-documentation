@@ -6,7 +6,6 @@
 # 3. Generate deployment package
 # 4. Deploy
 
-
 ## Include common scripts
 include:
   - project: 'deployments/build-scripts'
@@ -15,7 +14,6 @@ include:
     file: '.deploy.yml'
   - project: 'deployments/build-scripts'
     file: '.utilities.yml'
-
 
 stages:
   - gather info
