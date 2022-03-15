@@ -8,14 +8,12 @@
 
 ## Include common scripts
 include:
-  - project: 'deployments/build-scripts'
-    file: '.build.yml'
-  - project: 'deployments/build-scripts'
-    file: '.deploy.yml'
-  - project: 'deployments/build-scripts'
-    file: '.semantic-tag.yml'
-  - project: 'deployments/build-scripts'
-    file: '.utilities.yml'
+  - project: 'deployments/ci-config'
+    file: 
+      - '.build.yml'
+      - '.deploy.yml'
+      - '.semantic-tag.yml'
+      - '.utilities.yml'
 
 stages:
   - gather info
