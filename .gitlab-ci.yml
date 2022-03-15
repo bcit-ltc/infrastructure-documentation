@@ -104,6 +104,7 @@ include:
   - project: 'deployments/ci-config'
     file: 
       - '.build.yml'
+      - '.build-new.yml'
       - '.deploy.yml'
       - '.semantic-tag.yml'
       - '.utilities.yml'
