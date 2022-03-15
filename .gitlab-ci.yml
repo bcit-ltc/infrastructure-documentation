@@ -10,7 +10,11 @@
 ## Include common scripts
 include:
   - project: 'deployments/build-scripts'
-    file: '.gitlab-ci-template.yml'
+    file: '.build.yml'
+  - project: 'deployments/build-scripts'
+    file: '.deploy.yml'
+  - project: 'deployments/build-scripts'
+    file: '.utilities.yml'
 
 
 stages:
@@ -39,14 +43,19 @@ deploy review:
   stage: deploy
   variables:
     BUILD_ENV: dev
+    DEPLOY_HOST: CI_PROJECT_NAME.$CLUSTER_NAME.reviews.dev.ltc.bcit.ca
   extends:
-    - .deploy_review
-    - .set_gitlab_review_environment
+    - .deploy_package
     - .feature_branch_rules
   needs:
   - job: get environment
     artifacts: true
   - job: build review image
+  environment:
+    name: $CLUSTER_NAME/review/$CI_COMMIT_REF_SLUG
+    url: http://$CI_PROJECT_NAME.$CLUSTER_NAME.$DEV_HOST/$CI_COMMIT_REF_SLUG
+    on_stop: stop_review
+    auto_stop_in: 1 week
 
 
 ## Build main branch image and push to project registry
@@ -62,6 +71,7 @@ deploy latest:
   stage: deploy
   variables:
     BUILD_ENV: staging
+    DEPLOY_HOST: $STAGING_HOST/$CI_PROJECT_NAME
   secrets:
     TLS_CRT:
       vault: ssl-certificates/star-dev-ltc-bcit-ca-bundle.crt.base64@ltc-infrastructure
@@ -70,8 +80,7 @@ deploy latest:
       vault: ssl-certificates/star-dev-ltc-bcit-ca.key.base64@ltc-infrastructure
       file: false
   extends:
-    - .deploy_latest
-    - .set_gitlab_review_environment
+    - .deploy_package
     - .main_branch_rules
   needs:
   - job: get environment
@@ -171,6 +180,7 @@ deploy latest:
 #     kubernetes:
 #       namespace: $PROD_NAMESPACE      # update to '$CI_PROJECT_NAME' if projects are independent
 
+
 ## Removes deployment (and all assets in the namespace)
 stop_review:                          # Stop review environment
   stage: cleanup
@@ -178,6 +188,7 @@ stop_review:                          # Stop review environment
     BUILD_ENV: dev
   extends:
     - .stop_environment
+
 
 ## Pipeline variables
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
