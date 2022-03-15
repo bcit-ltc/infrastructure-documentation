@@ -79,10 +79,12 @@ semver_tag:
   # tags:
   #   - staging
 
-
 ## Deploy stable image (production)
-# - trigger production pipeline
-# - only run on new tag
+# - trigger production pipeline that:
+#   - unpacks trigger variables (CI_JOB_TOKEN, branch ref, image ref, target environment)
+#     eg. --form token=${CI_JOB_TOKEN} --form ref=main --form "variables[IMAGE_REF]=${IMAGE_REF}" --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
+#   - hydrates manifests
+#   - commits to registry (at `/manifests` path)
   # rules:
   #   - if: $CI_COMMIT_TAG
   # tags:
