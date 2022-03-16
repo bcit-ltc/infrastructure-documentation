@@ -8,8 +8,8 @@
 
 
 stages:
-  - gather info
   - analyze for tagging
+  - gather info
   - build
   - deploy
   - cleanup
@@ -44,7 +44,6 @@ deploy review package:
   needs:
   - job: get environment
     artifacts: true
-
 
 
 ## Removes deployment (and all assets in the namespace)
@@ -122,13 +121,14 @@ deploy:production:
   image: curlimages/curl:latest
   stage: deploy
   needs:
-    - job: build latest image
+    - job: get environment
       artifacts: true
   variables:
     MANIFEST_PROJECT_ID: 30770380
     TARGET_ENVIRONMENT: production
   script:
-  - 'curl --fail --request POST --form token=${CI_JOB_TOKEN} --form ref=main --form "variables[IMAGE_REF]=${IMAGE_REF}" --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
+  - echo "production deploy"
+  # - 'curl --fail --request POST --form token=${CI_JOB_TOKEN} --form ref=main --form "variables[IMAGE_REF]=${IMAGE_REF}" --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
   environment:
     name: production
   rules:
@@ -149,6 +149,8 @@ include:
 
 workflow:
   rules:
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
       when: never
