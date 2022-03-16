@@ -7,6 +7,28 @@
 # 4. Deploy
 
 
+## Include common scripts
+include:
+  - project: 'deployments/ci-config'
+    file: 
+      - '.build.yml'
+      - '.build-new.yml'
+      - '.deploy.yml'
+      - '.semantic-tag.yml'
+      - '.utilities.yml'
+  # - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
+
+
+workflow:
+  rules:
+    # - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
+    #   when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH'
+
+
 stages:
   - gather info
   - analyze for tagging
@@ -28,12 +50,7 @@ build review image:
     - .build_new
   tags:
     - $CLUSTER_NAME
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"'
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
+
 
 ## Deploy feat/fix branch package
 deploy review package:
@@ -48,12 +65,17 @@ deploy review package:
   needs:
   - job: get environment
     artifacts: true
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"'
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
+
+
+## Removes deployment (and all assets in the namespace)
+stop_review:                          # Stop review environment
+  stage: cleanup
+  variables:
+    BUILD_ENV: dev
+    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
+  extends:
+    - .undeploy_review_package
+
 
 
 ## Build main branch image and push to project registry
@@ -64,28 +86,31 @@ build latest image:
   tags:
     - staging
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never
 
-## Run Semantic Release
-# semver_tag:
-#   stage: analyze for tagging
-#   extends: 
-#     - .semantic_release
-#   secrets:
-#     GITLAB_TOKEN:
-#       vault: dependabot-$CI_PROJECT_NAME/token@tokens
-#       file: false
-#   script:
-#     - "semantic-release \
-#         --branches main \
-#         --repository-url $CI_PROJECT_URL \
-#         --plugins '@semantic-release/commit-analyzer, \
-#           @semantic-release/release-notes-generator, \
-#           @semantic-release/gitlab'"
-#   tags:
-#     - staging
 
+# Run Semantic Release
+semver_tag:
+  stage: analyze for tagging
+  extends: 
+    - .semantic_release
+  secrets:
+    GITLAB_TOKEN:
+      vault: dependabot-$CI_PROJECT_NAME/token@tokens
+      file: false
+  script:
+    - "semantic-release \
+        --branches main \
+        --repository-url $CI_PROJECT_URL \
+        --plugins '@semantic-release/commit-analyzer, \
+          @semantic-release/release-notes-generator, \
+          @semantic-release/gitlab'"
+  tags:
+    - staging
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
 
 ## Deploy latest image (staging)
 # - trigger staging pipeline in deployments/{projectName}/staging
@@ -102,38 +127,6 @@ build latest image:
   #   - if: $CI_COMMIT_TAG
   # tags:
   #   - production
-
-
-## Removes deployment (and all assets in the namespace)
-stop_review:                          # Stop review environment
-  stage: cleanup
-  variables:
-    BUILD_ENV: dev
-    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
-  extends:
-    - .undeploy_review_package
-
-
-## Include common scripts
-include:
-  - project: 'deployments/ci-config'
-    file: 
-      - '.build.yml'
-      - '.build-new.yml'
-      - '.deploy.yml'
-      - '.semantic-tag.yml'
-      - '.utilities.yml'
-  - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
-
-
-# workflow:
-#   rules:
-#     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
-#       when: never
-#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-#     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
-#       when: never
-#     - if: '$CI_COMMIT_BRANCH'
 
 
 ## Pipeline variables
