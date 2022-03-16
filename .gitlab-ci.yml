@@ -65,7 +65,7 @@ build latest image:
     - staging
   rules:
     - if: '$CI_COMMIT_REF_SLUG == "main"'
-    - if: '$CI_PIPELINE_SOURCE != "push"'
+    - if: '$CI_PIPELINE_SOURCE == "push"'
       when: never
 
 ## Run Semantic Release
@@ -124,16 +124,17 @@ include:
       - '.deploy.yml'
       - '.semantic-tag.yml'
       - '.utilities.yml'
+  - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
 
 
-workflow:
-  rules:
-    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
-      when: never
-    - if: '$CI_COMMIT_BRANCH'
+# workflow:
+#   rules:
+#     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
+#       when: never
+#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+#     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+#       when: never
+#     - if: '$CI_COMMIT_BRANCH'
 
 
 ## Pipeline variables
