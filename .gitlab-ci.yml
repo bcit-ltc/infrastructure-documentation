@@ -22,49 +22,28 @@ get environment:
 
 
 ## Build feat/fix branch image and push to project registry
-build review image:
+build image:
   stage: build
   extends:
     - .build_image
-    - .review_rules
   tags:
     - $CLUSTER_NAME
 
 
-## Deploy feat/fix branch package
-deploy review package:
-  stage: deploy
-  variables:
-    BUILD_ENV: dev
-    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
-    DEPLOY_HOST: $CI_PROJECT_NAME.$CLUSTER_NAME.reviews.dev.ltc.bcit.ca
-  extends:
-    - .deploy_review_package
-    - .set_review_environment
-    - .review_rules
-  needs:
-  - job: get environment
-    artifacts: true
-
-
-## Removes deployment (and all assets in the namespace)
-stop_review:                          # Stop review environment
-  stage: cleanup
-  variables:
-    BUILD_ENV: dev
-    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
-  extends:
-    - .undeploy_review_package
-
 
 ## Build main branch image and push to project registry
-build latest image:
-  stage: build
-  extends:
-    - .build_image
-    - .build_latest_rules
-  tags:
-    - staging
+# build latest image:
+#   stage: build
+#   extends:
+#     - .build_image
+#   tags:
+#     - $CLUSTER_NAME
+#   rules:
+#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
+#       when: never
+#     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+#       when: never
+#     - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
 
 
 # Run Semantic Release
@@ -143,6 +122,33 @@ deploy:production:
     - if: '$CI_COMMIT_TAG'
   tags:
     - production
+
+
+
+## Deploy feat/fix branch package
+deploy review package:
+  stage: deploy
+  variables:
+    BUILD_ENV: dev
+    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
+    DEPLOY_HOST: $CI_PROJECT_NAME.$CLUSTER_NAME.reviews.dev.ltc.bcit.ca
+  extends:
+    - .deploy_review_package
+    - .set_review_environment
+    - .review_rules
+  needs:
+  - job: get environment
+    artifacts: true
+
+
+## Removes deployment (and all assets in the namespace)
+stop_review:                          # Stop review environment
+  stage: cleanup
+  variables:
+    BUILD_ENV: dev
+    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
+  extends:
+    - .undeploy_review_package
 
 
 ## Include common scripts
