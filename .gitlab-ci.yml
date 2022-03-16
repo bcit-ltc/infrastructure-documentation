@@ -20,8 +20,6 @@ include:
 
 workflow:
   rules:
-    # - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
-    #   when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
       when: never
@@ -49,6 +47,12 @@ build review image:
     - .build_image
   tags:
     - $CLUSTER_NAME
+  # rules:
+  #   - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"'
+  #     when: never
+  #   - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
+  #     when: never
+  #   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
 
 
 ## Deploy feat/fix branch package
@@ -64,6 +68,13 @@ deploy review package:
   needs:
   - job: get environment
     artifacts: true
+  # rules:
+  #   - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"'
+  #     when: never
+  #   - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
+  #     when: never
+  #   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
+
 
 
 ## Removes deployment (and all assets in the namespace)
@@ -85,9 +96,9 @@ build latest image:
   tags:
     - staging
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
       when: never
-
 
 # Run Semantic Release
 semver_tag:
@@ -108,8 +119,12 @@ semver_tag:
   tags:
     - staging
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
       when: never
+  #   - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  #     when: never
+  #   - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
 
 ## Deploy latest image (staging)
 # - trigger staging pipeline in deployments/{projectName}/staging
@@ -132,7 +147,7 @@ semver_tag:
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
   DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
-  DEPLOYMENT_PACKAGE_VERSION: "v0.2"
+  DEPLOYMENT_PACKAGE_VERSION: "v0.3"
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
   GIT_FETCH_EXTRA_FLAGS: "--tags"
