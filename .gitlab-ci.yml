@@ -1,6 +1,5 @@
 # Default LTC GitLab CI/CD Pipeline
 
-
 ## General Steps
 # 1. Gather info
 # 2. Build Image
