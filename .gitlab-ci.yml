@@ -97,7 +97,7 @@ build latest image:
     - staging
   rules:
     - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
-    - if: '$CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
       when: never
 
 # Run Semantic Release
