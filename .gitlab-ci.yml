@@ -46,7 +46,6 @@ deploy review package:
     artifacts: true
 
 
-
 ## Removes deployment (and all assets in the namespace)
 stop_review:                          # Stop review environment
   stage: cleanup
