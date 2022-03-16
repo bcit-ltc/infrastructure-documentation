@@ -64,7 +64,9 @@ build latest image:
   tags:
     - staging
   rules:
-    - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_REF_SLUG == "main"'
+    - if: '$CI_PIPELINE_SOURCE != "push"'
+      when: never
 
 ## Run Semantic Release
 # semver_tag:
