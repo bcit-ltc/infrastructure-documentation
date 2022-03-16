@@ -81,6 +81,7 @@ semver_tag:
   script:
     - "semantic-release \
         --branches main \
+        --debug \
         --repository-url $CI_PROJECT_URL \
         --plugins '@semantic-release/commit-analyzer, \
           @semantic-release/release-notes-generator, \
