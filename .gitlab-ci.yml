@@ -55,23 +55,23 @@ build latest image:
 
 
 ## Run Semantic Release
-semver_tag:
-  stage: analyze for tagging
-  extends: 
-    - .semantic_release
-  secrets:
-    GITLAB_TOKEN:
-      vault: dependabot-$CI_PROJECT_NAME/token@tokens
-      file: false
-  script:
-    - "semantic-release \
-        --branches main \
-        --repository-url $CI_PROJECT_URL \
-        --plugins '@semantic-release/commit-analyzer, \
-          @semantic-release/release-notes-generator, \
-          @semantic-release/gitlab'"
-  tags:
-    - staging
+# semver_tag:
+#   stage: analyze for tagging
+#   extends: 
+#     - .semantic_release
+#   secrets:
+#     GITLAB_TOKEN:
+#       vault: dependabot-$CI_PROJECT_NAME/token@tokens
+#       file: false
+#   script:
+#     - "semantic-release \
+#         --branches main \
+#         --repository-url $CI_PROJECT_URL \
+#         --plugins '@semantic-release/commit-analyzer, \
+#           @semantic-release/release-notes-generator, \
+#           @semantic-release/gitlab'"
+#   tags:
+#     - staging
 
 
 ## Deploy latest image (staging)
@@ -124,10 +124,9 @@ workflow:
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
   DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/$BUILD_ENV
-  DEPLOYMENT_PACKAGE_VERSION: "v0.6"
+  DEPLOYMENT_PACKAGE_VERSION: "v0.1"
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
-  VAULT_AUTH_ROLE: "dependabot-documentation"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
-  # VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
+  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
   KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
