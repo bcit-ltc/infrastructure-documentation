@@ -84,6 +84,7 @@ semver_tag:
         --repository-url $CI_PROJECT_URL \
         --plugins '@semantic-release/commit-analyzer, \
           @semantic-release/release-notes-generator, \
+          @semantic-release/git, \
           @semantic-release/gitlab'"
   tags:
     - staging
