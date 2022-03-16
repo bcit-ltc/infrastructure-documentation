@@ -64,7 +64,6 @@ build latest image:
   tags:
     - staging
   rules:
-    - if: '$CI_COMMIT_REF_SLUG == "main"'
     - if: '$CI_PIPELINE_SOURCE == "push"'
       when: never
 
