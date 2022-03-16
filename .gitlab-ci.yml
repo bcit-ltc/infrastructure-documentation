@@ -8,8 +8,8 @@
 
 
 stages:
-  - gather info
   - analyze for tagging
+  - gather info
   - build
   - deploy
   - cleanup
