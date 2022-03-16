@@ -126,7 +126,7 @@ deploy:production:
 
 
 ## Deploy feat/fix branch package
-deploy review package:
+.deploy review package:
   stage: deploy
   variables:
     BUILD_ENV: dev
@@ -135,10 +135,14 @@ deploy review package:
   extends:
     - .deploy_review_package
     - .set_review_environment
-    - .review_rules
   needs:
   - job: get environment
     artifacts: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
+
 
 
 ## Removes deployment (and all assets in the namespace)
