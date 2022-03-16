@@ -8,9 +8,9 @@
 
 
 stages:
-  - analyze for tagging
   - gather info
   - build
+  - analyze for tagging
   - deploy
   - cleanup
 
@@ -26,6 +26,7 @@ build review image:
   stage: build
   extends:
     - .build_image
+    - .review_rules
   tags:
     - $CLUSTER_NAME
 
