@@ -16,7 +16,6 @@ include:
       - '.deploy.yml'
       - '.semantic-tag.yml'
       - '.utilities.yml'
-  # - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
 
 
 workflow:
@@ -47,7 +46,7 @@ get environment:
 build review image:
   stage: build
   extends:
-    - .build_new
+    - .build_image
   tags:
     - $CLUSTER_NAME
 
@@ -82,7 +81,7 @@ stop_review:                          # Stop review environment
 build latest image:
   stage: build
   extends:
-    - .build_new
+    - .build_image
   tags:
     - staging
   rules:
