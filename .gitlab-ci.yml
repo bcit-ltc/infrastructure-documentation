@@ -44,11 +44,11 @@ deploy review package:
   - job: get environment
     artifacts: true
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
       when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
 
 
 ## Removes deployment (and all assets in the namespace)
@@ -69,9 +69,9 @@ build latest image:
   tags:
     - staging
   rules:
-    - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
       when: never
+    - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
 
 
 # Run Semantic Release
@@ -93,9 +93,9 @@ semver_tag:
   tags:
     - staging
   rules:
-    - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
     - if: '$CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
       when: never
+    - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
 
 
 ## Deploy latest image (staging)
