@@ -1,11 +1,14 @@
 # Default LTC GitLab CI/CD Pipeline
-
-## General Steps
-# 1. Gather info
-# 2. Build Image
-# 3. Generate deployment package
-# 4. Deploy
-
+#
+## Requirements
+#   - run `project-init.sh` to generate GitLab Project Access Token and configure Vault
+#   - `Dockerfile` in project root
+#
+## General Pipeline Steps
+#   1. Gather info
+#   2. Build Image
+#   3. Hydrate deployment package
+#   4. Deploy package
 
 stages:
   - analyze for new tag
@@ -15,26 +18,23 @@ stages:
   - cleanup
 
 
-# Determine if a new tag is required
+## Determine if a new git tag is required
 semver tag:
   stage: analyze for new tag
   extends: 
     - .semantic_release
     - .semantic_release_rules
+  # Retrieve token from Vault
   secrets:
     GITLAB_TOKEN:
       vault: dependabot-$CI_PROJECT_NAME/token@tokens
       file: false
-  tags:
-    - $CLUSTER_NAME
 
 
 ## Determine if there are existing git tags
 get tags:
   stage: gather existing tag info
   extends: .get_tags
-  tags:
-    - $CLUSTER_NAME
 
 
 ## Build feat/fix branch image and push to project registry
@@ -42,59 +42,23 @@ build image:
   stage: build
   extends:
     - .build_image
-  tags:
-    - $CLUSTER_NAME
 
 
 ## Deploy feat/fix branch package
 deploy review package:
   stage: deploy
-  variables:
-    BUILD_ENV: dev
-    DEPLOY_HOST: $CI_PROJECT_NAME.$CLUSTER_NAME.reviews.dev.ltc.bcit.ca
-    DEPLOY_NAMESPACE: generic-dev
-    # DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
-    DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/generic-dev.git/packages/$BUILD_ENV
-    # DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
-    # DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
   extends:
     - .deploy_review_package
     - .deploy_review_package_rules
-  needs:
-  - job: get tags
-    artifacts: true
-  environment:
-    name: ${CLUSTER_NAME}/review/${CI_COMMIT_REF_SLUG}
-    url: http://${CI_PROJECT_NAME}.${CLUSTER_NAME}.${DEV_HOST}/${CI_COMMIT_REF_SLUG}
-    on_stop: stop_review
-    auto_stop_in: 1 week
-  tags:
-    - ${CLUSTER_NAME}
+    - .deploy_review_environment
 
 
 ## Removes deployment (and all assets in the namespace)
-stop_review:
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
+stop review:
   stage: cleanup
-  variables:
-    BUILD_ENV: dev
-    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
-    # Ensure `stop review` has inventory
-    STOP: "true"
-    GIT_STRATEGY: none
   extends:
-    # - .undeploy_review
+    - .undeploy_review
     - .undeploy_review_rules
-  script:
-    - kpt pkg get ${DEPLOYMENT_PACKAGE_URL}/@${DEPLOYMENT_PACKAGE_VERSION} ${BUILD_ENV}
-    - !reference [.check_inventory, script]
-    - !reference [.debug-env-vars, script]
-    - kpt live destroy ${BUILD_ENV}
-  environment:
-    name: ${CLUSTER_NAME}/review/${CI_COMMIT_REF_SLUG}
-    action: stop
-  tags:
-    - ${CLUSTER_NAME}
 
 
 ## Deploy latest image (staging)
@@ -135,7 +99,7 @@ deploy:production:
     - job: get tags
       artifacts: true
   variables:
-    MANIFEST_PROJECT_ID: 30770380
+    MANIFEST_PROJECT_ID: 338
     TARGET_ENVIRONMENT: production
   script:
   - echo "production deploy"
@@ -148,39 +112,57 @@ deploy:production:
     - production
 
 
-
-
-
-
-
-
-
+#
+#
+#
+  # ---------- Pipeline configuration ----------
+#
+#
+#
+variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
+  CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
+  # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
+  GENERIC_DEPLOYMENT: ""  # options: true, anything else!
+  #
+  #   - if GENERIC_DEPLOYMENT="*", the pipeline expects a deployment package to exist. Create a deployment package and
+  #       configure the pipeline with the package version.
+  #
+  #   - see https://infrastructure-documentation.dev.ltc.bcit.ca/ for info.
+  #
+  DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
+#
+#
+#
+  # ---------- It's generally bad to change anything below here ----------
+#
+#
+#
+## Other common pipeline variables
+  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
+  GIT_FETCH_EXTRA_FLAGS: "--tags"
+  PIPELINE_DEBUG: "true"
+  KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
 
 ## Include common scripts
 include:
   - project: 'deployments/ci-config'
     file: 
-      - '.semver-tag.yml'
-      - '.get-tags.yml'
       - '.build.yml'
       - '.deploy.yml'
+      - '.get-tags.yml'
       - '.rules.yml'
+      - '.semver-tag.yml'
 
+## Specify which runner should pick up pipeline jobs
+default:
+  tags:
+    - ${CLUSTER_NAME}
 
+## Configure merge request pipelines
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"'
       when: never
     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG'
-
-
-## Pipeline variables
-variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
-  CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
-  # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
-  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
-  GIT_FETCH_EXTRA_FLAGS: "--tags"
-  PIPELINE_DEBUG: "true"
-  KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
