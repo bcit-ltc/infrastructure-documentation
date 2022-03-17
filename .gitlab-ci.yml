@@ -81,7 +81,7 @@ stop_review:
     STOP: "true"
     GIT_STRATEGY: none
   extends:
-    - .undeploy_review
+    # - .undeploy_review
     - .undeploy_review_rules
   script:
     - kpt pkg get ${DEPLOYMENT_PACKAGE_URL}/@${DEPLOYMENT_PACKAGE_VERSION} ${BUILD_ENV}
