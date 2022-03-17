@@ -25,16 +25,12 @@ semver tag:
     GITLAB_TOKEN:
       vault: dependabot-$CI_PROJECT_NAME/token@tokens
       file: false
-  tags:
-    - $CLUSTER_NAME
 
 
 ## Determine if there are existing git tags
 get tags:
   stage: gather existing tag info
   extends: .get_tags
-  tags:
-    - $CLUSTER_NAME
 
 
 ## Build feat/fix branch image and push to project registry
@@ -42,8 +38,6 @@ build image:
   stage: build
   extends:
     - .build_image
-  tags:
-    - $CLUSTER_NAME
 
 
 ## Deploy feat/fix branch package
@@ -51,48 +45,26 @@ deploy review package:
   stage: deploy
   variables:
     BUILD_ENV: dev
-    DEPLOY_HOST: $CI_PROJECT_NAME.$CLUSTER_NAME.reviews.dev.ltc.bcit.ca
-    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
-
-    IMAGE_TAG: "latest"
-    DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/generic-dev.git/packages/$BUILD_ENV
+    GENERIC_DEPLOYMENT: "true"
+    #
+    # Otherwise, create a deployment package and configure the following:
+    #
     # DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
     # DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
   extends:
     - .deploy_review_package
     - .deploy_review_package_rules
     - .deploy_review_environment
-  # needs:
-  # - job: get tags
-  #   artifacts: true
-  tags:
-    - ${CLUSTER_NAME}
 
 
 ## Removes deployment (and all assets in the namespace)
 stop_review:
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
   stage: cleanup
   variables:
     BUILD_ENV: dev
-
-    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
-    # Ensure `stop review` has inventory
-    STOP: "true"
-    GIT_STRATEGY: none
   extends:
-    # - .undeploy_review
+    - .undeploy_review
     - .undeploy_review_rules
-  script:
-    - kpt pkg get ${DEPLOYMENT_PACKAGE_URL}${DEPLOYMENT_PACKAGE_VERSION} ${BUILD_ENV}
-    - !reference [.check_inventory, script]
-    - !reference [.debug-env-vars, script]
-    - kpt live destroy ${BUILD_ENV}
-  environment:
-    name: ${CLUSTER_NAME}/review/${CI_COMMIT_REF_SLUG}
-    action: stop
-  tags:
-    - ${CLUSTER_NAME}
 
 
 ## Deploy latest image (staging)
@@ -160,6 +132,9 @@ include:
       - '.deploy.yml'
       - '.rules.yml'
 
+default:
+  tags:
+    - ${CLUSTER_NAME}
 
 workflow:
   rules:
