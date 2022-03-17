@@ -6,7 +6,6 @@
 # 3. Hydrate deployment package
 # 4. Deploy package
 
-
 stages:
   - analyze for new tag
   - gather existing tag info
@@ -51,7 +50,7 @@ deploy review package:
 
 
 ## Removes deployment (and all assets in the namespace)
-stop_review:
+stop review:
   stage: cleanup
   extends:
     - .undeploy_review
@@ -109,15 +108,43 @@ deploy:production:
     - production
 
 
-## Include common scripts
+
+
+
+## Pipeline configuration
+#
+#
+variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
+  CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
+  # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
+  GENERIC_DEPLOYMENT: "true"      # options: true, anything else!
+  #
+  # Otherwise, create a deployment package and configure the following:
+  #
+  # DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
+  # DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
+  #
+#
+#
+#
+  # ---------- Don't change below here ----------
+#
+#
+#
+  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
+  GIT_FETCH_EXTRA_FLAGS: "--tags"
+  PIPELINE_DEBUG: "true"
+  KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
+
+  ## Include common scripts
 include:
   - project: 'deployments/ci-config'
     file: 
-      - '.semver-tag.yml'
-      - '.get-tags.yml'
       - '.build.yml'
       - '.deploy.yml'
+      - '.get-tags.yml'
       - '.rules.yml'
+      - '.semver-tag.yml'
 
 default:
   tags:
@@ -130,20 +157,3 @@ workflow:
     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG'
-
-
-## Pipeline variables
-variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
-  CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
-  BUILD_ENV: dev
-  # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
-  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
-  GIT_FETCH_EXTRA_FLAGS: "--tags"
-  PIPELINE_DEBUG: "true"
-  KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
-  GENERIC_DEPLOYMENT: "true"
-  #
-  # Otherwise, create a deployment package and configure the following:
-  #
-  # DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
-  # DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
