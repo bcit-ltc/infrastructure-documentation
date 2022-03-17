@@ -16,7 +16,7 @@ stages:
 
 
 # Run Semantic Release
-semver_tag:
+semver tag:
   stage: analyze for new tag
   variables:
     GIT_AUTHOR_NAME: $GITLAB_USER_LOGIN
@@ -38,18 +38,19 @@ semver_tag:
           @semantic-release/release-notes-generator, \
           @semantic-release/gitlab'"
   tags:
-    - staging
+    - $CLUSTER_NAME
   rules:
     - if: '$CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
       when: never
     - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
 
 
-
 ## Determine existing git tags
 get tags:
   stage: gather existing tag info
-  extends: .get_version
+  extends: .get_tags
+  tags:
+    - $CLUSTER_NAME
 
 
 ## Build feat/fix branch image and push to project registry
@@ -68,6 +69,8 @@ deploy review package:
     BUILD_ENV: dev
     DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
     DEPLOY_HOST: $CI_PROJECT_NAME.$CLUSTER_NAME.reviews.dev.ltc.bcit.ca
+    DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
+    DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
   extends:
     - .deploy_review_package
     - .set_review_environment
@@ -78,6 +81,8 @@ deploy review package:
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
+  tags:
+    - ${CLUSTER_NAME}
 
 
 ## Build main branch image and push to project registry
@@ -93,8 +98,6 @@ deploy review package:
 #     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
 #       when: never
 #     - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
-
-
 
 
 ## Deploy latest image (staging)
@@ -156,16 +159,18 @@ stop_review:                          # Stop review environment
     DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
   extends:
     - .undeploy_review_package
+  tags:
+    - ${CLUSTER_NAME}
 
 
 ## Include common scripts
 include:
   - project: 'deployments/ci-config'
     file: 
+      - '.semver-tag.yml'
+      - '.get-tags.yml'
       - '.build.yml'
       - '.deploy.yml'
-      - '.semantic-tag.yml'
-      - '.utilities.yml'
       - '.rules.yml'
 
 
@@ -181,8 +186,6 @@ workflow:
 ## Pipeline variables
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
-  DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
-  DEPLOYMENT_PACKAGE_VERSION: "v0.3"
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
   GIT_FETCH_EXTRA_FLAGS: "--tags"
