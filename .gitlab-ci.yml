@@ -17,6 +17,7 @@ stages:
 
 # Run Semantic Release
 semver tag:
+  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/semantic-release
   stage: analyze for new tag
   variables:
     GIT_AUTHOR_NAME: $GITLAB_USER_LOGIN
