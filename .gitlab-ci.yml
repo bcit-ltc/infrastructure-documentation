@@ -3,8 +3,8 @@
 ## General Steps
 # 1. Gather info
 # 2. Build Image
-# 3. Generate deployment package
-# 4. Deploy
+# 3. Hydrate deployment package
+# 4. Deploy package
 
 
 stages:
@@ -44,13 +44,6 @@ build image:
 ## Deploy feat/fix branch package
 deploy review package:
   stage: deploy
-  variables:
-    GENERIC_DEPLOYMENT: "true"
-    #
-    # Otherwise, create a deployment package and configure the following:
-    #
-    # DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
-    # DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
   extends:
     - .deploy_review_package
     - .deploy_review_package_rules
@@ -140,11 +133,17 @@ workflow:
 
 
 ## Pipeline variables
-variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
-  CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
+variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
+  CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
   BUILD_ENV: dev
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
-  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
+  VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
   KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:gitlab-kubernetes-agent"
+  GENERIC_DEPLOYMENT: "true"
+  #
+  # Otherwise, create a deployment package and configure the following:
+  #
+  # DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
+  # DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
