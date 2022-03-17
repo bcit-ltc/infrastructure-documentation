@@ -95,11 +95,7 @@ stop review:
 deploy:production:
   image: curlimages/curl:latest
   stage: deploy
-  needs:
-    - job: get tags
-      artifacts: true
   variables:
-    MANIFEST_PROJECT_ID: 338
     TARGET_ENVIRONMENT: production
   script:
   - echo "production deploy"
@@ -115,7 +111,7 @@ deploy:production:
 #
 #
 #
-  # ---------- Pipeline configuration ----------
+## ---------- Pipeline configuration ----------
 #
 #
 #
@@ -130,10 +126,11 @@ variables:                    # other global variables are set in GitLab Admin: 
   #   - see https://infrastructure-documentation.dev.ltc.bcit.ca/ for info.
   #
   DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
+  DEPLOYMENT_PACKAGE_PROJECT_ID: 338
 #
 #
 #
-  # ---------- It's generally bad to change anything below here ----------
+## ---------- It's generally bad to change anything below here ----------
 #
 #
 #
