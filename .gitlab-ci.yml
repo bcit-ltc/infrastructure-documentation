@@ -110,8 +110,8 @@ deploy:production:
 
 
 
-
-## Pipeline configuration
+#
+  # ---------- Pipeline configuration ----------
 #
 #
 variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
