@@ -118,7 +118,6 @@ deploy:production:
     - production
 
 
-
 ## Include common scripts
 include:
   - project: 'deployments/ci-config'
