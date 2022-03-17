@@ -63,47 +63,55 @@ stop review:
 
 ## Deploy latest image (staging)
 # - trigger staging pipeline in deployments/{projectName}/staging
-  # tags:
-  #   - staging
-# deploy staging:
-#   image: curlimages/curl:latest
-#   stage: deploy
-#   needs:
-#     - job: build latest image
-#       artifacts: true
-#   variables:
-#     MANIFEST_PROJECT_ID: 30770380
-#     TARGET_ENVIRONMENT: staging
-#   script:
-#   - printenv
-#   - 'curl --fail --request POST --form token=${CI_JOB_TOKEN} --form ref=main --form "variables[IMAGE_REF]=${IMAGE_REF}" --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
-#   environment:
-#     name: staging
+deploy to staging:
+  image: curlimages/curl:latest
+  stage: deploy
+  variables:
+    TARGET_ENVIRONMENT: staging
+  extends:
+    - .deploy_staging_rules
+  script:
+  - echo "staging deploy"
+  - printenv
+  # - 'curl \
+  #     --fail \
+  #     --request POST \
+  #     --form token=${CI_JOB_TOKEN} \
+  #     --form ref=main \
+  #     --form "variables[IMAGE_REF]=${IMAGE_REF}" \
+  #     --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" \
+  #     "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
+  environment:
+    name: staging
+  tags:
+    - staging
 
 
 ## Deploy stable image (production)
 # - trigger production pipeline that:
 #   - unpacks trigger variables (CI_JOB_TOKEN, branch ref, image ref, target environment)
-#     eg. --form token=${CI_JOB_TOKEN} --form ref=main --form "variables[IMAGE_REF]=${IMAGE_REF}" --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
 #   - hydrates manifests
-#   - commits to registry (at `/releases` path)
-  # rules:
-  #   - if: $CI_COMMIT_TAG
-  # tags:
-  #   - production
-  
-deploy:production:
+#   - commits to registry (at `/releases` path)  
+deploy to production:
   image: curlimages/curl:latest
   stage: deploy
   variables:
     TARGET_ENVIRONMENT: production
+  extends:
+    - .deploy_prod_rules
   script:
   - echo "production deploy"
-  # - 'curl --fail --request POST --form token=${CI_JOB_TOKEN} --form ref=main --form "variables[IMAGE_REF]=${IMAGE_REF}" --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
+  - printenv
+  # - 'curl \
+  #     --fail \
+  #     --request POST \
+  #     --form token=${CI_JOB_TOKEN} \
+  #     --form ref=main \
+  #     --form "variables[IMAGE_REF]=${IMAGE_REF}" \
+  #     --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" \
+  #     "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
   environment:
     name: production
-  rules:
-    - if: '$CI_COMMIT_TAG'
   tags:
     - production
 
