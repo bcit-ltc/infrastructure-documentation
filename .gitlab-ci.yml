@@ -89,6 +89,7 @@ deploy to staging:
     - staging
 
 
+
 ## Deploy stable image (production)
 # - trigger production pipeline that:
 #   - unpacks trigger variables (CI_JOB_TOKEN, branch ref, image ref, target environment)
