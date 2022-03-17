@@ -21,6 +21,7 @@ semver tag:
   extends: 
     - .semantic_release
     - .semantic_release_rules
+  # Retrieve token from Vault
   secrets:
     GITLAB_TOKEN:
       vault: dependabot-$CI_PROJECT_NAME/token@tokens
