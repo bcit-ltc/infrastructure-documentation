@@ -105,7 +105,7 @@ deploy:production:
     - job: get tags
       artifacts: true
   variables:
-    MANIFEST_PROJECT_ID: 30770380
+    MANIFEST_PROJECT_ID: 338
     TARGET_ENVIRONMENT: production
   script:
   - echo "production deploy"
