@@ -16,7 +16,7 @@ stages:
 
 
 # Run Semantic Release
-semver_tag:
+semver tag:
   stage: analyze for new tag
   variables:
     GIT_AUTHOR_NAME: $GITLAB_USER_LOGIN
@@ -48,7 +48,7 @@ semver_tag:
 ## Determine existing git tags
 get tags:
   stage: gather existing tag info
-  extends: .get_version
+  extends: .get_tags
   tags:
     - $CLUSTER_NAME
 
@@ -169,10 +169,10 @@ stop_review:                          # Stop review environment
 include:
   - project: 'deployments/ci-config'
     file: 
+      - '.semver-tag.yml'
+      - '.get-tags.yml'
       - '.build.yml'
       - '.deploy.yml'
-      - '.semantic-tag.yml'
-      - '.utilities.yml'
       - '.rules.yml'
 
 
