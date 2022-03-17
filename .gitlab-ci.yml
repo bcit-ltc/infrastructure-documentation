@@ -15,38 +15,21 @@ stages:
   - cleanup
 
 
-# Run Semantic Release
+# Determine if a new tag is required
 semver tag:
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/semantic-release
   stage: analyze for new tag
-  variables:
-    GIT_AUTHOR_NAME: $GITLAB_USER_LOGIN
-    GIT_AUTHOR_EMAIL: $GITLAB_USER_EMAIL
-    GIT_COMMITTER_NAME: $GITLAB_USER_LOGIN
-    GIT_COMMITTER_EMAIL: $GITLAB_USER_EMAIL
   extends: 
     - .semantic_release
+    - .semantic_release_rules
   secrets:
     GITLAB_TOKEN:
       vault: dependabot-$CI_PROJECT_NAME/token@tokens
       file: false
-  script:
-    - "semantic-release \
-        --branches main \
-        --debug \
-        --repository-url $CI_PROJECT_URL \
-        --plugins '@semantic-release/commit-analyzer, \
-          @semantic-release/release-notes-generator, \
-          @semantic-release/gitlab'"
   tags:
     - $CLUSTER_NAME
-  rules:
-    - if: '$CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
-      when: never
-    - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
 
 
-## Determine existing git tags
+## Determine if there are existing git tags
 get tags:
   stage: gather existing tag info
   extends: .get_tags
@@ -74,31 +57,42 @@ deploy review package:
     DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
   extends:
     - .deploy_review_package
-    - .set_review_environment
+    - .deploy_review_package_rules
   needs:
   - job: get tags
     artifacts: true
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"'
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
+  environment:
+    name: ${CLUSTER_NAME}/review/${CI_COMMIT_REF_SLUG}
+    url: http://${CI_PROJECT_NAME}.${CLUSTER_NAME}.${DEV_HOST}/${CI_COMMIT_REF_SLUG}
+    on_stop: stop_review
+    auto_stop_in: 1 week
   tags:
     - ${CLUSTER_NAME}
 
 
-## Build main branch image and push to project registry
-# build latest image:
-#   stage: build
-#   extends:
-#     - .build_image
-#   tags:
-#     - $CLUSTER_NAME
-#   rules:
-#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_MERGE_REQUEST_EVENT_TYPE == "detached"'
-#       when: never
-#     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
-#       when: never
-#     - if: '$CI_COMMIT_REF_SLUG == "main" && $CI_PIPELINE_SOURCE == "push"'
+## Removes deployment (and all assets in the namespace)
+stop_review:
+  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker
+  stage: cleanup
+  variables:
+    BUILD_ENV: dev
+    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
+    # Ensure `stop review` has inventory
+    STOP: "true"
+    GIT_STRATEGY: none
+  extends:
+    - .undeploy_review
+    - .undeploy_review_rules
+  script:
+    - kpt pkg get ${DEPLOYMENT_PACKAGE_URL}/@${DEPLOYMENT_PACKAGE_VERSION} ${BUILD_ENV}
+    - !reference [.check_inventory, script]
+    - !reference [.debug-env-vars, script]
+    - kpt live destroy ${BUILD_ENV}
+  environment:
+    name: ${CLUSTER_NAME}/review/${CI_COMMIT_REF_SLUG}
+    action: stop
+  tags:
+    - ${CLUSTER_NAME}
 
 
 ## Deploy latest image (staging)
@@ -152,16 +146,12 @@ deploy:production:
     - production
 
 
-## Removes deployment (and all assets in the namespace)
-stop_review:                          # Stop review environment
-  stage: cleanup
-  variables:
-    BUILD_ENV: dev
-    DEPLOY_NAMESPACE: $CI_COMMIT_REF_SLUG
-  extends:
-    - .undeploy_review_package
-  tags:
-    - ${CLUSTER_NAME}
+
+
+
+
+
+
 
 
 ## Include common scripts
