@@ -116,12 +116,12 @@ deploy:production:
 variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
-  GENERIC_DEPLOYMENT: "true"      # options: true, anything else!
+  GENERIC_DEPLOYMENT: ""  # options: true, anything else!
+  #   - if GENERIC_DEPLOYMENT="*", the pipeline expects a deployment package to exist. Create a deployment package and
+  #       configure the pipeline with the package version.
+  #   - see https://infrastructure-documentation.dev.ltc.bcit.ca/ for info.
   #
-  # Otherwise, create a deployment package and configure the following:
-  #
-  # DEPLOYMENT_PACKAGE_URL: https://gitlab-ci-token:$CI_JOB_TOKEN@$CI_SERVER_HOST/deployments/$CI_PROJECT_NAME.git/packages/$BUILD_ENV
-  # DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
+  DEPLOYMENT_PACKAGE_VERSION: "@v0.3"
   #
 #
 #
