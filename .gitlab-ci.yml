@@ -61,14 +61,10 @@ deploy review package:
   extends:
     - .deploy_review_package
     - .deploy_review_package_rules
-  needs:
-  - job: get tags
-    artifacts: true
-  environment:
-    name: ${CLUSTER_NAME}/review/${CI_COMMIT_REF_SLUG}
-    url: http://${CI_PROJECT_NAME}.${CLUSTER_NAME}.${DEV_HOST}/${CI_COMMIT_REF_SLUG}
-    on_stop: stop_review
-    auto_stop_in: 1 week
+    - .deploy_review_environment
+  # needs:
+  # - job: get tags
+  #   artifacts: true
   tags:
     - ${CLUSTER_NAME}
 
