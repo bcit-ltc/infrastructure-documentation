@@ -75,14 +75,14 @@ deploy to staging:
   script:
   - echo "staging deploy"
   - set
-  # - "curl \
-  #     --fail \
-  #     --request POST \
-  #     --form token=${CI_JOB_TOKEN} \
-  #     --form ref=main \
-  #     --form \"variables[IMAGE_REF]=${IMAGE_REF}\" \
-  #     --form \"variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}\" \
-  #     \"${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline\""
+  - "curl \
+      --fail \
+      --request POST \
+      --form token=${CI_JOB_TOKEN} \
+      --form ref=main \
+      --form \"variables[IMAGE_REF]=${IMAGE_REF}\" \
+      --form \"variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}\" \
+      \"${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline\""
   environment:
     name: staging
   tags:
@@ -149,7 +149,7 @@ variables:                    # other global variables are set in GitLab Admin: 
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
-  KUBE_CONTEXT: "deployments/ci-config:dev-cp"
+  KUBE_CONTEXT: "deployments/ci-config:$CLUSTER_NAME"
 
 ## Include common scripts
 include:
