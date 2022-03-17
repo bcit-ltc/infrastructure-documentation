@@ -15,7 +15,7 @@ stages:
   - cleanup
 
 
-# Determine if a new tag is required
+# Determine if a new git tag is required
 semver tag:
   stage: analyze for new tag
   extends: 
@@ -45,7 +45,6 @@ build image:
 deploy review package:
   stage: deploy
   variables:
-    BUILD_ENV: dev
     GENERIC_DEPLOYMENT: "true"
     #
     # Otherwise, create a deployment package and configure the following:
@@ -61,8 +60,6 @@ deploy review package:
 ## Removes deployment (and all assets in the namespace)
 stop_review:
   stage: cleanup
-  variables:
-    BUILD_ENV: dev
   extends:
     - .undeploy_review
     - .undeploy_review_rules
@@ -145,6 +142,7 @@ workflow:
 ## Pipeline variables
 variables:                  # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"    # options: dev-cp, dev-vsm
+  BUILD_ENV: dev
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"    # Standard policies: [default, jwt, read-tokens, read-apps, read-ssl-certificates]
   GIT_FETCH_EXTRA_FLAGS: "--tags"
