@@ -67,24 +67,23 @@ deploy to staging:
   image: curlimages/curl:latest
   stage: deploy
   variables:
-    TARGET_ENVIRONMENT: staging
-    # eg. "registry.dev.ltc.bcit.ca/web-apps/qcon/qcon-api:1.2.1"
-    IMAGE_REF: ${CI_REGISTRY_IMAGE}:${IMAGE_TAG}
+    TARGET_ENV: staging
   extends:
     - .deploy_staging_rules
   script:
-  - echo "staging deploy"
-  - set
+  - echo "Starting deploy to staging"
   - "curl \
       --fail \
       --request POST \
       --form token=${CI_JOB_TOKEN} \
-      --form ref=main \
-      --form \"variables[IMAGE_REF]=${IMAGE_REF}\" \
-      --form \"variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}\" \
+      --form ref=${CI_COMMIT_BRANCH} \
+      --form \"variables[VERSION]=${GIT_TAG}\" \
+      --form \"variables[TAG]=${IMAGE_TAG}\" \
+      --form \"variables[IMAGE]=${DEPLOY_IMAGE}\" \
       \"${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline\""
   environment:
     name: staging
+    url: https://$STAGING_HOST/$CI_PROJECT_NAME
   tags:
     - staging
 
@@ -103,18 +102,19 @@ deploy to production:
   extends:
     - .deploy_prod_rules
   script:
-  - echo "production deploy"
-  - printenv
-  # - 'curl \
-  #     --fail \
-  #     --request POST \
-  #     --form token=${CI_JOB_TOKEN} \
-  #     --form ref=main \
-  #     --form "variables[IMAGE_REF]=${IMAGE_REF}" \
-  #     --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" \
-  #     "${CI_API_V4_URL}/projects/${MANIFEST_PROJECT_ID}/trigger/pipeline"'
+  - echo "Starting deploy to production"
+  - "curl \
+      --fail \
+      --request POST \
+      --form token=${CI_JOB_TOKEN} \
+      --form ref=${CI_COMMIT_BRANCH} \
+      --form \"variables[VERSION]=${GIT_TAG}\" \
+      --form \"variables[TAG]=${IMAGE_TAG}\" \
+      --form \"variables[IMAGE]=${DEPLOY_IMAGE}\" \
+      \"${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline\""
   environment:
     name: production
+    url: https://${PROD_HOST}/${CI_PROJECT_NAME}
   tags:
     - production
 
