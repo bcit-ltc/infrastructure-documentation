@@ -39,7 +39,7 @@ get tags:
 
 ## Build feat/fix branch image and push to project registry
 build image:
-  # stage: build
+  stage: build
   # extends:
   #   - .build_image
   trigger:
