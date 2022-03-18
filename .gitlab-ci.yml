@@ -79,7 +79,6 @@ deploy to staging:
       --form ref=${CI_COMMIT_BRANCH} \
       --form \"variables[VERSION]=${GIT_TAG}\" \
       --form \"variables[TAG]=${IMAGE_TAG}\" \
-      --form \"variables[IMAGE]=${DEPLOY_IMAGE}\" \
       \"${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline\""
   environment:
     name: staging
@@ -110,7 +109,7 @@ deploy to production:
       --form ref=${CI_COMMIT_BRANCH} \
       --form \"variables[VERSION]=${GIT_TAG}\" \
       --form \"variables[TAG]=${IMAGE_TAG}\" \
-      --form \"variables[IMAGE]=${DEPLOY_IMAGE}\" \
+      --form \"variables[IMAGE]=${CI_REGISTRY_IMAGE}\" \
       \"${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline\""
   environment:
     name: production
