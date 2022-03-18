@@ -46,7 +46,8 @@ build image:
     include:
       - project: 'deployments/ci-config'
         file: '.build.yml'
-
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
 
 ## Deploy feat/fix branch package
 deploy review package:
