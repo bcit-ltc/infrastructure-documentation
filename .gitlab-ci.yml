@@ -43,7 +43,6 @@ stages:
 #   extends:
 #     - .build_image
 
-
 build image:
   image: curlimages/curl:latest
   stage: build
