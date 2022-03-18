@@ -19,7 +19,7 @@ stages:
 
 
 ## Determine if a new git tag is required
-semver tag:
+.semver tag:
   stage: analyze for new tag
   extends: 
     - .semantic_release
@@ -38,7 +38,7 @@ get tags:
 
 
 ## Build feat/fix branch image and push to project registry
-build image:
+.build image:
   stage: build
   extends:
     - .build_image
