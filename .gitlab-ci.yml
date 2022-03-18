@@ -17,6 +17,7 @@ stages:
   - deploy
   - cleanup
 
+
 ## Determine if a new git tag is required
 .semver tag:
   stage: analyze for new tag
@@ -37,16 +38,29 @@ get tags:
 
 
 ## Build feat/fix branch image and push to project registry
+# .build image:
+#   stage: build
+#   extends:
+#     - .build_image
+
+
 build image:
+  image: curlimages/curl:latest
   stage: build
-  # extends:
-  #   - .build_image
-  trigger:
-    include:
-      - project: 'deployments/ci-config'
-        file: '.build.yml'
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
+  variables:
+    TARGET_ENV: staging
+  script:
+  - echo "Starting build"
+  - "curl \
+      --fail \
+      --request POST \
+      --form token=${CI_JOB_TOKEN} \
+      --form ref=${CI_COMMIT_BRANCH} \
+      --form \"variables[TARGET_ENV]=${TARGET_ENV}\" \
+      --form \"variables[TAG]=${IMAGE_TAG}\" \
+      --form \"variables[ACTION]=build\" \
+      \"${CI_API_V4_URL}/projects/${CI_PIPELINE_CONFIG_PROJECT_ID}/trigger/pipeline\""
+
 
 ## Deploy feat/fix branch package
 deploy review package:
@@ -81,9 +95,9 @@ deploy to staging:
       --request POST \
       --form token=${CI_JOB_TOKEN} \
       --form ref=${CI_COMMIT_BRANCH} \
-      # --form \"variables[VERSION]=${GIT_TAG}\" \
-      # --form \"variables[TAG]=${IMAGE_TAG}\" \
-      # --form \"variables[TEST]=SOMETHING3\" \
+      --form \"variables[VERSION]=${GIT_TAG}\" \
+      --form \"variables[TAG]=${IMAGE_TAG}\" \
+      --form \"variables[TEST]=SOMETHING2\" \
       \"${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline\""
   environment:
     name: staging
@@ -120,6 +134,7 @@ deploy to production:
     url: https://${PROD_HOST}/${CI_PROJECT_NAME}
   tags:
     - production
+
 
 #
 #
