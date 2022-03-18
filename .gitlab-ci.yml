@@ -10,7 +10,6 @@
 #   3. Hydrate deployment package
 #   4. Deploy package
 
-
 stages:
   - analyze for new tag
   - gather existing tag info
