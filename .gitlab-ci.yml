@@ -32,33 +32,16 @@ stages:
 
 
 ## Determine if there are existing git tags
-.get tags:
+get tags:
   stage: gather existing tag info
   extends: .get_tags
 
 
 ## Build feat/fix branch image and push to project registry
-# .build image:
-#   stage: build
-#   extends:
-#     - .build_image
-
-build image:
-  image: curlimages/curl:latest
+.build image:
   stage: build
-  variables:
-    TARGET_ENV: staging
-  script:
-  - echo "Starting build"
-  - "curl \
-      --fail \
-      --request POST \
-      --form token=${CI_JOB_TOKEN} \
-      --form ref=main \
-      --form \"variables[TARGET_ENV]=${TARGET_ENV}\" \
-      --form \"variables[TAG]=${IMAGE_TAG}\" \
-      --form \"variables[ACTION]=build\" \
-      \"${CI_API_V4_URL}/projects/346/trigger/pipeline\""
+  extends:
+    - .build_image
 
 
 ## Deploy feat/fix branch package
