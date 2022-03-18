@@ -32,7 +32,7 @@ stages:
 
 
 ## Determine if there are existing git tags
-get tags:
+.get tags:
   stage: gather existing tag info
   extends: .get_tags
 
@@ -55,11 +55,11 @@ build image:
       --fail \
       --request POST \
       --form token=${CI_JOB_TOKEN} \
-      --form ref=${CI_COMMIT_BRANCH} \
+      --form ref=main \
       --form \"variables[TARGET_ENV]=${TARGET_ENV}\" \
       --form \"variables[TAG]=${IMAGE_TAG}\" \
       --form \"variables[ACTION]=build\" \
-      \"${CI_API_V4_URL}/projects/${CI_PIPELINE_CONFIG_PROJECT_ID}/trigger/pipeline\""
+      \"${CI_API_V4_URL}/projects/346/trigger/pipeline\""
 
 
 ## Deploy feat/fix branch package
