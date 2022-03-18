@@ -67,7 +67,7 @@ stop review:
 
 ## Deploy latest image (staging)
 # - trigger staging pipeline in deployments/{projectName}/staging
-deploy to staging:
+.deploy to staging:
   image: curlimages/curl:latest
   stage: deploy
   variables:
