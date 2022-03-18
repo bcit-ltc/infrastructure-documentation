@@ -39,13 +39,13 @@ get tags:
 
 ## Build feat/fix branch image and push to project registry
 build image:
-  stage: build
-  extends:
-    - .build_image
+  # stage: build
+  # extends:
+  #   - .build_image
   trigger:
     include:
       - project: 'deployments/ci-config'
-        file: 'build.yml'
+        file: '.build.yml'
 
 
 ## Deploy feat/fix branch package
