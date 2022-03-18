@@ -17,7 +17,6 @@ stages:
   - deploy
   - cleanup
 
-
 ## Determine if a new git tag is required
 .semver tag:
   stage: analyze for new tag
