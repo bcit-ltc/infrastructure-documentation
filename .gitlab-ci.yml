@@ -13,6 +13,7 @@
 stages:
   - analyze for new tag
   - gather existing tag info
+  - review
   - build
   - deploy
   - cleanup
@@ -38,15 +39,15 @@ get tags:
 
 
 ## Build feat/fix branch image and push to project registry
-.build image:
-  stage: build
+build image:
+  stage: review
   extends:
     - .build_image
 
 
 ## Deploy feat/fix branch package
 deploy review package:
-  stage: deploy
+  stage: review
   extends:
     - .deploy_review_package
     - .deploy_review_package_rules
