@@ -128,7 +128,7 @@ variables:                    # other global variables are set in GitLab Admin: 
   #
   #   - see https://infrastructure-documentation.dev.ltc.bcit.ca/ for info.
   #
-  DEPLOYMENT_PACKAGE_VERSION: "@v0.4"
+  DEPLOYMENT_PACKAGE_VERSION: "v0.5"
   DEPLOYMENT_PACKAGE_PROJECT_ID: 345
 #
 #
