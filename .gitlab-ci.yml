@@ -41,7 +41,6 @@ deploy review package:
   stage: review
   variables:
     TARGET_ENV: dev
-    DEPLOYMENT_HOST: ${CI_PROJECT_NAME}.${CLUSTER_NAME}.reviews.dev.ltc.bcit.ca
   extends:
     - .deploy_package
     - .deploy_package_rules
@@ -120,6 +119,7 @@ stop review:
 #
 variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
+  DEPLOYMENT_HOST: ${CI_PROJECT_NAME}.${CLUSTER_NAME}.reviews.dev.ltc.bcit.ca
   # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
   GENERIC_DEPLOYMENT: ""  # options: true, anything else!
   #
