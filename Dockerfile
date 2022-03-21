@@ -12,7 +12,7 @@ RUN set -ex; \
 
 
 ######################
-FROM nginx
+FROM nginxinc/nginx-unprivileged:1.20
 
 LABEL maintainer courseproduction@bcit.ca
 
