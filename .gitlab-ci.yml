@@ -52,12 +52,10 @@ deploy review:
   before_script:
     - kubectl config get-contexts
     - kubectl config use-context ltc-infrastructure/gitlab-kubernetes-agent:dev-cp-ltc-infrastructure
-    - kubectl get ns
-    - kubectl config set-context --current --namespace ${CI_COMMIT_REF_SLUG}
   after_script:
     - |
-      touch overlays/$TARGET_ENV/secrets/crt.pem
-      touch overlays/$TARGET_ENV/secrets/key.pem
+      mkdir overlays/$TARGET_ENV/secrets
+      mkdir overlays/$TARGET_ENV/secrets
       echo "$CRT_PEM" | base64 --decode > overlays/$TARGET_ENV/secrets/crt.pem
       echo "$KEY_PEM" | base64 --decode > overlays/$TARGET_ENV/secrets/key.pem
 
