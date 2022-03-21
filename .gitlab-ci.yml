@@ -145,7 +145,6 @@ variables:                    # other global variables are set in GitLab Admin: 
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
-  # KUBE_CONTEXT: "ltc-infrastructure/gitlab-kubernetes-agent:dev-cp-ltc-infrastructure"
 
 ## Include common scripts
 include:
