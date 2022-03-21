@@ -38,6 +38,13 @@ deploy review:
   stage: review
   variables:
     TARGET_ENV: dev
+  secrets:
+    TLS_CRT:
+      vault: ssl-certificates/star-dev-ltc-bcit-ca-bundle.crt.base64@ltc-infrastructure
+      # file: false
+    TLS_KEY:
+      vault: ssl-certificates/star-dev-ltc-bcit-ca.key.base64@ltc-infrastructure
+      # file: false
   extends:
     - .deploy_package
     - .deploy_review_environment
@@ -45,6 +52,13 @@ deploy review:
   before_script:
     - kubectl config get-contexts
     - kubectl get ns
+  after_script:
+    - |
+      echo "$TLS_CRT" | base64 --decode > overlays/$TARGET_ENV/secrets/tls.crt
+      echo "$TLS_KEY" | base64 --decode > overlays/$TARGET_ENV/secrets/tls.key
+
+      echo -e "\nData files for TLS secret generation created successfully"
+
 
 ## Removes deployment (and all assets in the namespace)
 stop review:
@@ -61,6 +75,13 @@ deploy to staging:
   stage: deploy
   variables:
     TARGET_ENV: staging
+  secrets:
+    TLS_CRT:
+      vault: ssl-certificates/star-dev-ltc-bcit-ca-bundle.crt.base64@ltc-infrastructure
+      # file: false
+    TLS_KEY:
+      vault: ssl-certificates/star-dev-ltc-bcit-ca.key.base64@ltc-infrastructure
+      # file: false
   extends:
     - .deploy_staging_rules
   script:
