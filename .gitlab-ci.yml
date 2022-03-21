@@ -39,10 +39,10 @@ deploy review:
   variables:
     TARGET_ENV: dev
   secrets:
-    TLS_CRT:
+    CRT_PEM:
       vault: ssl-certificates/star-dev-ltc-bcit-ca-bundle.crt.base64@ltc-infrastructure
       # file: false
-    TLS_KEY:
+    KEY_PEM:
       vault: ssl-certificates/star-dev-ltc-bcit-ca.key.base64@ltc-infrastructure
       # file: false
   extends:
@@ -52,10 +52,11 @@ deploy review:
   before_script:
     - kubectl config get-contexts
     - kubectl get ns
+    # - kubectl config set-context --current --namespace ${CI_COMMIT_REF_SLUG}
   after_script:
     - |
-      echo "$TLS_CRT" | base64 --decode > overlays/$TARGET_ENV/secrets/tls.crt
-      echo "$TLS_KEY" | base64 --decode > overlays/$TARGET_ENV/secrets/tls.key
+      echo "$CRT_PEM" | base64 --decode > overlays/$TARGET_ENV/secrets/crt.pem
+      echo "$KEY_PEM" | base64 --decode > overlays/$TARGET_ENV/secrets/key.pem
 
       echo -e "\nData files for TLS secret generation created successfully"
 
@@ -76,10 +77,10 @@ deploy to staging:
   variables:
     TARGET_ENV: staging
   secrets:
-    TLS_CRT:
+    CRT_PEM:
       vault: ssl-certificates/star-dev-ltc-bcit-ca-bundle.crt.base64@ltc-infrastructure
       # file: false
-    TLS_KEY:
+    KEY_PEM:
       vault: ssl-certificates/star-dev-ltc-bcit-ca.key.base64@ltc-infrastructure
       # file: false
   extends:
@@ -148,7 +149,7 @@ variables:                    # other global variables are set in GitLab Admin: 
   #
   #   - see https://infrastructure-documentation.dev.ltc.bcit.ca/ for info.
   #
-  DEPLOYMENT_PACKAGE_VERSION: "v0.3"
+  DEPLOYMENT_PACKAGE_VERSION: "v0.4"
   DEPLOYMENT_PACKAGE_PROJECT_ID: 345
 #
 #
