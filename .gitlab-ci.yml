@@ -58,8 +58,8 @@ deploy review:
       ls -laht
       mkdir overlays/$TARGET_ENV/secrets
       mkdir overlays/$TARGET_ENV/secrets
-      echo "$CRT_PEM" | base64 --decode > overlays/$TARGET_ENV/secrets/crt.pem
-      echo "$KEY_PEM" | base64 --decode > overlays/$TARGET_ENV/secrets/key.pem
+      echo "$CRT_PEM" | base64 --decode > overlays/$TARGET_ENV/crt.pem
+      echo "$KEY_PEM" | base64 --decode > overlays/$TARGET_ENV/key.pem
 
       echo -e "\nData files for TLS secret generation created successfully"
 
