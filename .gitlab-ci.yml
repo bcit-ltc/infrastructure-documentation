@@ -42,7 +42,9 @@ deploy review:
     - .deploy_package
     - .deploy_review_environment
     - .deploy_review_rules
-
+  before_script:
+    - kubectl config get-contexts
+    - kubectl get ns
 
 ## Removes deployment (and all assets in the namespace)
 stop review:
