@@ -114,7 +114,6 @@ deploy to staging:
 #     url: https://${PROD_HOST}/${CI_PROJECT_NAME}
 #   tags:
 #     - production
-
 #
 #
 #
