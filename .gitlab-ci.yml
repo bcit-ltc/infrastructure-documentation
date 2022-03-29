@@ -155,7 +155,6 @@ include:
       - '.get-tags.yml'
       - '.rules.yml'
 
-
 ## Specify which runner should pick up pipeline jobs
 default:
   tags:
