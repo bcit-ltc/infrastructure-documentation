@@ -43,6 +43,7 @@ deploy review:
     - .deploy_review_environment
     - .deploy_review_rules
 
+
 ## Removes deployment (and all assets in the namespace)
 stop review:
   stage: cleanup
