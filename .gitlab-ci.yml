@@ -36,16 +36,11 @@ build image:
 
 ## Deploy feat/fix branch package
 deploy review:
-  image: registry.dev.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker-kustomize
   stage: review
   variables:
     TARGET_ENV: dev
-  before_script:
-    - kubectl config use-context ${CI_PROJECT_NAMESPACE}/gitlab-kubernetes-agent:${CLUSTER_NAME}-${CI_PROJECT_NAMESPACE}
   extends:
-    - .retrieve_package
-    - .hydrate_package
-    - .deploy_package
+    - .deploy_review
     - .deploy_review_environment
     - .deploy_review_rules
 
@@ -54,8 +49,9 @@ deploy review:
 stop review:
   stage: cleanup
   extends:
-    - .undeploy
-    - .undeploy_rules
+    - .undeploy_review
+    - .undeploy_review_environment
+    - .undeploy_review_rules
 
 
 ## Deploy latest image (staging)
@@ -129,7 +125,7 @@ deploy to staging:
 #
 variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
   CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
-  # PROD_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
+  # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
   GENERIC_DEPLOYMENT: ""  # options: true, anything else!
   #
   #   - if GENERIC_DEPLOYMENT="anything but true", the pipeline expects a deployment package to exist. Create a deployment package and
