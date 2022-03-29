@@ -22,8 +22,8 @@ stages:
 get tags:
   stage: get tags
   extends:
-    - .get_tags
     - .get_gitlab_token
+    - .get_tags
 
 
 ## Build image and push to project registry
