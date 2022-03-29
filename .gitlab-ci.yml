@@ -17,6 +17,7 @@ stages:
   - deploy
   - cleanup
 
+
 ## Determine if there are existing git tags or a new tag is required
 get tags:
   stage: get tags
