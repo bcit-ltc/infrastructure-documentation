@@ -146,7 +146,6 @@ variables:                    # other global variables are set in GitLab Admin: 
   PIPELINE_DEBUG: "true"
   DEPLOYMENT_HOST: ${CI_PROJECT_NAME}.${CLUSTER_NAME}.${DEV_HOST}
 
-
 ## Include common scripts
 include:
   - project: 'deployments/ci-config'
