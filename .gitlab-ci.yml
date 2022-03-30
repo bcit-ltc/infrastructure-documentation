@@ -4,6 +4,7 @@
 #   - run `project-init.sh` to generate GitLab Project Access Token and configure Vault
 #   - `Dockerfile` in project root
 #
+#
 ## General Pipeline Steps
 #   1. Gather info
 #   2. Build Image
