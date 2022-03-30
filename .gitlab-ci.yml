@@ -30,11 +30,19 @@ get tags:
 ## Build image and push to project registry
 build image:
   stage: build
-  trigger:
-    include:
-      - project: 'deployments/ci-config'
-        ref: 'main'
-        file: '.build.yml'
+  script:
+    - |-
+      curl \
+      --fail \
+      --request POST \
+      --form token=${CI_JOB_TOKEN} \
+      --form ref=${CI_COMMIT_REF_SLUG} \
+      --form "variables[CLUSTER_NAME]=${CLUSTER_NAME}" \
+      --form "variables[GIT_TAG]=${GIT_TAG}" \
+      --form "variables[IMAGE_NAME]=${CI_REGISTRY_IMAGE}" \
+      --form "variables[IMAGE_TAG]=${IMAGE_TAG}" \
+      --form "variables[TARGET_ENV]=${TARGET_ENV}" \
+      ${CI_API_V4_URL}/projects/346/trigger/pipeline
 
 
 ## Deploy feat/fix branch package
