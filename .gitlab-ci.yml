@@ -13,9 +13,7 @@
 
 stages:
   - get tags
-  - review
-  - build
-  - deploy
+  - ship
   - cleanup
 
 
@@ -29,14 +27,14 @@ get tags:
 
 ## Build image and push to project registry
 build image:
-  stage: review
+  stage: ship
   extends:
     - .build_image
 
 
 ## Deploy feat/fix branch package
 deploy review:
-  stage: review
+  stage: ship
   variables:
     TARGET_ENV: dev
   extends:
@@ -57,7 +55,7 @@ stop review:
 ## Deploy latest image (staging)
 # - trigger staging pipeline in deployments/{projectName}/staging
 deploy to staging:
-  stage: deploy
+  stage: ship
   variables:
     TARGET_ENV: staging
   extends:
@@ -73,7 +71,7 @@ deploy to staging:
 ## Deploy stable image (production)
 # - trigger production pipeline in deployments/{projectName}/production
 deploy to production:
-  stage: deploy
+  stage: ship
   variables:
     TARGET_ENVIRONMENT: production
   extends:
