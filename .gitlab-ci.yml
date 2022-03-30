@@ -63,33 +63,6 @@ deploy to staging:
   extends:
     - .deploy_staging
     - .deploy_staging_rules
-  script:
-    # Override with production namespace if set
-    - !reference [.common-namespace, script]
-    - |
-      if [[ "${GENERIC_DEPLOYMENT}" == "true" ]]; then
-        echo -e " \
-          \nGENERIC_DEPLOYMENT is set \
-          No deployment package for staging/prod. \
-          \n"
-
-      else
-        echo -e " \
-          \nGENERIC_DEPLOYMENT not set... Starting deploy to staging \
-          \n"
-
-        curl \
-          --fail \
-          --request POST \
-          --form token=${CI_JOB_TOKEN} \
-          --form ref=main \
-          --form "variables[NAMESPACE]=${DEPLOYMENT_NAMESPACE}" \
-          --form "variables[TARGET_ENV]=${TARGET_ENV}" \
-          --form "variables[GIT_TAG]=${GIT_TAG}" \
-          --form "variables[IMAGE_TAG]=${IMAGE_TAG}" \
-          --form "variables[IMAGE_NAME]=${CI_REGISTRY_IMAGE}" \
-          ${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline
-      fi
   environment:
     name: staging
     url: https://$STAGING_HOST/$CI_PROJECT_NAME
@@ -98,33 +71,21 @@ deploy to staging:
 
 
 ## Deploy stable image (production)
-# - trigger production pipeline that:
-#   - unpacks trigger variables (CI_JOB_TOKEN, branch ref, image ref, target environment)
-#   - hydrates manifests
-#   - commits to registry (at `/releases` path)  
-# deploy to production:
-#   image: curlimages/curl:latest
-#   stage: deploy
-#   variables:
-#     TARGET_ENVIRONMENT: production
-#   extends:
-#     - .deploy_prod_rules
-#   script:
-#   - echo "Starting deploy to production"
-#   - "curl \
-#       --fail \
-#       --request POST \
-#       --form token=${CI_JOB_TOKEN} \
-#       --form ref=${CI_COMMIT_BRANCH} \
-#       --form \"variables[VERSION]=${GIT_TAG}\" \
-#       --form \"variables[TAG]=${IMAGE_TAG}\" \
-#       --form \"variables[IMAGE]=${CI_REGISTRY_IMAGE}\" \
-#       \"${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline\""
-#   environment:
-#     name: production
-#     url: https://${PROD_HOST}/${CI_PROJECT_NAME}
-#   tags:
-#     - production
+# - trigger production pipeline in deployments/{projectName}/production
+deploy to production:
+  stage: deploy
+  variables:
+    TARGET_ENVIRONMENT: production
+  extends:
+    - .deploy
+    - .deploy_prod_rules
+  environment:
+    name: production
+    url: https://${PROD_HOST}/${CI_PROJECT_NAME}
+  tags:
+    - production
+
+
 #
 #
 #
