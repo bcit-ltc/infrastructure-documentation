@@ -29,6 +29,7 @@ get tags:
 
 ## Build image and push to project registry
 build image:
+  image: curlimages/curl:latest
   stage: build
   script:
     - |-
