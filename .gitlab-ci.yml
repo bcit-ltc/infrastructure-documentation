@@ -31,9 +31,21 @@ get tags:
 ## Build image and push to project registry
 build image:
   stage: review
-  extends:
-    - .build_image
+  trigger:
+    include:
+      - project: 'deployments/ci-config'
+        ref: 'main'
+        file: '.build.yml'
+        
 
+include:
+  - project: 'deployments/ci-config'
+    file: 
+      - '.build.yml'
+      - '.deploy.yml'
+      - '.get-tags.yml'
+      - '.rules.yml'
+      - '.utilities.yml'
 
 ## Deploy feat/fix branch package
 deploy review:
