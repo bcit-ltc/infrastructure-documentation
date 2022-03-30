@@ -130,7 +130,6 @@ variables:                    # other global variables are set in GitLab Admin: 
 include:
   - project: 'deployments/ci-config'
     file: 
-      - '.build.yml'
       - '.deploy.yml'
       - '.get-tags.yml'
       - '.rules.yml'
