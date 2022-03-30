@@ -53,7 +53,7 @@ stop review:
 
 ## Deploy latest image (staging)
 # - trigger staging pipeline in deployments/{projectName}/staging
-deploy to staging:
+.deploy to staging:
   stage: publish
   variables:
     TARGET_ENV: staging
