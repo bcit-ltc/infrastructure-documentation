@@ -62,7 +62,7 @@ deploy to staging:
     - .deploy_staging
     - .deploy_staging_rules
   script:
-    - 'curl --fail --request POST --form token=${TRIGGER_TOKEN} --form ref=main --form "variables[IMAGE_REF]=${IMAGE_REF}" --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" "${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline"'
+    - 'curl --fail --request POST --form token=${CI_JOB_TOKEN} --form ref=main --form "variables[IMAGE_REF]=${IMAGE_REF}" --form "variables[TARGET_ENVIRONMENT]=${TARGET_ENVIRONMENT}" "${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline"'
 
   environment:
     name: staging
