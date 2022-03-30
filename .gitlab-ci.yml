@@ -114,7 +114,6 @@ variables:                    # other global variables are set in GitLab Admin: 
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
-  DEPLOYMENT_HOST: ${CI_PROJECT_NAME}.${CLUSTER_NAME}.${DEV_HOST}
 
 ## Include common scripts
 include:
