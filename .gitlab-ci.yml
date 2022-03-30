@@ -72,7 +72,7 @@ deploy to staging:
 deploy to production:
   stage: publish
   variables:
-    TARGET_ENVIRONMENT: production
+    TARGET_ENV: production
   extends:
     - .deploy
     - .deploy_prod_rules
