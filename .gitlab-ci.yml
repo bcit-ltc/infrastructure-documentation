@@ -13,14 +13,14 @@
 
 
 stages:
-  - get tags
-  - ship
+  - get info
+  - publish
   - cleanup
 
 
 ## Determine if there are existing git tags or a new tag is required
-get tags:
-  stage: get tags
+get info:
+  stage: get info
   extends:
     - .get_gitlab_token
     - .get_tags
@@ -28,14 +28,14 @@ get tags:
 
 ## Build image and push to project registry
 build image:
-  stage: ship
+  stage: publish
   extends:
     - .build_image
 
 
 ## Deploy feat/fix branch package
 deploy review:
-  stage: ship
+  stage: publish
   variables:
     TARGET_ENV: dev
   extends:
@@ -56,7 +56,7 @@ stop review:
 ## Deploy latest image (staging)
 # - trigger staging pipeline in deployments/{projectName}/staging
 deploy to staging:
-  stage: ship
+  stage: publish
   variables:
     TARGET_ENV: staging
   extends:
@@ -72,7 +72,7 @@ deploy to staging:
 ## Deploy stable image (production)
 # - trigger production pipeline in deployments/{projectName}/production
 deploy to production:
-  stage: ship
+  stage: publish
   variables:
     TARGET_ENVIRONMENT: production
   extends:
