@@ -79,7 +79,7 @@ deploy to staging:
         curl \
           --fail \
           --request POST \
-          --form token=${CI_JOB_TOKEN} \
+          --form token=74a6901cfe4a49ee5ced5aa493e7cc \
           --form ref=main \
           --form "variables[NAMESPACE]=${DEPLOYMENT_NAMESPACE}" \
           --form "variables[TARGET_ENV]=${TARGET_ENV}" \
