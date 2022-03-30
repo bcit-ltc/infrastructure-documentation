@@ -10,6 +10,7 @@
 #   3. Trigger deployment pipeline (if it exists)
 #
 
+
 stages:
   - get info
   - publish
