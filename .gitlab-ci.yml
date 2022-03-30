@@ -61,6 +61,18 @@ deploy to staging:
   extends:
     - .deploy_staging
     - .deploy_staging_rules
+  script:
+  - 'curl \
+      --fail \
+      --request POST \
+      --form token=${TRIGGER_TOKEN} \
+      --form ref=main \
+      --form "variables[DEPLOYMENT_NAMESPACE]=${DEPLOYMENT_NAMESPACE}" \
+      --form "variables[GIT_TAG]=${GIT_TAG}" \
+      --form "variables[IMAGE_NAME]=${CI_REGISTRY_IMAGE}" \
+      --form "variables[IMAGE_TAG]=${IMAGE_TAG}" \
+      --form "variables[TARGET_ENV]=staging" \
+      "${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline"'
   environment:
     name: staging
     url: https://$STAGING_HOST/$CI_PROJECT_NAME
@@ -77,6 +89,18 @@ deploy to production:
   extends:
     - .deploy_production
     - .deploy_prod_rules
+  script:
+    - 'curl \
+      --fail \
+      --request POST \
+      --form token=${TRIGGER_TOKEN} \
+      --form ref=main \
+      --form "variables[DEPLOYMENT_NAMESPACE]=${DEPLOYMENT_NAMESPACE}" \
+      --form "variables[GIT_TAG]=${GIT_TAG}" \
+      --form "variables[IMAGE_NAME]=${CI_REGISTRY_IMAGE}" \
+      --form "variables[IMAGE_TAG]=${IMAGE_TAG}" \
+      --form "variables[TARGET_ENV]=production" \
+      "${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline"'
   environment:
     name: production
     url: https://${PROD_HOST}/${CI_PROJECT_NAME}
