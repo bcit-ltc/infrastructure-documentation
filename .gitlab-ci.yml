@@ -29,6 +29,7 @@ get tags:
 
 ## Build image and push to project registry
 build image:
+  stage: build
   trigger:
     include:
       - project: 'deployments/ci-config'
