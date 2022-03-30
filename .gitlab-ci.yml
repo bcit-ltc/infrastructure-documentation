@@ -61,7 +61,7 @@ deploy to staging:
   variables:
     TARGET_ENV: staging
   extends:
-    - .deploy_staging
+    - .deploy
     - .deploy_staging_rules
   environment:
     name: staging
