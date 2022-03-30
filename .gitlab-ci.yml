@@ -29,7 +29,7 @@ get tags:
 
 
 ## Build image and push to project registry
-.build image:
+build image:
   stage: review
   extends:
     - .build_image
