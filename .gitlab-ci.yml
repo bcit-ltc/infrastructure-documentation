@@ -10,6 +10,8 @@
 #   2. Build Image
 #   3. Hydrate deployment package
 #   4. Deploy package
+#
+
 
 stages:
   - get tags
