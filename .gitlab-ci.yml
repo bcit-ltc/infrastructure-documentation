@@ -68,14 +68,17 @@ deploy to staging:
     - !reference [.common-namespace, script]
     - set
     - |
-      if [[ \"${GENERIC_DEPLOYMENT}\" == \"true\" ]]; then
-        echo "GENERIC_DEPLOYMENT is set \
-        No deployment package for staging/prod.";
+      if [[ "$GENERIC_DEPLOYMENT" == "true" ]]; then
+        echo -e " \
+          \nGENERIC_DEPLOYMENT is set \
+          No deployment package for staging/prod. \
+          \n"
 
       else
-        echo "GENERIC_DEPLOYMENT not set... Starting deploy to staging"
+        echo -e " \
+          \nGENERIC_DEPLOYMENT not set... Starting deploy to staging \
+          \n"
 
-        # Triggers pipeline for staging deployment
         curl \
           --fail \
           --request POST \
@@ -86,7 +89,7 @@ deploy to staging:
           --form "variables[GIT_TAG]=${GIT_TAG}" \
           --form "variables[IMAGE_TAG]=${IMAGE_TAG}" \
           --form "variables[IMAGE_NAME]=${CI_REGISTRY_IMAGE}" \
-          ${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline;
+          ${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline
       fi
   environment:
     name: staging
