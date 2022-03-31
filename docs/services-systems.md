@@ -6,7 +6,6 @@ The LTC operates systems and services based on ITS-provisioned virtual machines 
 
     Most systems and services require that you are part of the `LTC Users` Active Directory group. If you're not part of that group, please submit a request to ITS.
 
-
 ## GitLab
 > [https://issues.ltc.bcit.ca](https://issues.ltc.bcit.ca)
 
@@ -43,14 +42,12 @@ We use GitLab to:
 
     There are also `admin` groups for team-specific projects, as well as a `Templates` group that holds projects that we re-use frequently.
 
-
 ## Mattermost
 > [https://mattermost.ltc.bcit.ca](https://mattermost.ltc.bcit.ca)
 >
 > * Login by clicking on the **Login with GitLab** button using your BCIT credentials
 
 Mattermost is an open-source chat service that emulates the functionality of Slack. Mattermost comes bundled with GitLab and we use it for bantering and sharing ideas.
-
 
 ## Vault
 > [https://vault.ltc.bcit.ca:8200](https://vault.ltc.bcit.ca:8200)
@@ -59,7 +56,6 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 > * Login with your BCIT credentials using the **LDAP** authentication method.
 
 [Hashicorp Vault](https://vaultproject.io) is the LTC's secrets management platform. It stores secrets used for apps, database credentials, certificates, and more, and serves as an authentication middleware to secure communication between source code repositories, and a deployment endpoint in our Kubernetes clusters.
-
 
 ## Rancher
 > [https://rancher2.ltc.bcit.ca](https://rancher2.ltc.bcit.ca)
@@ -71,7 +67,6 @@ Rancher is an easy-to-use UI for Kubernetes. It helps us manage and get insight 
 
 We use Kubernetes to deliver our apps and services. See the [Kubernetes section](1_kubernetes/index.md) for more info.
 
-
 ## Legacy Web Servers
 
 Several applications are still served from aging (and bloated) virtual machines; work to migrate these workloads to Kubernetes is ongoing.
@@ -81,4 +76,3 @@ Several applications are still served from aging (and bloated) virtual machines;
 
 **test1.ltc.bcit.ca**
 > [http://test.ltc.bcit.ca](http://test.ltc.bcit.ca)
-
