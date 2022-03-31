@@ -2,7 +2,6 @@
 
 Information about the structure and makeup of the LTC's server infrastructure.
 
-
 ## Developing
 
 1. Create an issue and a merge request
