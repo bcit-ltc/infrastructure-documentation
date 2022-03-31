@@ -1,8 +1,8 @@
 site_name: LTC Infrastructure
-site_url: https://issues.ltc.bcit.ca/ltc-infrastructure
+site_url: https://infrastructure-documentation.dev.ltc.bcit.ca/
 
-repo_name: ltc-infrastructure/documentation
-repo_url: https://issues.ltc.bcit.ca/ltc-infrastructure/documentation.git
+repo_name: infrastructure-documentation
+repo_url: https://issues.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation.git
 
 # Set to false for local docs development
 strict: false
