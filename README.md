@@ -2,7 +2,6 @@
 
 Information about the structure and makeup of the LTC's server infrastructure.
 
-
 ## Developing
 
 1. Create an issue and a merge request
@@ -12,7 +11,6 @@ Information about the structure and makeup of the LTC's server infrastructure.
     docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
 
 1. Browse to `localhost:8000` to see site with *live reload* enabled.
-
 
 ## Building
 
