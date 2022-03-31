@@ -1,15 +1,13 @@
 # Default LTC GitLab CI/CD Pipeline
 #
 ## Requirements
-#   - run `project-init.sh` to generate GitLab Project Access Token and configure Vault
+#   - run `project-init.sh` to generate a GitLab Project Access Token and configure Vault
 #   - `Dockerfile` in project root
 #
 ## General Pipeline Steps
 #   1. Gather info
 #   2. Build Image
-#   3. Trigger deployment pipeline (if it exists)
-#
-
+#   3. Trigger deployment pipeline
 
 stages:
   - get info
@@ -32,7 +30,7 @@ build image:
     - .build_image
 
 
-## Deploy feat/fix branch package
+## Deploy feat/fix branch package to dev cluster for review
 deploy review:
   stage: publish
   variables:
@@ -43,7 +41,7 @@ deploy review:
     - .deploy_review_rules
 
 
-## Removes deployment (and all assets in the namespace)
+## Removes dev cluster deployment (and all assets in the branch namespace)
 stop review:
   stage: cleanup
   extends:
@@ -52,8 +50,8 @@ stop review:
     - .undeploy_review_rules
 
 
-## Deploy latest image (staging)
-# - trigger staging pipeline in deployments/{projectName}/staging
+## Deploy staging package (must have a deployment package)
+# - triggers pipeline in "Deployments/{projectName}" project
 deploy to staging:
   stage: publish
   variables:
@@ -68,8 +66,8 @@ deploy to staging:
     - staging
 
 
-## Deploy stable image (production)
-# - trigger production pipeline in deployments/{projectName}/production
+## Deploy production package (must have a deployment package)
+# - triggers pipeline in "Deployments/{projectName}" project
 deploy to production:
   stage: publish
   variables:
@@ -83,6 +81,7 @@ deploy to production:
   tags:
     - production
 
+
 #
 #
 #
@@ -90,15 +89,16 @@ deploy to production:
 #
 #
 #
-variables:                    # other global variables are set in GitLab Admin: https://issues.ltc.bcit.ca/admin/application_settings/ci_cd
+variables:                    # other global variables are set in GitLab Admin
   CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
-  # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace if following microservice pattern; otherwise, set to ""
-  GENERIC_DEPLOYMENT: ""  # options: true, anything else!
+  # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
+  GENERIC_DEPLOYMENT: ""
   #
-  #   - if GENERIC_DEPLOYMENT="anything but true", the pipeline expects a deployment package to exist. Create a deployment package and
-  #       configure the pipeline with the package version.
+  #   - if GENERIC_DEPLOYMENT="anything but true", the pipeline expects a deployment package
+  #     to exist in the "Deployments" GitLab group. Create a deployment package following the
+  #     guide in "Deployments/CI Config".
   #
-  #   - see https://infrastructure-documentation.dev.ltc.bcit.ca/ for info.
+  #   - also see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
   #
   DEPLOYMENT_PACKAGE_PROJECT_ID: 345
 #
@@ -112,15 +112,14 @@ variables:                    # other global variables are set in GitLab Admin: 
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "true"
-  CI_DEBUG_TRACE: "true"
 
 ## Include common scripts
 include:
   - project: 'deployments/ci-config'
     file: 
+      - '.get-tags.yml'
       - '.build.yml'
       - '.deploy.yml'
-      - '.get-tags.yml'
       - '.rules.yml'
       - '.utilities.yml'
 
