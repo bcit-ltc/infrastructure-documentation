@@ -53,7 +53,7 @@ stop review:
 
 ## Deploy latest image (staging)
 # - trigger staging pipeline in deployments/{projectName}/staging
-.deploy to staging:
+deploy to staging:
   stage: publish
   variables:
     TARGET_ENV: staging
@@ -73,20 +73,14 @@ deploy to production:
   stage: publish
   variables:
     TARGET_ENV: production
-    TRIGGER_TOKEN: e41d853fa2c5056a547bed2b29f922
   extends:
     - .deploy
-    # - .deploy_prod_rules
-  script:
-    - 'curl --fail --request POST --form token=$TRIGGER_TOKEN --form ref=$CI_COMMIT_REF_NAME "https://issues.ltc.bcit.ca/api/v4/projects/345/trigger/pipeline"'
-    # - curl --fail --request POST --form token=$CI_JOB_TOKEN --form ref=main ${CI_API_V4_URL}/projects/${DEPLOYMENT_PACKAGE_PROJECT_ID}/trigger/pipeline
+    - .deploy_prod_rules
   environment:
     name: production
     url: https://${PROD_HOST}/${CI_PROJECT_NAME}
   tags:
     - production
-  rules:
-    - if: '$CI_COMMIT_TAG'
 
 
 #
