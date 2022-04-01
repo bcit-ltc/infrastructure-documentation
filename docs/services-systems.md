@@ -75,8 +75,6 @@ We use Kubernetes to deliver our apps and services. See the [Kubernetes section]
 
 Several applications are still served from aging (and bloated) virtual machines; work to migrate these workloads to Kubernetes is ongoing.
 
-**prod1.ltc.bcit.ca**
-> [http://ltc.bcit.ca](http://ltc.bcit.ca)
+**prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)
 
-**test1.ltc.bcit.ca**
-> [http://test.ltc.bcit.ca](http://test.ltc.bcit.ca)
+**test1.ltc.bcit.ca**: [http://test.ltc.bcit.ca](http://test.ltc.bcit.ca)
