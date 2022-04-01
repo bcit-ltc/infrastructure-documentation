@@ -6,21 +6,17 @@
 
 Projects in the `LTC Infrastructure` group contain the configuration files for a variety of services. The projects and their purpose are briefly described below.
 
-
 ## VM Node Configuration
 
 When a new VM is provisioned by ITS, the Ansible scripts in this project are used to configure the node for a variety of roles.
-
 
 ## Inventory
 
 This repo contains the authoritative source of LTC server information.
 
-
 ## [HAProxy](https://issues.ltc.bcit.ca/ltc-infrastructure/haproxy)
 
 HAProxy is the load balancer entrypoint for the LTC's web apps and services. It sits in the DMZ and forwards traffic to apps that run on Kubernetes clusters.
-
 
 ## [Vault](https://issues.ltc.bcit.ca/ltc-infrastructure/vault-configuration)
 
@@ -30,26 +26,21 @@ Vault is currently deployed as a single-node resource (which eases backup/restor
 
 * Vault was provisioned with the `deploy_vault.yaml` playbook, which uses configuration settings in the `templates/vault` path. See the [Hashicorp Vault Production Deployment Guide](https://learn.hashicorp.com/tutorials/vault/raft-deployment-guide?in=vault/day-one-raft).
 
-
 ## Configuration Development
 
 This sub group is a place to start projects for automating infrastructure. Projects that have been tested and are in general use should be moved out of this subgroup into the main `LTC Infrastructure` group.
-
 
 ## Base Images
 
 This project houses the configuration and base images used in other projects. Checkout a branch to update an image.
 
-
 ## GitaLab Runner
 
 GitLab Runner is the CI/CD pipline agent that performs actions to build and deploy apps. This repo stores the Terraform state file and Helm `values.yaml` used to deploy this service.
 
-
 ## Longhorn
 
 Longhorn is the name of the service that provisions persistent storage in the LTC's Kubernetes clusters. This repo stores the Terraform state file and Helm `values.yaml` used to deploy this service.
-
 
 ## Rancher
 
