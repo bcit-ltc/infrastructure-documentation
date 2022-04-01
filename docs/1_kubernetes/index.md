@@ -16,6 +16,6 @@ The VM's in a cluster are called **nodes**, and nodes can have different **roles
 
 ## Rancher
 
-One of the more important workloads that runs on the "admin" RKE2 cluster is called Rancher. Rancher is an application that allows us to administer each of the clusters from a central interface.
+One of the more important workloads that runs on the "admin" RKE2 cluster is called Rancher. Rancher Kubernetes GUI that allows us to administer each of the clusters from a central interface.
 
 > * [https://rancher2.ltc.bcit.ca](https://rancher2.ltc.bcit.ca)
