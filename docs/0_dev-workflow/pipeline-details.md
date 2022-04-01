@@ -20,7 +20,7 @@ The default LTC pipeline runs the following jobs:
 
         ![MR-Branch](../assets/mr-branch.png)
     1. Open a code editor and checkout the new branch
-    1. Develop locally using `docker compose up` and `skaffold dev`
+    1. Develop locally using `docker run...`, `docker compose up`, and/or `skaffold dev`
     1. Commit changes and push to GitLab
 
 ## Repository Configuration
