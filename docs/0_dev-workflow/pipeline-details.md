@@ -3,7 +3,6 @@
 !!! warning "Under Construction"
 
     This page is still being written
-    
 
 The default LTC pipeline runs the following jobs:
 
@@ -23,8 +22,6 @@ The default LTC pipeline runs the following jobs:
     1. Open a code editor and checkout the new branch
     1. Develop locally using `docker compose up` and `skaffold dev`
     1. Commit changes and push to GitLab
-
-
 
 ## Repository Configuration
 
@@ -57,12 +54,12 @@ We use [Semantic Versioning](https://semver.org/) to automatically determine whe
 
     See https://docs.gitlab.com/ee/api/resource_access_tokens.html#create-a-project-access-token
 
-```
-curl --request POST --header "PRIVATE-TOKEN: <your_access_token>" \
---header "Content-Type:application/json" \
---data '{ "name":"semantic-release-qcon-api", "scopes":["api", "write_repository"]' \
-"https://gitlab.example.com/api/v4/projects/250/access_tokens"
-```
+    ```bash
+    curl --request POST --header "PRIVATE-TOKEN: <your_access_token>" \
+    --header "Content-Type:application/json" \
+    --data '{ "name":"semantic-release-qcon-api", "scopes":["api", "write_repository"]' \
+    "https://gitlab.example.com/api/v4/projects/250/access_tokens"
+    ```
 
     1. create a vault token at the path /secrets/access-tokens/semantic-release-{project-name} with:
         ```
