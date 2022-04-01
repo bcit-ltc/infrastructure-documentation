@@ -20,12 +20,9 @@ Kubernetes cluster nodes provisioned by RKE2 have 3 roles: Manager, Worker, or C
 
     :   runs both manager and worker roles
 
-
 Different clusters (admin, prod, staging, etc...) use a mix of different roles.
 
-
 ## Cluster Details
-
 
 ### Production
 
@@ -36,7 +33,6 @@ Different clusters (admin, prod, staging, etc...) use a mix of different roles.
 * there are three nodes to ensure replication and high availability
 * worker nodes run workloads and contribute storage to the persistent disk provisioner, Longhorn.
 
-
 ### Staging
 
 ![staging-cluster diagram](../assets/staging-cluster.png#only-light)
@@ -44,11 +40,9 @@ Different clusters (admin, prod, staging, etc...) use a mix of different roles.
 
 * all nodes run combo (manager+worker) roles
 
-
 ### Dev_cp and Dev_vsm
 
 * all nodes run combo (manager+worker) roles
-
 
 ### Rancher Admin
 
@@ -57,14 +51,11 @@ Different clusters (admin, prod, staging, etc...) use a mix of different roles.
 * `prod-admin*` nodes run the Rancher application in a highly available configuration.
 * all nodes run combo (manager+worker) roles
 
-
 ## Common Cluster Components
-
 
 ### Rancher "Projects"
 
 Projects are Rancher constructs that help organize namespaces. See [Rancher Docs - Project Administration](https://rancher.com/docs/rancher/v2.6/en/project-admin/).
-
 
 ### `nginx` Ingress
 
