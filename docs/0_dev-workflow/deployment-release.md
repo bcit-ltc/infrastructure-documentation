@@ -26,7 +26,7 @@ This page describes the general steps involved in creating a deployment, whether
 
     **Release**
 
-    :   A deployment that receives traffic
+    :   A deployment that receives public traffic
 
 ## Deploying a Workload
 
