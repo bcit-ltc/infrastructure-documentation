@@ -4,7 +4,7 @@ The LTC operates systems and services based on ITS-provisioned virtual machines 
 
 !!! warning "Access Requirements"
 
-    Most systems and services require that you are part of the `LTC Users` Active Directory group. If you're not part of that group, please submit a request to ITS.
+    Most systems and services require that you are part of the `LTC Users` Active Directory group. If you're not part of that group and you need access, please submit a request to ITS.
 
 ## GitLab
 
@@ -14,20 +14,17 @@ GitLab is the LTC's code repository, CI/CD pipeline coordinator, and container r
 
 We use GitLab to:
 
-* record our work on projects through the version control system
+* record our work using version controlled code repositories
 * track issues related to projects
 * run CI/CD pipelines that automate building and deploying
 * save copies of images in each project's private image registry
 
 !!! note "Starting a project"
 
-    We usually start a project by creating a code repository in GitLab in one of these "top-level" groups:
+    We start a project by creating a code repository in GitLab in one of these "top-level" groups:
 
     `Web Apps`
-    :   Mature web applications that have some front-end component
-
-    `VSM Web Apps`
-    :   Web applications for the VSM team
+    :   Projects that have some front-end component; UI required.
 
     `Utilities`
     :   Tools, resources, and services (both local and server-based) that do not have a front-end
