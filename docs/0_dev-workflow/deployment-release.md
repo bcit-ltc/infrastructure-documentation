@@ -28,7 +28,6 @@ This page describes the general steps involved in creating a deployment, whether
 
     :   A deployment that receives traffic
 
-
 ## Deploying a Workload
 
 When an image is ready to be scheduled on a Kubernetes cluster, there are a few configuration files that need to be defined for the workload to run. Together, these files - and the image they refer to - are considered a **deployment**. When the deployment is scheduled and running on a cluster, it's called a **workload**.
@@ -55,7 +54,6 @@ A Kubernetes resource called a **deployment** tells the cluster how to run the i
     * a workload
 
     The context will help you determine which meaning is relevant.
-
 
 ### Workload Configuration Files
 
@@ -94,10 +92,9 @@ Configuration files are YAML formatted; they define the types of Kubernetes reso
 
 So how or where do we get these files? They can be created from scratch, but there are also tools that simplify the initial spec definition.
 
-
 ## Working with Kubernetes
 
->   * See the [Kubernetes section](../1_kubernetes/index.md) for more details about our Kubernetes architecture.
+> * See the [Kubernetes section](../1_kubernetes/index.md) for more details about our Kubernetes architecture.
 
 Besides the image and the workload configuration files, you need a cluster to deploy to! An easy way to get started is to download and run a local Kubernetes distribution, but because Kubernetes is resource-intensive, it's generally not a good idea to keep it running continuously; start one up, use it, and then stop it to preserve battery!
 
@@ -110,22 +107,22 @@ Some popular flavours that launch local Kubernetes clusters on your local machin
 
 Once you have a local cluster up and running, you are ready to install a couple of command-line utilities.
 
-
 ### kubectl
 
 Deployments, services, ingresses, and other Kubernetes resources can be created and destroyed from the command line using the `kubectl` command.
 
->   * See [kubectl documentation](https://kubectl.docs.kubernetes.io/guides/introduction/kubectl/).
+> * See [kubectl documentation](https://kubectl.docs.kubernetes.io/guides/introduction/kubectl/).
 
 !!! note "Installing `kubectl`"
 
     === "brew (MacOS)"
 
-            brew install kubernetes-cli
+        brew install kubernetes-cli
+
 
     === "choclatey (Windows)"
 
-            choco install kubernetes-cli
+        choco install kubernetes-cli
 
 !!! note ""
 
@@ -142,7 +139,6 @@ With the CLI utilities installed, and with a local cluster running, check connec
 If you don't see any namespaces, troubleshoot before moving on.
 
 If everything looks good, you're ready to make your configuration files!
-
 
 ### Skaffold
 
@@ -170,34 +166,29 @@ Try it out by running:
 
     skaffold dev
 
-
 ### Kubernetes Contexts
 
 When working with several clusters, or when switching from a local cluster like Minikube to a remote cluster, the configuration for authenticating to these *contexts* is stored in a `~/.kube/config` file.
 
 Cluster contexts from various sources can be joined with commands like:
 
-```bash
-# Make a copy of your existing config
-$ cp ~/.kube/config ~/.kube/config.bak
+    # Make a copy of your existing config
+    $ cp ~/.kube/config ~/.kube/config.bak
 
-# Merge the two config files together into a new config file
-$ KUBECONFIG=~/.kube/config:/path/to/new/config kubectl config view --flatten > /tmp/config
+    # Merge the two config files together into a new config file
+    $ KUBECONFIG=~/.kube/config:/path/to/new/config kubectl config view --flatten > /tmp/config
 
-# Replace your old config with the new merged config
-$ mv /tmp/config ~/.kube/config
+    # Replace your old config with the new merged config
+    $ mv /tmp/config ~/.kube/config
 
-# (optional) Delete the backup once you confirm everything worked ok
-$ rm ~/.kube/config.bak
-```
-
+    # (optional) Delete the backup once you confirm everything worked ok
+    $ rm ~/.kube/config.bak
 
 ## Kustomize
 
 [Kustomize](https://kustomize.io) is a tool to build deployment configuration files for different contexts without duplicating content. Kustomize uses *overlays* to change deployment parameters from one configuration for a dev cluster to slightly different configuration for a production cluster.
 
 Our template `deploy` folder uses Kustomize to ensure workloads are configured for the context they are being deployed to.
-
 
 ## CI/CD Pipelines
 

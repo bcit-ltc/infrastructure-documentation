@@ -22,18 +22,16 @@ Docker also helps avoid deployment trouble because of a mismatch between a local
 
 Building a single containerized app is pretty easy! Usually all you have to do is look for a good **base image** in the [Docker Hub](https://hub.docker.com/) and then copy your code into the container during the *build* stage. Let's take a look at how to get started.
 
-
 ## Requirements
 
 Download and install [Docker desktop](https://www.docker.com/products/docker-desktop).
-
 
 ## Container Development Workflow
 
 A typical container "dev loop" involves committing code, building an image, running tests, and deploying the image to a registry.
 
 ![Development Loop](../assets/dev-loop.png)
- 
+
 Because our goal is to develop an image, we use Docker to:
 
 - develop locally using the `docker compose` command
@@ -42,7 +40,6 @@ Because our goal is to develop an image, we use Docker to:
 - push the image to the LTC private registry
 
 Once an image is stored in a registry it can be deployed to a Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline. Before we look at CI/CD pipelines in more detail, let's go over other important details about Docker.
-
 
 ### Docker Details
 
@@ -53,7 +50,6 @@ Docker can be used in a few different ways. A nice way to try out an app is to r
     1. Start Docker
     1. Open a terminal and run `docker container run -p 8080:80 nginx`
     1. Open a browser and navigate to `localhost:8080`
-
 
 ### `docker compose`
 
@@ -82,7 +78,6 @@ See [Docker Compose File Basics](https://takacsmark.com/docker-compose-tutorial-
           - 8080:8080
     ```
 
-
 ### Building Images
 
 When you are ready to turn your app into an image and push it to a registry, navigate to the GitLab project page and look for the `Packages and Registries` menu link. Click on `Container Registry` and look for the CLI commands to login to the registry, build (and tag) the image, and push it.
@@ -96,7 +91,6 @@ When you are ready to turn your app into an image and push it to a registry, nav
     `$ docker push registry.dev.ltc.bcit.ca/web-apps/qcon/qcon-api`
 
 Now that you have an image in a registry, it can be deployed to a Kubernetes cluster as a workload.
-
 
 ### Repository Branches and "GitFlow"
 

@@ -6,7 +6,6 @@
 
 We strive to add or change infrastructure through declarative programming practices, where a desired state is coded into files that are then pushed to manage infrastructure.
 
-
 ## Infrastructure Configuration Requirements
 
 If you are creating or changing infrastructure you will also need these tools:
@@ -15,14 +14,11 @@ If you are creating or changing infrastructure you will also need these tools:
 - [Helm](https://helm.sh/docs/intro/install/)
 - [Terraform](https://www.terraform.io/downloads.html)
 
-
 !!! warning "Brand New Virtual Machines"
 
     Brand new VM's need to be configured with the `ansible` user before performing configuration changes.
 
-
 ## Infrastructure Tool Usage
-
 
 ### Ansible
 
@@ -35,6 +31,7 @@ To test that you can run a playbook, try running a `ping` test first:
 `ansible-playbook basic_tasks/ping.yaml`
 
 If the play fails, check that:
+
 - you're connected to VPN
 - the ansible user has been created on the VM
 - the path to the `ansible` user's SSH key is located correctly in the `ansible.cfg` file. The path should be relative to the playbook's location.
@@ -43,12 +40,11 @@ If the `ansible` user hasn't yet been added to the server, run `00_add_user.yaml
 
 When the ping is successful, decide what the new node is for...
 
-* k8s cluster manager
-* k8s cluster worker
-* load balancer
-* etcd/consul cluster
-* other (vault, admin, nomad, testing)
-
+- k8s cluster manager
+- k8s cluster worker
+- load balancer
+- etcd/consul cluster
+- other (vault, admin, nomad, testing)
 
 ### Helm
 

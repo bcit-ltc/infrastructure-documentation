@@ -8,9 +8,9 @@ Information about the architecture and makeup of the LTC's server infrastructure
 1. Checkout the branch in your code editor
 1. Open a terminal and run
 
-    docker run --rm -it -p 8080:8080 -v ${PWD}:/docs squidfunk/mkdocs-material
+    docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
 
-1. Browse to `localhost:8080` to see site with *live reload* enabled.
+1. Browse to `localhost:8000` to see site with *live reload* enabled.
 
 ## Building
 

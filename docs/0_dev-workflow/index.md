@@ -9,6 +9,7 @@ The LTC's infrastructure is designed to make it easy to adopt a modern, automate
 - [x] private image registries using [GitLab Registry](https://docs.gitlab.com/ee/user/packages/container_registry/)
 - [x] development deployment testing using [Skaffold](https://skaffold.dev)
 - [x] modified environments for dev, staging, and production using [Kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
+- [x] deployment packages managed by [kpt](https://kpt.dev/book/)
 - [x] automated deployment using [GitLab Runner CI/CD pipeline](https://docs.gitlab.com/ee/ci/)
 - [x] standarized in-cluster image building using [Kaniko](https://github.com/GoogleContainerTools/kaniko)
 - [x] secrets management using [Hashicorp Vault](https://www.vaultproject.io/docs)
