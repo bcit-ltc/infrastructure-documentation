@@ -14,7 +14,7 @@ Containerizing everything can present a challenge when developing locally unless
 
     ![Docker Logo](../assets/horizontal-logo-monochromatic-white.png)
 
-[Docker](https://docs.docker.com/get-started/) to the rescue!
+**[Docker](https://docs.docker.com/get-started/) to the rescue!**
 
 Docker makes it easier to containerize apps by providing a tool stack that builds and runs standardized ***images*** - small containers of executable code that can be deployed on any platform.
 
