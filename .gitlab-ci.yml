@@ -16,7 +16,7 @@ stages:
 
 ## Does the project have an access token?
 ##  - a project access token is created on the first run. If the pipeline fails,
-##    please wait 5 minutes and re-run after a token has been created.
+##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
 project init:
   stage: get info
   extends:
