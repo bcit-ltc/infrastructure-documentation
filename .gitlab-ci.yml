@@ -14,12 +14,19 @@ stages:
   - publish
   - cleanup
 
+## Does the project have an access token?
+##  - a project access token is created on the first run. If the pipeline fails,
+##    please wait 5 minutes and re-run after a token has been created.
+project init:
+  stage: get info
+  extends:
+    - .project_init
+
 
 ## Determine if there are existing git tags or a new tag is required
 get info:
   stage: get info
   extends:
-    - .project_init
     - .get_info
 
 
