@@ -48,15 +48,6 @@ deploy review:
     - .deploy_review_rules
 
 
-## Removes dev cluster deployment (and all assets in the branch namespace)
-stop review:
-  stage: cleanup
-  extends:
-    - .undeploy_review
-    - .undeploy_review_environment
-    - .undeploy_review_rules
-
-
 ## Deploy staging/production packages (must have a deployment package)
 # - triggers pipelines in "Deployments/{projectName}" project
 deploy to staging:
@@ -85,6 +76,15 @@ deploy to production:
     url: https://${PROD_HOST}/${CI_PROJECT_NAME}
   tags:
     - production
+
+
+## Removes dev cluster deployment (and all assets in the branch namespace)
+stop review:
+  stage: cleanup
+  extends:
+    - .undeploy_review
+    - .undeploy_review_environment
+    - .undeploy_review_rules
 
 
 #
