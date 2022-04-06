@@ -19,8 +19,8 @@ stages:
 get info:
   stage: get info
   extends:
-    - .get_gitlab_token
-    - .get_tags
+    - .project_init
+    - .get_info
 
 
 ## Build image and push to project registry
@@ -89,15 +89,15 @@ deploy to production:
 #
 variables:                    # other global variables are set in GitLab Admin
   CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
-  GENERIC_DEPLOYMENT: ""
+  GENERIC_DEPLOYMENT: "true"
   #
-  #   - if GENERIC_DEPLOYMENT="anything but true", the pipeline expects a deployment package
+  #   - if GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects a deployment package
   #     to exist in the "Deployments" GitLab group. Create a deployment package following the
   #     guide in "Deployments/CI Config".
   #
   #   - also see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
   #
-  DEPLOYMENT_PACKAGE_PROJECT_ID: 345
+  # DEPLOYMENT_PACKAGE_PROJECT_ID: 345
   # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
 #
 #
@@ -109,17 +109,17 @@ variables:                    # other global variables are set in GitLab Admin
 ## Other common pipeline variables
   VAULT_AUTH_ROLE: "dependabot-$CI_PROJECT_NAME"
   GIT_FETCH_EXTRA_FLAGS: "--tags"
-  PIPELINE_DEBUG: "true"
 
 ## Include common scripts
 include:
   - project: 'deployments/ci-config'
     file: 
-      - '.get-info.yml'
       - '.build.yml'
-      - '.hydrate-deploy.yml'
-      - '.rules.yml'
       - '.debug.yml'
+      - '.deploy-hydrate.yml'
+      - '.get-info.yml'
+      - '.project-init.yml'
+      - '.rules.yml'
 
 ## Specify which runner should pick up pipeline jobs
 default:
