@@ -9,10 +9,12 @@
 #   2. Build Image
 #   3. Trigger deployment pipeline
 
+
 stages:
   - get info
   - publish
   - cleanup
+
 
 ## Does the project have an access token?
 ##  - a project access token is created on the first run. If the pipeline fails,
