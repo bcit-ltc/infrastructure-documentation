@@ -81,7 +81,7 @@ Configuration files are YAML formatted; they define the types of Kubernetes reso
       labels:
         app: nginx
     spec:
-      replicas: 1
+      replicas: 3
         spec:
           containers:
           - name: nginx
