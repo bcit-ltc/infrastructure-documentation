@@ -18,6 +18,10 @@ stages:
 ## Does the project have an access token?
 ##  - a project access token is created on the first run. If the pipeline fails,
 ##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
+# Other possible values
+# variables:
+# PROJEC_INIT:
+# DEPLOY_PKG_INIT="true"
 project init:
   stage: get info
   extends:
@@ -45,7 +49,6 @@ deploy review:
     TARGET_ENV: dev
   extends:
     - .deploy_review
-    - .deploy_review_environment
     - .deploy_review_rules
 
 
@@ -84,7 +87,6 @@ stop review:
   stage: cleanup
   extends:
     - .undeploy_review
-    - .undeploy_review_environment
     - .undeploy_review_rules
 
 
@@ -97,7 +99,7 @@ stop review:
 #
 variables:                    # other global variables are set in GitLab Admin
   CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
-  GENERIC_DEPLOYMENT: ""
+  GENERIC_DEPLOYMENT: "true"
   #
   #   - if GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects a deployment package
   #     to exist in the "Deployments" GitLab group. Create a deployment package following the
@@ -105,7 +107,7 @@ variables:                    # other global variables are set in GitLab Admin
   #
   #   - also see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
   #
-  DEPLOYMENT_PACKAGE_PROJECT_ID: 345
+  # DEPLOYMENT_PACKAGE_PROJECT_ID: 345
   # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
 #
 #
@@ -122,12 +124,15 @@ variables:                    # other global variables are set in GitLab Admin
 include:
   - project: 'deployments/ci-config'
     file: 
-      - '.build.yml'
+      - 'project-init.yml'
       - '.debug.yml'
+      - 'get-info.yml'
+      - 'build.yml'
+      - 'deploy-review.yml'
       - '.deploy-hydrate.yml'
-      - '.get-info.yml'
-      - '.project-init.yml'
+      - '.vault.yml'
       - '.rules.yml'
+      - 'deploy.yml'
 
 ## Specify which runner should pick up pipeline jobs
 default:
