@@ -106,9 +106,9 @@ variables:                    # other global variables are set in GitLab Admin
   DEPLOYMENT_PACKAGE_PROJECT_ID: 345
   # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
 #
-# # other possible values
-#   PROJEC_INIT: "true"       # to override project token creation
-  DEPLOY_PKG_INIT: "true"   # to create an initial project deployment package
+# Other possible values
+  # PROJEC_INIT: "true"       # to override project token creation
+  # DEPLOY_PKG_INIT: "true"   # to create an initial project deployment package
 #
 #
 #
