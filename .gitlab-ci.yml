@@ -1,7 +1,7 @@
 # Default LTC GitLab CI/CD Pipeline
 #
 ## Requirements
-#   - this file, with "CLUSTER_NAME" set to "dev-cp" or "dev-vsm"
+#   - this file, with "CLUSTER_NAME" (bottom of script) set to either "dev-cp" or "dev-vsm"
 #   - `Dockerfile` in project root
 #
 ## General Pipeline Steps
@@ -16,15 +16,11 @@ stages:
   - cleanup
 
 
-## Does the project have an access token?
-##  - a project access token is created on the first run. If the pipeline fails,
+## Has the project been initialized?
+##  - a project access token is required, and created on the first run. If the pipeline fails,
 ##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
 project init:
   stage: get info
-# # other possible values
-# variables:
-#   PROJEC_INIT: "true"
-#   DEPLOY_PKG_INIT: "true"
   extends:
     - .project_init
 
@@ -53,8 +49,9 @@ deploy review:
     - .deploy_review_rules
 
 
-## Deploy staging/production packages (must have a deployment package)
-# - triggers pipelines in "Deployments/{projectName}" project
+## Deploy staging/production packages
+#   - must have a deployment package
+#   - triggers pipelines in "Deployments/{projectName}" project
 deploy to staging:
   stage: publish
   variables:
@@ -67,7 +64,6 @@ deploy to staging:
     url: https://$STAGING_HOST/$CI_PROJECT_NAME
   tags:
     - staging
-
 
 deploy to production:
   stage: publish
@@ -83,7 +79,7 @@ deploy to production:
     - production
 
 
-## Removes dev cluster deployment (and all assets in the branch namespace)
+## Removes dev cluster review (and all assets in the review branch namespace)
 stop review:
   stage: cleanup
   extends:
@@ -100,7 +96,7 @@ stop review:
 #
 variables:                    # other global variables are set in GitLab Admin
   CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
-  GENERIC_DEPLOYMENT: "true"
+  GENERIC_DEPLOYMENT: ""
   #
   #   - if GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects a deployment package
   #     to exist in the "Deployments" GitLab group. Create a deployment package following the
@@ -108,8 +104,12 @@ variables:                    # other global variables are set in GitLab Admin
   #
   #   - also see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
   #
-  # DEPLOYMENT_PACKAGE_PROJECT_ID: 345
+  DEPLOYMENT_PACKAGE_PROJECT_ID: 345
   # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
+#
+# # other possible values
+#   PROJEC_INIT: "true"       # to override project token creation
+#   DEPLOY_PKG_INIT: "true"   # to create an initial project deployment package
 #
 #
 #
