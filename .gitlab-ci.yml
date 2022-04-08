@@ -1,13 +1,14 @@
 # Default LTC GitLab CI/CD Pipeline
 #
 ## Requirements
-#   - run `project-init.sh` to generate a GitLab Project Access Token and configure Vault
+#   - this file, with "CLUSTER_NAME" set to "dev-cp" or "dev-vsm"
 #   - `Dockerfile` in project root
 #
 ## General Pipeline Steps
 #   1. Gather info
 #   2. Build Image
 #   3. Trigger deployment pipeline
+
 
 stages:
   - get info
