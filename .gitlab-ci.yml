@@ -126,13 +126,12 @@ include:
   - project: 'deployments/ci-config'
     file: 
       - 'project-init.yml'
-      - '.debug.yml'
       - 'get-info.yml'
       - 'build.yml'
       - 'deploy-review.yml'
       - '.deploy-hydrate.yml'
       - '.vault.yml'
-      - '.rules.yml'
+      - '.rules-debug.yml'
       - 'deploy.yml'
 
 ## Specify which runner should pick up pipeline jobs
