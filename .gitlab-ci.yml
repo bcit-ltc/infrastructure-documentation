@@ -19,12 +19,12 @@ stages:
 ## Does the project have an access token?
 ##  - a project access token is created on the first run. If the pipeline fails,
 ##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
-# Other possible values
-# variables:
-# PROJEC_INIT:
-# DEPLOY_PKG_INIT="true"
 project init:
   stage: get info
+# # other possible values
+# variables:
+#   PROJEC_INIT: "true"
+#   DEPLOY_PKG_INIT: "true"
   extends:
     - .project_init
 
