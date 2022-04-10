@@ -22,7 +22,7 @@ stages:
 project init:
   stage: get info
   extends:
-    - token_init
+    - .token_init
 
 
 ## Determine if there are existing git tags or a new tag is required
