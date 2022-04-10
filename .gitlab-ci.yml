@@ -9,7 +9,6 @@
 #   2. Build Image
 #   3. Trigger deployment pipeline
 
-
 stages:
   - get info
   - publish
@@ -22,7 +21,7 @@ stages:
 project init:
   stage: get info
   extends:
-    - .project_init
+    - token_init
 
 
 ## Determine if there are existing git tags or a new tag is required
@@ -107,8 +106,7 @@ variables:                    # other global variables are set in GitLab Admin
   # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
 #
 # Other possible values
-  # PROJECT_INIT: "true"       # to override project token creation
-  DEPLOY_PKG_INIT: "true"   # to create an initial project deployment package
+  # DEPLOY_PKG_INIT: "true"   # to create an initial project deployment package
 #
 #
 #
@@ -126,13 +124,13 @@ include:
   - project: 'deployments/ci-config'
     file: 
       - 'project-init.yml'
+      - '.tokens.yml'
       - 'get-info.yml'
       - 'build.yml'
-      - 'deploy-review.yml'
+      - 'deploy.yml'
       - '.deploy-hydrate.yml'
       - '.vault.yml'
       - '.rules-debug.yml'
-      - 'deploy.yml'
 
 ## Specify which runner should pick up pipeline jobs
 default:
