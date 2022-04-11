@@ -9,6 +9,7 @@
 #   2. Build Image
 #   3. Trigger deployment pipeline
 
+
 stages:
   - get info
   - publish
@@ -20,6 +21,7 @@ stages:
 ##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
 project init:
   stage: get info
+
   extends:
     - .token_init
 
