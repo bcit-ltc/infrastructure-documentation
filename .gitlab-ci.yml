@@ -9,6 +9,7 @@
 #   2. Build Image
 #   3. Trigger deployment pipeline
 
+
 stages:
   - get info
   - publish
