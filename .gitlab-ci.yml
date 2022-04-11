@@ -21,6 +21,10 @@ stages:
 project init:
   stage: get info
 
+  variables:
+    GITLAB_PROJECT_NAME: "${CI_PROJECT_NAME}"
+    GITLAB_PROJECT_ID: "${CI_PROJECT_ID}"
+    
   extends:
     - .token_init
 
