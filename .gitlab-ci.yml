@@ -115,8 +115,8 @@ stop review:
 #
 #
 #
-variables:                    # other global variables are set in GitLab Admin
-  CLUSTER_NAME: "dev-cp"      # options: dev-cp, dev-vsm
+variables:                      # other global variables are set in GitLab Admin
+  CLUSTER_NAME: "dev-cp"        # options: dev-cp, dev-vsm
   GENERIC_DEPLOYMENT: ""
   #
   #   - if GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects a deployment package
@@ -125,11 +125,11 @@ variables:                    # other global variables are set in GitLab Admin
   #
   #   - also see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
   #
+  DEPLOY_PKG_INIT: "true"       # to create an initial project deployment package
   DEPLOY_PKG_PROJECT_ID: 345
-  # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
 #
 # Other possible values
-  DEPLOY_PKG_INIT: "true"   # to create an initial project deployment package
+  # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
 #
 #
 #
