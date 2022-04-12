@@ -125,8 +125,6 @@ include:
   - project: 'deployments/ci-config'
     file: 
       - 'project-init.yml'
-      - '.tokens.yml'
-      - '.packages.yml'
       - 'get-info.yml'
       - 'build.yml'
       - 'deploy.yml'
