@@ -16,6 +16,7 @@ stages:
   - cleanup
 
 
+
 ## Has the project been initialized?
 ##  - a project access token is required, and created on the first run. If the pipeline fails,
 ##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
@@ -26,28 +27,36 @@ project init:
     - .project_init
 
 
+
 ## Determine if there are existing git tags or a new tag is required
 get info:
   stage: get info
+
   extends:
     - .get_info
+
 
 
 ## Build image and push to project registry
 build image:
   stage: publish
+
   extends:
     - .build_image
+
 
 
 ## Deploy feat/fix branch package to dev cluster for review
 deploy review:
   stage: publish
+
   variables:
     TARGET_ENV: dev
+
   extends:
     - .deploy_review
     - .deploy_review_rules
+
 
 
 ## Deploy staging/production packages
@@ -55,37 +64,51 @@ deploy review:
 #   - triggers pipelines in "Deployments/{projectName}" project
 deploy to staging:
   stage: publish
+
   variables:
     TARGET_ENV: staging
+
   extends:
     - .deploy
     - .deploy_staging_rules
+
   environment:
     name: staging
     url: https://$STAGING_HOST/$CI_PROJECT_NAME
+
   tags:
     - staging
 
+
+
 deploy to production:
   stage: publish
+
   variables:
     TARGET_ENV: production
+
   extends:
     - .deploy
     - .deploy_prod_rules
+
   environment:
     name: production
     url: https://${PROD_HOST}/${CI_PROJECT_NAME}
+
   tags:
     - production
+
 
 
 ## Removes dev cluster review (and all assets in the review branch namespace)
 stop review:
   stage: cleanup
+
   extends:
     - .undeploy_review
     - .undeploy_review_rules
+
+
 
 #
 #
@@ -104,7 +127,7 @@ variables:                    # other global variables are set in GitLab Admin
   #
   #   - also see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
   #
-  DEPLOYMENT_PACKAGE_PROJECT_ID: 345
+  DEPLOY_PKG_PROJECT_ID: 345
   # COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
 #
 # Other possible values
