@@ -7,8 +7,7 @@
 ## General Pipeline Steps
 #   1. Gather info
 #   2. Build Image
-#   3. Trigger deployment pipeline
-
+#   3. Source code repository branches deploy to a dev cluster for review; main branch deploys to staging/production
 
 stages:
   - get info
@@ -16,8 +15,7 @@ stages:
   - cleanup
 
 
-
-## Has the project been initialized?
+## Project initialization
 ##  - a project access token is required, and created on the first run. If the pipeline fails,
 ##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
 project init:
