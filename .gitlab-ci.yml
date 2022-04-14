@@ -125,7 +125,7 @@ variables:                      # other global variables are set in GitLab Admin
 #
 #
 ## Other common pipeline variables
-  PIPELINE_DEBUG: "false"
+  PIPELINE_DEBUG: "true"
   GIT_FETCH_EXTRA_FLAGS: "--tags"
   VAULT_AUTH_ROLE: "$CI_PROJECT_NAME-dependabot"
 
