@@ -15,7 +15,6 @@ stages:
   - cleanup
 
 
-
 ## Project initialization
 ##  - a project access token is required, and created on the first run. If the pipeline fails,
 ##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
@@ -26,7 +25,6 @@ project init:
     - .project_init
 
 
-
 ## Determine if there are existing git tags or a new tag is required
 get info:
   stage: get info
@@ -35,14 +33,12 @@ get info:
     - .get_info
 
 
-
 ## Build image and push to project registry
 build image:
   stage: publish
 
   extends:
     - .build_image
-
 
 
 ## Deploy feat/fix branch package to dev cluster for review
@@ -55,7 +51,6 @@ deploy review:
   extends:
     - .deploy_review
     - .deploy_review_rules
-
 
 
 ## Deploy staging/production packages
@@ -79,7 +74,6 @@ deploy to staging:
     - staging
 
 
-
 deploy to production:
   stage: publish
 
@@ -98,7 +92,6 @@ deploy to production:
     - production
 
 
-
 ## Removes dev cluster review (and all assets in the review branch namespace)
 stop review:
   stage: cleanup
@@ -106,7 +99,6 @@ stop review:
   extends:
     - .undeploy_review
     - .undeploy_review_rules
-
 
 
 #
