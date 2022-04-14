@@ -41,7 +41,7 @@ build image:
 
 
 ## Deploy feat/fix branch package to dev cluster for review
-#   - must have a deployment package with at least a `dev` overlay
+#   - must have a deployment package with a `dev` overlay
 deploy review:
   stage: publish
   variables:
@@ -53,7 +53,7 @@ deploy review:
 
 
 ## Deploy staging/production packages
-#   - must have a deployment package
+#   - must have a deployment package with `staging` and `production` overlays
 #   - triggers pipelines in "Deployments/{projectName}" project
 deploy to staging:
   stage: publish
