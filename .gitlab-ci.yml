@@ -1,13 +1,15 @@
 # Default LTC GitLab CI/CD Pipeline
 #
 ## Requirements
-#   - this file, with "CLUSTER_NAME" (bottom of script) set to either "dev-cp" or "dev-vsm"
+#   - this file, with "CLUSTER_NAME" set (bottom of script)
 #   - `Dockerfile` in project root
+#   - (optional) deployment package
 #
 ## General Pipeline Steps
 #   1. Gather info
 #   2. Build Image
-#   3. Source code repository branches deploy to a dev cluster for review; main branch deploys to staging/production
+#   3. Deploy to a cluster
+#     - main branch deploys to staging/production; other branches deploy to a dev cluster for review
 
 stages:
   - get info
