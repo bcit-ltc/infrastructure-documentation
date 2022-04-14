@@ -110,13 +110,13 @@ variables:                      # other global variables are set in GitLab Admin
   #     to exist in the "Deployments" GitLab group. Create a deployment package following the
   #     guide in "Deployments/CI Config".
   #
-  #   - also see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
+  #   - see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
   #
   DEPLOY_PKG_INIT: "true"       # to create an initial project deployment package
   DEPLOY_PKG_PROJECT_ID: 380
 #
 # Other possible values
-  COMMON_NAMESPACE: "qcon"    # combine apps into one namespace; otherwise, set to ""
+  COMMON_NAMESPACE: "qcon"      # combine apps into one namespace
 #
 #
 #
