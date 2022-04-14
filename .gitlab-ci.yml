@@ -9,7 +9,6 @@
 #   2. Build Image
 #   3. Source code repository branches deploy to a dev cluster for review; main branch deploys to staging/production
 
-
 stages:
   - get info
   - publish
@@ -21,7 +20,6 @@ stages:
 ##    please wait 5 minutes and re-trigger with a new commit after a token has been created.
 project init:
   stage: get info
-
   extends:
     - .project_init
 
@@ -29,7 +27,6 @@ project init:
 ## Determine if there are existing git tags or a new tag is required
 get info:
   stage: get info
-
   extends:
     - .get_info
 
@@ -37,7 +34,6 @@ get info:
 ## Build image and push to project registry
 build image:
   stage: publish
-
   extends:
     - .build_image
 
@@ -45,7 +41,6 @@ build image:
 ## Deploy feat/fix branch package to dev cluster for review
 deploy review:
   stage: publish
-
   variables:
     TARGET_ENV: dev
 
@@ -59,7 +54,6 @@ deploy review:
 #   - triggers pipelines in "Deployments/{projectName}" project
 deploy to staging:
   stage: publish
-
   variables:
     TARGET_ENV: staging
 
@@ -77,7 +71,6 @@ deploy to staging:
 
 deploy to production:
   stage: publish
-
   variables:
     TARGET_ENV: production
 
@@ -132,9 +125,9 @@ variables:                      # other global variables are set in GitLab Admin
 #
 #
 ## Other common pipeline variables
-  VAULT_AUTH_ROLE: "$CI_PROJECT_NAME-dependabot"
-  GIT_FETCH_EXTRA_FLAGS: "--tags"
   PIPELINE_DEBUG: "false"
+  GIT_FETCH_EXTRA_FLAGS: "--tags"
+  VAULT_AUTH_ROLE: "$CI_PROJECT_NAME-dependabot"
 
 ## Include common scripts
 include:
