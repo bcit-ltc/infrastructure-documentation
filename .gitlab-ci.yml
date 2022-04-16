@@ -18,7 +18,7 @@ stages:
 
 
 ## Project initialization
-##  - a project access token is required, and created on the first run. If the pipeline fails,
+##  - a project access token (required) is created on the first run. If the pipeline fails,
 ##    please wait 5 minutes and re-try after a token has been created.
 project init:
   stage: get info
