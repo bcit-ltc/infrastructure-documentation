@@ -61,7 +61,7 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 
 > [https://rancher2.ltc.bcit.ca](https://rancher2.ltc.bcit.ca)
 >
-> * vpn required
+> * VPN required
 > * Login with your BCIT credentials
 
 Rancher is an easy-to-use UI for Kubernetes. It helps us manage the workloads and services on our clusters.
