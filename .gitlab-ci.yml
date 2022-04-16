@@ -11,7 +11,6 @@
 #   3. Deploy to a cluster
 #     - main branch deploys to staging/production; other branches deploy to a dev cluster for review
 
-
 stages:
   - get info
   - publish
