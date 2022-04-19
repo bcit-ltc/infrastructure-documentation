@@ -52,7 +52,7 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 
 > [https://vault.ltc.bcit.ca:8200](https://vault.ltc.bcit.ca:8200)
 >
-> * vpn required
+> * VPN required
 > * Login with your BCIT credentials using the **LDAP** authentication method.
 
 [Hashicorp Vault](https://vaultproject.io) is the LTC's secrets management platform. It stores secrets used for apps, database credentials, certificates, and more, and serves as an authentication middleware to secure communication between source code repositories, and a deployment endpoint in our Kubernetes clusters.
@@ -61,7 +61,7 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 
 > [https://rancher2.ltc.bcit.ca](https://rancher2.ltc.bcit.ca)
 >
-> * vpn required
+> * VPN required
 > * Login with your BCIT credentials
 
 Rancher is an easy-to-use UI for Kubernetes. It helps us manage the workloads and services on our clusters.

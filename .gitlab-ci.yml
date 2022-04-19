@@ -1,4 +1,4 @@
-# Default LTC GitLab CI/CD Pipeline
+# Default LTC Source Project CI/CD Pipeline
 #
 ## Requirements
 #   - this file, with "CLUSTER_NAME" set (bottom of script)
@@ -18,8 +18,8 @@ stages:
 
 
 ## Project initialization
-##  - a project access token is required, and created on the first run. If the pipeline fails,
-##    please wait 5 minutes and re-try after a token has been created.
+#   - a project access token is required, and created on the first run. If the pipeline fails,
+#     please wait 5 minutes and re-try after a token has been created.
 project init:
   stage: get info
   extends:
@@ -38,10 +38,11 @@ build image:
   stage: publish
   extends:
     - .build_image
+    - .build_image_rules
 
 
 ## Deploy feat/fix branch package to dev cluster for review
-#   - must have a deployment package with at least a `dev` overlay
+#   - must have a deployment package with a `dev` overlay
 deploy review:
   stage: publish
   variables:
@@ -53,7 +54,7 @@ deploy review:
 
 
 ## Deploy staging/production packages
-#   - must have a deployment package
+#   - must have a deployment package with `staging` and `production` overlays
 #   - triggers pipelines in "Deployments/{projectName}" project
 deploy to staging:
   stage: publish
@@ -107,7 +108,7 @@ stop review:
 #
 variables:                      # other global variables are set in GitLab Admin
   CLUSTER_NAME: "dev-cp"        # options: dev-cp, dev-vsm
-  GENERIC_DEPLOYMENT: ""
+  # GENERIC_DEPLOYMENT: ""
   #
   #   - if GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects a deployment package
   #     to exist in the "Deployments" GitLab group. Create a deployment package following the
@@ -115,11 +116,11 @@ variables:                      # other global variables are set in GitLab Admin
   #
   #   - see https://infrastructure-documentation.dev.ltc.bcit.ca/ for additional info.
   #
-  DEPLOY_PKG_INIT: "true"       # to create an initial project deployment package
-  DEPLOY_PKG_PROJECT_ID: 380
+  # DEPLOY_PKG_INIT: "true"       # to create an initial project deployment package
+  DEPLOY_PKG_PROJECT_ID: "403"
 #
 # Other possible values
-  COMMON_NAMESPACE: "qcon"      # combine apps into one namespace
+  # COMMON_NAMESPACE: ""      # combine apps into one namespace
 #
 #
 #
@@ -129,8 +130,6 @@ variables:                      # other global variables are set in GitLab Admin
 #
 ## Other common pipeline variables
   PIPELINE_DEBUG: "true"
-  GIT_FETCH_EXTRA_FLAGS: "--tags"
-  VAULT_AUTH_ROLE: "$CI_PROJECT_NAME-dependabot"
 
 ## Include common scripts
 include:
@@ -142,7 +141,7 @@ include:
       - 'deploy.yml'
       - '.deploy-hydrate.yml'
       - '.vault.yml'
-      - '.rules-debug.yml'
+      - '.rules.yml'
 
 ## Specify which runner should pick up pipeline jobs
 default:
