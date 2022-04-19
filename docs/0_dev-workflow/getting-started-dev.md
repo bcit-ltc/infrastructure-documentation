@@ -107,24 +107,19 @@ This workflow helps us keep track of bugfixes, new features, and major changes (
     ![versioning workflow](../assets/git-workflow-simple.png#only-light)
     ![versioning workflow](../assets/git-workflow-simple-dark.png#only-dark)
 
-    After creating or cloning a project, our workflow involves the following steps:
+    After creating or cloning a project, the workflow involves the following:
 
-    1. Creating an Issue, a Merge Request (MR), and new branch
-    1. Committing and syncing
-        * pushing work to GitLab triggers a CI/CD pipeline that:
-            1. Builds an image, tagged with the git commit hash
+    1. Create an Issue, a Merge Request (MR), and new branch
+    1. Commit and sync
+        * push work to GitLab to trigger a CI/CD pipeline that:
+            1. Builds an image (tagged with the git commit hash)
             1. Pushes the image to the project registry
             1. Deploys the workload to a *dev* cluster
     1. Request a code review and approval
-    1. Merge into `main`
-        * Merging MR's into the `main` branch triggers a CI/CD pipeline that:
-            1. Builds an image, tagged with the label `latest`
+    1. Merge into *main*
+        * Merging an MR into the *main* branch triggers a CI/CD pipeline that:
+            1. Builds an image (tagged with the label `latest`)
             1. Pushes the image to the project registry
             1. Deploys the workload to the *staging* cluster
-    1. Create a "release" MR
-    1. Request a code review and approval
-    1. Merge into `release`
-        * Merging MR's into the `release` branch triggers a CI/CD pipeline that:
-            1. Builds an image, tagged with the label `stable`
-            1. Pushes the image to the project registry
-            1. Deploys the workload to the *production* cluster
+
+    * Commits that have a commit message that starts with "feat:", or "fix:" will automatically increment the version tag of the repo.
