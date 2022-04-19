@@ -92,17 +92,13 @@ When you are ready to turn your app into an image and push it to a registry, nav
 
 Now that you have an image in a registry, it can be deployed to a Kubernetes cluster as a workload.
 
-### Repository Branches and "GitFlow"
+### Repository Branches and GitLab workflow
 
 !!! info ""
 
-    This section is included here because setting up a project is one of the first things you do, even before getting started with Docker!
+    Setting up a project is one of the first things you do, even before getting started with Docker!
 
-For us, a pattern has emerged that is loosely based on GitFlow. Projects have two persistent branches, and new bugfixes or features are added to ephemeral branches:
-
-- a `main` branch, where code deployed to the `staging` cluster
-- a `release` branch, where code gets tested, approved, and deployed to the `prod` cluster
-- `feature` branches are forked from the `main` branch and merged after code review and approval
+For us, a pattern has emerged that is loosely based on GitFlow. Projects have a persistent *main* branche, and new bugfixes or features are added to ephemeral *feat* or *fix* branches. Feature and fix branch code is deployed to a dev cluster and main branch code is deployed to the staging and production clusters.
 
 This workflow helps us keep track of bugfixes, new features, and major changes (and the work done to resolve those issues) without maintaining an overly-complex branching practice.
 
