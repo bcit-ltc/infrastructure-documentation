@@ -1,4 +1,4 @@
-# Default LTC GitLab CI/CD Source Project Pipeline
+# Default LTC Source Project CI/CD Pipeline
 #
 ## Requirements
 #   - this file, with "CLUSTER_NAME" set (bottom of script)
