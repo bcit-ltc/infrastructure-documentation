@@ -90,11 +90,11 @@ Configuration files are YAML formatted; they define the types of Kubernetes reso
             - containerPort: 80
     ```
 
-So how or where do we get these files? They can be created from scratch, but there are also tools that simplify the initial spec definition.
+So how or where do we get these files? They can be created from scratch, but there are also tools that simplify the initial spec definition. This next section outlines some of the options when working with these files, also known as *Kubernetes Resource Manifest (KRM)* files.
 
 ## Working with Kubernetes
 
-> * See the [Kubernetes section](../1_kubernetes/index.md) for more details about our Kubernetes architecture.
+> * See the [Kubernetes section](../1_kubernetes/index.md) for more details about the LTC's Kubernetes architecture.
 
 Besides the image and the workload configuration files, you need a cluster to deploy to! An easy way to get started is to download and run a local Kubernetes distribution, but because Kubernetes is resource-intensive, it's generally not a good idea to keep it running continuously; start one up, use it, and then stop it to preserve battery!
 
@@ -189,6 +189,10 @@ Cluster contexts from various sources can be joined with commands like:
 [Kustomize](https://kustomize.io) is a tool to build deployment configuration files for different contexts without duplicating content. Kustomize uses *overlays* to change deployment parameters from one configuration for a dev cluster to slightly different configuration for a production cluster.
 
 Our template `deploy` folder uses Kustomize to ensure workloads are configured for the context they are being deployed to.
+
+## Kpt
+
+`Kpt` is a Kubernetes Resource Manifest (KRM) package manager. It simplifies the management of workloads by associating resources together as an "inventory". This inventory is recorded on all KRM's that are deployed together so that they can be tracked, updated, and pruned as necessary.
 
 ## CI/CD Pipelines
 
