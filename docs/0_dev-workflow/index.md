@@ -1,6 +1,9 @@
 ---
-title: Overview
+  title: "Overview"
 ---
+<!-- markdownlint-disable MD025 -->
+
+# Development Workflow Overview
 
 The LTC's infrastructure is designed to make it easy to adopt a modern, automated, development workflow:
 
@@ -19,5 +22,5 @@ The LTC's infrastructure is designed to make it easy to adopt a modern, automate
 
 This diagram is an overview of the major components of our development workflow:
 
-[![Development workflow](../assets/dev-workflow-overview.png#only-light)](../assets/dev-workflow-overview.png)
-[![Development workflow](../assets/dev-workflow-overview-dark.png#only-dark)](../assets/dev-workflow-overview-dark.png)
+[![Development workflow](../assets/dev-workflow-overview-new.png#only-light)](../assets/dev-workflow-overview.png)
+[![Development workflow](../assets/dev-workflow-overview-new-dark.png#only-dark)](../assets/dev-workflow-overview-dark.png)

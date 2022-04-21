@@ -30,14 +30,14 @@ This page describes the general steps involved in creating a deployment, whether
 
 ## Deploying a Workload
 
-When an image is ready to be scheduled on a Kubernetes cluster, there are a few configuration files that need to be defined for the workload to run. Together, these files - and the image they refer to - are considered a **deployment**. When the deployment is scheduled and running on a cluster, it's called a **workload**.
+When an image is ready to be scheduled on a Kubernetes cluster, there are a few configuration files that need to be defined for the workload to run. Together, these files - and the image they refer to - are considered a **deployment package**. When the deployment is scheduled and running on a cluster, it's called a **workload**.
 
 ![deployment image](../assets/deployment.png#only-light){ align=right }
 ![deployment image](../assets/deployment-dark.png#only-dark){ align=right }
 
 !!! info ""
 
-    A typical deployment has the following configuration files:
+    A typical deployment package has the following *Kubernetes Resource Manifest (KRM)* files:
 
     * `ingress.yaml`
     * `service.yaml`
@@ -47,7 +47,7 @@ A Kubernetes resource called a **deployment** tells the cluster how to run the i
 
 !!! danger "Beware! Confusing Terminology"
 
-    The term "deployment" can be used to describe a couple of different things:
+    The terms "deployment" and "deployment package" can be used to describe a couple of different things:
 
     * the process of getting the image to the cluster and configuring it to run (usually via a CI/CD pipeline)
     * a Kubernetes resource that specifies how an image should run
@@ -57,7 +57,7 @@ A Kubernetes resource called a **deployment** tells the cluster how to run the i
 
 ### Workload Configuration Files
 
-Configuration files are YAML formatted; they define the types of Kubernetes resources to create. Although they can be named anything, the names in our example files correspond to the types of resources that are created.
+KRM configuration files are YAML formatted; they define the types of Kubernetes resources to create. Although they can be named anything, the names in our example files correspond to the types of resources that are created.
 
 **`deployment.yaml`**
 
@@ -90,7 +90,7 @@ Configuration files are YAML formatted; they define the types of Kubernetes reso
             - containerPort: 80
     ```
 
-So how or where do we get these files? They can be created from scratch, but there are also tools that simplify the initial spec definition. This next section outlines some of the options when working with these files, also known as *Kubernetes Resource Manifest (KRM)* files.
+So how or where do we get these files? They can be created from scratch, but there are also tools that simplify the initial spec definition. This next section outlines some of the options when working with these files.
 
 ## Working with Kubernetes
 
@@ -192,7 +192,7 @@ Our template `deploy` folder uses Kustomize to ensure workloads are configured f
 
 ## Kpt
 
-`Kpt` is a Kubernetes Resource Manifest (KRM) package manager. It simplifies the management of workloads by associating resources together as an "inventory". This inventory is recorded on all KRM's that are deployed together so that they can be tracked, updated, and pruned as necessary.
+[`Kpt`](https://kpt.dev/) is a Kubernetes Resource Manifest (KRM) package manager. It simplifies the management of workloads by associating resources together as an "inventory". This inventory is associated with all KRM's that are deployed together so that they can be tracked, updated, and pruned as necessary.
 
 ## CI/CD Pipelines
 
