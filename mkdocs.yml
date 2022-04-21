@@ -62,15 +62,15 @@ nav:
   - index.md
   - services-systems.md
   - Development Workflow:
-    - 0_dev-workflow/index.md
-    - 0_dev-workflow/getting-started-dev.md
-    - 0_dev-workflow/deployment-release.md
-    - 0_dev-workflow/pipeline-details.md
+    - dev-workflow/index.md
+    - dev-workflow/getting-started-dev.md
+    - dev-workflow/deployment-release.md
+    - dev-workflow/pipeline-details.md
   - Kubernetes:
-    - 1_kubernetes/index.md
-    - 1_kubernetes/role-cluster-details.md
+    - kubernetes/index.md
+    - kubernetes/role-cluster-details.md
   - Infrastructure:
-    - 2_infrastructure/index.md
-    - 2_infrastructure/infrastructure-details.md
-    - 2_infrastructure/configuration-projects.md
-    - 2_infrastructure/infrastructure-dev.md
+    - infrastructure/index.md
+    - infrastructure/infrastructure-details.md
+    - infrastructure/configuration-projects.md
+    - infrastructure/infrastructure-dev.md

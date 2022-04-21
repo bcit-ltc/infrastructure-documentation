@@ -94,7 +94,7 @@ So how or where do we get these files? They can be created from scratch, but the
 
 ## Working with Kubernetes
 
-> * See the [Kubernetes section](../1_kubernetes/index.md) for more details about the LTC's Kubernetes architecture.
+> * See the [Kubernetes section](../kubernetes/index.md) for more details about the LTC's Kubernetes architecture.
 
 Besides the image and the workload configuration files, you need a cluster to deploy to! An easy way to get started is to download and run a local Kubernetes distribution, but because Kubernetes is resource-intensive, it's generally not a good idea to keep it running continuously; start one up, use it, and then stop it to preserve battery!
 
