@@ -4,7 +4,7 @@ Whether it's a small interaction for an single course, or a larger, more complic
 
 !!! tip "Development Strategy"
 
-    Rather than building every functional component into one large monolith, our approach is to build smaller apps that have one purpose, and then connect them together with API calls. This makes it easier to update a specific component without having to change to something that already works well.
+    Rather than building every functional component into one large monolith, the approach is to build smaller apps that have one purpose, and then connect them together with API calls. This makes it easier to update a specific component without having to change to something that already works well.
 
     For example, an authentication component that interfaces with a front-end does not need to be part of the same code base as a data conversion engine that is part of the back-end.
 
@@ -50,6 +50,24 @@ Docker can be used in a few different ways. A nice way to try out an app is to r
     1. Start Docker
     1. Open a terminal and run `docker container run -p 8080:80 nginx`
     1. Open a browser and navigate to `localhost:8080`
+
+### Dockerfile
+
+The core configuration file for Docker is the `Dockerfile`. This file specifies how your app should be built.
+
+The `Dockerfile` is a sequence of commands that the build engine reads to create everything your app needs to run. The final output of the build engine is an `image` that can (generally) run on any machine.
+
+!!! example "Example `Dockerfile` commands"
+
+    FROM python
+
+    WORKDIR /app
+
+    COPY . ./
+
+    RUN pip install
+
+For more information about options and best-practices about how to build a `Dockerfile`, see the [`Dockerfile` reference documentation](https://docs.docker.com/engine/reference/builder/).
 
 ### `docker compose`
 
