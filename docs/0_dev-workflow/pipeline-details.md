@@ -2,7 +2,7 @@
 
 !!! warning "Under Construction"
 
-    This page is still being written
+    This page is still being written...
 
 The default LTC pipeline runs the following jobs:
 
@@ -10,7 +10,6 @@ The default LTC pipeline runs the following jobs:
 1. gather_info
 1. build
 1. deploy
-1. cleanup
 
 !!! example "Working with the CI/CD Pipeline"
 
@@ -23,7 +22,7 @@ The default LTC pipeline runs the following jobs:
     1. Develop locally using `docker run...`, `docker compose up`, and/or `skaffold dev`
     1. Commit changes and push back to the repo
 
-    Pushing a commit triggers a CI/CD pipeline that builds your application and deploys it to a dev cluster.
+Pushing a commit triggers a CI/CD pipeline that builds your application and deploys it to a dev cluster.
 
 ## Repository Configuration
 
@@ -57,7 +56,7 @@ Here's what the structure of a kustomize-based deployment package looks like:
 
 ![kustomized deploy package](../assets/kustomized-deploy-pkg.png)
 
-The files in the `dev` path are *patches* that configure the deployment for a dev cluster. Similarly, the files in the `production` path are patches for the production cluster.
+The files in the `dev` path are *patches* that configure the deployment for a `dev` cluster. Similarly, the files in the `production` path are patches for the `production` cluster.
 
 !!! tip "Creating a Deployment Package"
 
