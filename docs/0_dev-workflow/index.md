@@ -7,7 +7,6 @@ The LTC's infrastructure is designed to make it easy to adopt a modern, automate
 - [x] local development using `docker compose`
 - [x] centralized version control using GitLab
 - [x] private image registries using [GitLab Registry](https://docs.gitlab.com/ee/user/packages/container_registry/)
-- [x] development deployment testing using [Skaffold](https://skaffold.dev)
 - [x] modified environments for dev, staging, and production using [Kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
 - [x] deployment packages managed by [kpt](https://kpt.dev/book/)
 - [x] automated deployment using [GitLab Runner CI/CD pipeline](https://docs.gitlab.com/ee/ci/)

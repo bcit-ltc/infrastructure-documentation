@@ -39,7 +39,7 @@ Because our goal is to develop an image, we use Docker to:
 - scan the image for vulnerabilities
 - push the image to the LTC private registry
 
-Once an image is stored in a registry it can be deployed to a Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline. Before we look at CI/CD pipelines in more detail, let's go over other important details about Docker.
+Once an image is stored in a registry it can be deployed to a development Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline. Before we look at CI/CD pipelines in more detail, let's go over other important details about Docker.
 
 ### Docker Details
 
@@ -90,7 +90,7 @@ When you are ready to turn your app into an image and push it to a registry, nav
 
     `$ docker push registry.dev.ltc.bcit.ca/web-apps/qcon/qcon-api`
 
-Now that you have an image in a registry, it can be deployed to a Kubernetes cluster as a workload.
+Now that you have an image in a registry, it can be deployed to a development Kubernetes cluster as a workload.
 
 ### Repository Branches and GitLab workflow
 
@@ -120,6 +120,6 @@ This workflow helps us keep track of bugfixes, new features, and major changes (
         * Merging an MR into the *main* branch triggers a CI/CD pipeline that:
             1. Builds an image (tagged with the label `latest`)
             1. Pushes the image to the project registry
-            1. Deploys the workload to the *staging* cluster
+            1. Deploys the workload to the *staging* and/or *production* clusters
 
     * Commits that have a commit message that starts with "feat:", or "fix:" will automatically increment the version tag of the repo.
