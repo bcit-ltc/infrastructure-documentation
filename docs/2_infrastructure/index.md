@@ -1,6 +1,9 @@
 ---
 title: Overview
 ---
+<!-- markdownlint-disable MD025 -->
+
+# Infrastructure Overview
 
 [![architecture](../assets/ltc-infrastructure-feb2022-light.png#only-light)](ltc-infrastructure-feb2022.md)
 [![architecture](../assets/ltc-infrastructure-feb2022-dark.png#only-dark)](ltc-infrastructure-feb2022-dark.md)
