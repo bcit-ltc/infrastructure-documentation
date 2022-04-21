@@ -92,20 +92,16 @@ When you are ready to turn your app into an image and push it to a registry, nav
 
 Now that you have an image in a registry, it can be deployed to a development Kubernetes cluster as a workload.
 
-### Repository Branches and GitLab workflow
+### Repository Branches and GitLab Flow
 
-!!! info ""
-
-    Setting up a project is one of the first things you do, even before getting started with Docker!
-
-For us, a pattern has emerged that is loosely based on GitFlow. Projects have a persistent *main* branche, and new bugfixes or features are added to ephemeral *feat* or *fix* branches. Feature and fix branch code is deployed to a dev cluster and main branch code is deployed to the staging and production clusters.
+For us, a pattern has emerged that is loosely based on [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html). Projects have a persistent *main* branch, and new bugfixes or features are added to ephemeral *feat* or *fix* branches. Feature and fix branch code is deployed to a `dev` cluster and main branch code is deployed to the `staging` and `production` clusters.
 
 This workflow helps us keep track of bugfixes, new features, and major changes (and the work done to resolve those issues) without maintaining an overly-complex branching practice.
 
-!!! example "Git-based Development Workflow"
+!!! example "GitLab Flow-based Development Workflow"
 
-    ![versioning workflow](../assets/git-workflow-simple.png#only-light)
-    ![versioning workflow](../assets/git-workflow-simple-dark.png#only-dark)
+    ![versioning workflow](../assets/git-workflow-simple-new.png#only-light)
+    ![versioning workflow](../assets/git-workflow-simple-new-dark.png#only-dark)
 
     After creating or cloning a project, the workflow involves the following:
 
