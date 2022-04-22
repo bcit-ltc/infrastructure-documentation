@@ -66,6 +66,7 @@ nav:
     - dev-workflow/getting-started-dev.md
     - dev-workflow/deployment-release.md
     - dev-workflow/pipeline-overview.md
+    - dev-workflow/deploy-packages.md
     - dev-workflow/pipeline-details.md
   - Kubernetes:
     - kubernetes/index.md
