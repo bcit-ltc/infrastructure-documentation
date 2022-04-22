@@ -59,6 +59,7 @@ The `Dockerfile` is a sequence of commands that the build engine reads to create
 
 !!! example "Example `Dockerfile` commands"
 
+    ```
     FROM python
 
     WORKDIR /app
@@ -66,6 +67,7 @@ The `Dockerfile` is a sequence of commands that the build engine reads to create
     COPY . ./
 
     RUN pip install
+    ```
 
 For more information about options and best-practices about how to build a `Dockerfile`, see the [`Dockerfile` reference documentation](https://docs.docker.com/engine/reference/builder/).
 
