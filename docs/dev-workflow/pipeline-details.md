@@ -6,4 +6,6 @@
 
 "The pipeline" is actually several pipelines working in different projects:
 
-## `LTC Infrastructure` > `project-init`
+## `LTC Infrastructure` > `Project Init`
+
+## `Deployments` > `CI Config`
