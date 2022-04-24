@@ -4,4 +4,6 @@
 
     This page is still being written...
 
-The pipeline files involved in a working setup span several projects...
+"The pipeline" is actually several pipelines working in different projects:
+
+## `LTC Infrastructure` > `project-init`
