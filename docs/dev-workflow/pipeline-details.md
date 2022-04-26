@@ -15,7 +15,53 @@
 
 ## `LTC Infrastructure` > `Project Init`
 
-This project houses common scripts called whenever a new project token needs to be created.
+This project houses common pipelines called whenever init tasks are needed. The pipeline configuration files exist on different branches.
+
+### `deploy-pkg-init` pipeline
+
+1. Parse trigger payload
+1. Create deploy package
+    * create "create deploy-package-project" payload
+    * create project
+1. Trigger the `project-token-init` pipeline (Deployments/CI_Config project)
+
+### `create-project-token` pipeline
+
+1. Parse trigger payload
+1. Create project token
+    * create payload for token creation
+    * create token
+    * retrieve vault userpass auth token to write secrets
+    * writes token as a vault secret
+1. Trigger the `commit-vault-config` pipeline
+
+### `commit-vault-config` pipeline
+
+1. Parse trigger payload
+1. Create role files
+    * create gitlab-jwt role file
+    * create kubernetes-auth role file
+1. Commit Terraform files for Vault roles
+    * create branch for the commit
+    * create commit payload
+    * commit payload to the branch
+    * create a merge request payload
+    * create a merge request (MR)
+    * check if branch can be merged
+    * create merge payload to approve and delete branch
+    * merge the MR
+
+## `create-deploy-trigger-token` pipeline
+
+1. Parse trigger payload
+1. Create trigger token
+    * check if trigger token already exists
+    * create trigger token
+1. Write secret to Vault
+    * retrieve vault userpass auth token to write secrets
+    * retrieve existing `-deployabot` secret
+    * inject trigger token into existing `-deployabot` secret
+    * write updated secret to Vault
 
 ## `Deployments` > `CI Config`
 
