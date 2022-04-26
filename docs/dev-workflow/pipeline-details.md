@@ -60,9 +60,11 @@ This project houses common pipelines called whenever init tasks are needed. The 
 ## `create-deploy-trigger-token` pipeline
 
 1. Parse trigger payload
+
 1. Create trigger token
     * check if trigger token already exists
     * create trigger token
+
 1. Write secret to Vault
     * retrieve vault userpass auth token to write secrets
     * retrieve existing `-deployabot` secret
