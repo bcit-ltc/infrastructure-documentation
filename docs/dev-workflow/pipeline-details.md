@@ -4,7 +4,7 @@
 
     This page is still being written...
 
-"The pipeline" is actually several pipelines working in different projects. As much as possible, the pipelines have been created to perform a discrete function. These include:
+The "pipeline" is actually several pipelines working together from different projects. As much as possible, the pipelines have been created to perform a discrete function. These include:
 
 * Coordinating the deployment of source code to a `dev` cluster for review
 * Creating a *deployment package* project
@@ -77,7 +77,7 @@ This repo houses the common deployment helper scripts for ci/cd pipelines.
 
 ### `build.yml`
 
-Main configuration file for building images using Kanko.
+Main configuration file for building images using Kaniko.
 
 #### `.build_image` job
 
