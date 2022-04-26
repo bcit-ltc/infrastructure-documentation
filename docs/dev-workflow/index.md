@@ -18,9 +18,7 @@ The LTC's infrastructure is designed to make it easy to adopt a modern, automate
 - [x] git tagged semantic versioning using [semantic-release](https://semantic-release.gitbook.io/semantic-release/)
 - [x] packaged release snapshots using [GitLab Releases](https://docs.gitlab.com/ee/user/project/releases/)
 
-----
-
-This diagram is an overview of the major components of our development workflow:
+This diagram below is an overview of the major components of our development workflow. Click "Getting Started" to find out how to add a pipeline to your project, initialize a *deployment package*, and deploy to a Kubernetes cluster.
 
 [![Development workflow](../assets/dev-workflow-overview-new.png#only-light)](../assets/dev-workflow-overview.png)
 [![Development workflow](../assets/dev-workflow-overview-new-dark.png#only-dark)](../assets/dev-workflow-overview-dark.png)
