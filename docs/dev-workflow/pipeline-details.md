@@ -15,6 +15,8 @@
 
 ## `LTC Infrastructure` > `Project Init`
 
+This project houses common scripts called whenever a new project token needs to be created.
+
 ## `Deployments` > `CI Config`
 
 This repo houses the common deployment helper scripts for ci/cd pipelines.
