@@ -6,7 +6,7 @@ WORKDIR /docs
 RUN set -ex; \
     pip install Pygments pymdown-extensions;
 
-COPY . .
+COPY . ./
 
 RUN set -ex; \
     mkdocs build --site-dir /public;
@@ -17,4 +17,4 @@ FROM nginxinc/nginx-unprivileged:1.20
 
 LABEL maintainer courseproduction@bcit.ca
 
-COPY --from=build /public /usr/share/nginx/html
+COPY --from=build /public /usr/share/nginx/html/
