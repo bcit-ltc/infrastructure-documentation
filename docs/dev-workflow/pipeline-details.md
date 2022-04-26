@@ -52,7 +52,7 @@ Metajob that deploys a workload from the `dev` overlay of a deployment package t
 
 #### `.deploy` job
 
-Trigger a deployment/release pipeline (`.gitlab-ci.yml` in the deployment package).
+Trigger a deployment/release pipeline (`.gitlab-ci.yml` in the *deployment package*).
 
 * Apply production namespace override
 * Trigger the deployment package pipeline
