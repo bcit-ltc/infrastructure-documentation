@@ -57,7 +57,7 @@ A Kubernetes resource called a **deployment** tells the cluster how to run the i
 
 ### Workload Configuration Files
 
-KRM configuration files are YAML formatted; they define the types of Kubernetes resources to create. Although they can be named anything, the names in our example files correspond to the types of resources that are created.
+KRM configuration files are YAML formatted and they define the types of Kubernetes resources to create. Although they can be named anything, the names in our example files correspond to the types of resources that are created.
 
 **`deployment.yaml`**
 
