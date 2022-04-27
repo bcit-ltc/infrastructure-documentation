@@ -43,9 +43,11 @@ Because our goal is to develop an image, we use Docker to:
 - scan the image for vulnerabilities
 - push the image to the LTC private registry
 
-Once an image is stored in a registry it can be deployed to a development Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline. Before we look at CI/CD pipelines in more detail, let's go over other important details about Docker.
+Once an image is stored in a registry it can be deployed to a development Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline.
 
-### Docker Details
+But before we look at CI/CD pipelines in more detail, let's go over other important details about Docker.
+
+### Docker
 
 Docker can be used in a few different ways. A nice way to try out an app is to run it using `docker` instead of installing it.
 
@@ -55,7 +57,7 @@ Docker can be used in a few different ways. A nice way to try out an app is to r
     1. Open a terminal and run `docker container run -p 8080:80 nginx`
     1. Open a browser and navigate to `localhost:8080`
 
-### Dockerfile
+#### Dockerfiles
 
 The core configuration file for Docker is the `Dockerfile`. This file specifies how your app should be built.
 
@@ -77,7 +79,7 @@ For more information about options and best-practices about how to build a `Dock
 
 ### `docker compose`
 
-When developing a single-purpose app that runs as a component in a "microservice", `docker compose` helps by creating a local dev environment that simulates a microservice environment that runs in production.
+When you install `docker`, the executable includes functionality that creates a local dev environment to simulate how microservices would run in production. The `docker compose` command reads a `docker-compose.yml` file and launches containers connected by a virtual network.
 
 See [Docker Compose File Basics](https://takacsmark.com/docker-compose-tutorial-beginners-by-example-basics/#compose-file-basics) for a good overview of how `docker-compose.yml` files work.
 
