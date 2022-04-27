@@ -116,7 +116,7 @@ When you are ready to turn your app into an image and push it to a registry, nav
 
     `$ docker push registry.dev.ltc.bcit.ca/web-apps/qcon/qcon-api`
 
-Now that you have an image in a registry, it can be deployed to a development Kubernetes cluster as a workload.
+When you have an image in a registry, either in the LTC's private registry or on a public site like [hub.docker.com](https://hub.docker.com), it can be deployed to a Kubernetes cluster as a workload.
 
 ### Repository Branches and GitLab Flow
 
