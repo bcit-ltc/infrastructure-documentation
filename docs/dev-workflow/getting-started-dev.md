@@ -133,15 +133,15 @@ This workflow helps us keep track of bugfixes, new features, and major changes (
 
     1. Create an Issue, a Merge Request (MR), and new branch
     1. Commit and sync
-        * push work to GitLab to trigger a CI/CD pipeline that:
+        * push your code to GitLab to trigger a CI/CD pipeline. The pipeline:
             1. Builds an image (tagged with the git commit hash)
             1. Pushes the image to the project registry
             1. Deploys the workload to a *dev* cluster
     1. Request a code review and approval
     1. Merge into *main*
-        * Merging an MR into the *main* branch triggers a CI/CD pipeline that:
+        * Merging a MR into the *main* branch triggers a CI/CD pipeline that:
             1. Builds an image (tagged with the label `latest`)
             1. Pushes the image to the project registry
             1. Deploys the workload to the *staging* and/or *production* clusters
 
-    * Commits that have a commit message that starts with "feat:", or "fix:" will automatically increment the version tag of the repo.
+    * Commits that have a commit message that starts with "feat:", or "fix:" will automatically increment the version tag of the repo and deploy the workload to the production cluster.
