@@ -79,7 +79,7 @@ For more information about options and best-practices about how to build a `Dock
 
 ### `docker compose`
 
-When you install `docker`, the executable includes functionality that creates a local dev environment to simulate how microservices would run in production. The `docker compose` command reads a `docker-compose.yml` file and launches containers connected by a virtual network to simulate a microservice pattern.
+When you install `docker`, the executable includes functionality that creates a local dev environment to simulate how microservices would run in production. The `docker compose` command reads a `docker-compose.yml` file and launches containers connected by a virtual network.
 
 See [Docker Compose File Basics](https://takacsmark.com/docker-compose-tutorial-beginners-by-example-basics/#compose-file-basics) for a good overview of how `docker-compose.yml` files work.
 
