@@ -43,7 +43,9 @@ Because our goal is to develop an image, we use Docker to:
 - scan the image for vulnerabilities
 - push the image to the LTC private registry
 
-Once an image is stored in a registry it can be deployed to a development Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline. Before we look at CI/CD pipelines in more detail, let's go over other important details about Docker.
+Once an image is stored in a registry it can be deployed to a development Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline.
+
+But before we look at CI/CD pipelines in more detail, let's go over other important details about Docker.
 
 ### Docker Details
 
