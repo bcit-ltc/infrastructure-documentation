@@ -200,4 +200,4 @@ CI/CD stands for "continuous integration/continuous deployment", and it refers t
 
 When an app is ready to be tested on a cluster, a commit to a repo configured with a `.gitlab-ci.yml` file triggers a pipeline that builds the app and then deploys it to a cluster.
 
-The next section, [CI/CD Pipeline Details](pipeline-details.md) explains the details involved in each step of the template pipeline configuration file.
+The next section, [CI/CD Pipeline Overview](pipeline-overview.md) explains the details involved in each step of the template pipeline configuration file.

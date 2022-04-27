@@ -30,7 +30,11 @@ Download and install [Docker desktop](https://www.docker.com/products/docker-des
 
 A typical container "dev loop" involves committing code, building an image, running tests, and deploying the image to a registry.
 
-![Development Loop](../assets/dev-loop.png)
+<!-- markdownlint-disable MD033 -->
+<figure markdown>
+![Development Loop](../assets/dev-loop.png){ width="300" }
+  <figcaption>A container-based dev loop</figcaption>
+</figure>
 
 Because our goal is to develop an image, we use Docker to:
 
