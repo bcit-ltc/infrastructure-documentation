@@ -11,7 +11,6 @@
 #   3. Deploy to a cluster
 #     - main branch deploys to staging/production; other branches deploy to a dev cluster for review
 
-
 stages:
 - get info
 - test
@@ -127,8 +126,8 @@ include:
   - ".deploy-hydrate.yml"
   - ".vault.yml"
   - ".rules.yml"
-- template: Jobs/SAST.gitlab-ci.yml
-- template: Jobs/Secret-Detection.gitlab-ci.yml
+  - SAST.gitlab-ci.yml
+  - Secret-Detection.gitlab-ci.yml
 
 ## Specify which runner should pick up pipeline jobs
 default:
@@ -138,6 +137,8 @@ default:
 ## Configure security scanning
 sast:
   stage: test
+  extends:
+  - ".deploy_prod_rules"
 
 ## Configure merge request pipelines
 workflow:

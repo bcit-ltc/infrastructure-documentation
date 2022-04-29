@@ -193,11 +193,3 @@ Our template `deploy` folder uses Kustomize to ensure workloads are configured f
 ## Kpt
 
 [`Kpt`](https://kpt.dev/) is a Kubernetes Resource Manifest (KRM) package manager. It simplifies the management of workloads by associating resources together as an "inventory". This inventory is associated with all KRM's that are deployed together so that they can be tracked, updated, and pruned as necessary.
-
-## CI/CD Pipelines
-
-CI/CD stands for "continuous integration/continuous deployment", and it refers to an integration between the code base and the deployment environment. A CI/CD pipeline is a set of `jobs` that are configured to run automatically every time a new commit is pushed to a repository. These jobs can do many things, including testing code, building images, and pushing a deployment to a cluster. Examples of popular CI/CD pipeline tools are Drone, CircleCI, and TravisCI. GitLab comes with a built-in CI/CD sub-system; it relies on a "runner" and a `.gitlab-ci.yml` configuration file.
-
-When an app is ready to be tested on a cluster, a commit to a repo configured with a `.gitlab-ci.yml` file triggers a pipeline that builds the app and then deploys it to a cluster.
-
-The next section, [CI/CD Pipeline Overview](pipeline-overview.md) explains the details involved in each step of the template pipeline configuration file.
