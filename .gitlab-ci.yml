@@ -129,7 +129,6 @@ include:
   - SAST.gitlab-ci.yml
   - Secret-Detection.gitlab-ci.yml
 
-
 ## Specify which runner should pick up pipeline jobs
 default:
   tags:
