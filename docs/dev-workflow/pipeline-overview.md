@@ -1,10 +1,20 @@
-# CI/CD Pipeline Overview
+---
+  title: "Overview"
+---
+<!-- markdownlint-disable MD025 -->
 
-!!! warning "Under Construction"
-
-    This page is still being written...
+# CI/CD Pipelines
 
 A CI/CD pipeline automatically builds your application and deploys it to a cluster.
+
+CI/CD stands for "continuous integration/continuous deployment", and it refers to an integration between the code base and the deployment environment. A CI/CD pipeline is a set of `jobs` that are configured to run automatically every time a new commit is pushed to a repository. These jobs can do many things, including testing code, building images, and pushing a deployment to a cluster. Examples of popular CI/CD pipeline tools are Drone, CircleCI, and TravisCI. 
+
+GitLab comes with a built-in CI/CD sub-system; it relies on a "runner" and a `.gitlab-ci.yml` configuration file.
+
+When an app is ready to be tested on a cluster, a commit to a repo configured with a `.gitlab-ci.yml` file triggers a pipeline that builds the app and then deploys it to a cluster.
+
+![Deployment Pipeline](../assets/deployment-package-apply.png#only-light)
+![Deployment Pipeline](../assets/deployment-package-apply-dark.png#only-dark)
 
 ## Requirements
 
@@ -32,23 +42,23 @@ Pushing a commit triggers the pipeline to run through each of these stages.
     1. Create an Issue
     1. Create a Merge Request and a branch
 
-        ![Create-MR-Branch](../assets/create-mr.png)
+        ![Create-MR-Branch](../assets/create-mr.png){ width="250" }
 
     1. Open a code editor and checkout the new branch
     1. Develop locally using `docker run...`, `docker compose up`, and/or `skaffold dev`
     1. Commit changes and push back to the repo
 
-## Project Initialization
+### Project Initialization
 
 **The default pipeline file will fail the first time it runs** - it's OK, this is by design! The first job checks to see if the project has any *project access tokens*, and when it finds that there are none, it runs a job that creates one.
 
-## Gather Info
+### Gather Info
 
 This stage is responsible for analyzing the repository for git tags. It determines if there are any existing tags and - based on the commit messages - whether any tags should be created.
 
 Tag analysis and versioning is automatically semantically versioned using `semantic-release`.
 
-### Semantic-Release
+#### Semantic-Release
 
 We use [Semantic Versioning](https://semver.org/) to automatically determine whether a tag is considered "major", "minor", or "patch. [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) analyzes commit messages and increments versions based on the type of keyword included in a commit message.
 
@@ -58,31 +68,38 @@ To begin using semver tagging in your projects, add any of the following keyword
 | ----------------------                                                    | ------------  |
 | `fix: ...some smaller bugfix...`                                          | patch         |
 | `feat: ...add functionality message...`                                   | minor         |
-| `any term: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
+| `any term!: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
 `*` *the "footer" of the commit message must start with **BREAKING CHANGE:***
 
-## Test
+### Test
 
 This stage performs basic Static Application Security Testing (SAST). The job scans files of various languages for vulnerabilities and produces a report that suggests potential remediation.
 
-## Build
+### Build
 
 This stage uses the in-cluster container builder Kaniko to generate `Docker` compatible images.
 
-## Deploy
+### Deploy
+
+This is the stage where the deployment package is updated with the lastest build and applied to the cluster.
+
+![Deploy stage](../assets/deploy-pipeline-generic-steps.png#only-light)
+![Deploy stage](../assets/deploy-pipeline-generic-steps-dark.png#only-dark)
 
 This stage has two sub-jobs depending on the target of the commit.
 
-=== "`main` (default) branch commits"
+=== "`main` branch"
 
-    Triggers a deployment to staging and production clusters
+    Triggers a deployment to `staging` and `production` clusters
 
-    * requires a *deployment package* with staging and a production overlays
+    * requires a deployment package with **`staging`** and a **`production`** overlays
 
-=== "commits to any other branch"
+=== "any other branch"
 
-    Triggers a deployment "review" to a dev cluster
+    Triggers a deployment "review" to a `development` cluster
 
-    * requires a *deployment package with a dev overlay
+    * requires a deployment package with a **`development`** overlay
 
-See the next section for information about how to configure a deployment package.
+When the [Default LTC GitLab CI/CD Pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is added to a project, the first run deploys a simple generic deployment package called `generic-dev`. This package is based on an `nginx` deployment and it demonstrates how `kustomize` overlays work.
+
+When you are familiar with the concept of a deployment package and how it is applied by the pipeline, you're ready to learn how to create your own deployment package and configure it to deploy your app.
