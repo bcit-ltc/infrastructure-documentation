@@ -14,6 +14,4 @@ Information about the architecture and makeup of the LTC's server infrastructure
 
 ## Building
 
-1. Create an issue
-1. Create a merge request and a branch
 1. Commit and push to the repo; the CI/CD pipeline will build and push the image to the cluster specified in the `.gitlab-ci.yml` file.
