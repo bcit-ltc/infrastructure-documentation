@@ -1,5 +1,6 @@
 # LTC Infrastructure Documentation
 
+
 Information about the architecture and makeup of the LTC's server infrastructure.
 
 ## Developing
