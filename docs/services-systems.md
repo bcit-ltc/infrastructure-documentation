@@ -70,7 +70,7 @@ We use Kubernetes to deliver our apps and services. See the [Kubernetes section]
 
 ## Legacy Web Servers
 
-Several applications are still served from aging (and bloated) virtual machines; work to migrate these workloads to Kubernetes is ongoing.
+Several applications are still served from older virtual machines; work to migrate these workloads to Kubernetes is ongoing.
 
 **prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)
 
