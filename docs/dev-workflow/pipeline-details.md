@@ -199,6 +199,9 @@ Retrieves the deployment package.
 
 ##### `.add-rancher-project-annotations` job
 
+!!! warning ""
+This is in the process of being phased out.
+
 Set namespace annotations to place workload in the correct Rancher project.
 
 * Add Rancher ProjectID's based on DEPLOY_PKG_GROUP
