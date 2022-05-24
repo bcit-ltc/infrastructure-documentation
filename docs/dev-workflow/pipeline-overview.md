@@ -7,7 +7,7 @@
 
 A CI/CD pipeline automatically builds your application and deploys it to a cluster.
 
-CI/CD stands for "continuous integration/continuous deployment", and it refers to an integration between the code base and the deployment environment. A CI/CD pipeline is a set of `jobs` that are configured to run automatically every time a new commit is pushed to a repository. These jobs can do many things, including testing code, building images, and pushing a deployment to a cluster. Examples of popular CI/CD pipeline tools are Drone, CircleCI, and TravisCI. 
+CI/CD stands for "continuous integration/continuous deployment", and it refers to an integration between the code base and the deployment environment. A CI/CD pipeline is a set of `jobs` that are configured to run automatically every time a new commit is pushed to a repository. These jobs can do many things, including testing code, building images, and pushing a deployment to a cluster. Examples of popular CI/CD pipeline tools are Drone, CircleCI, and TravisCI.
 
 GitLab comes with a built-in CI/CD sub-system; it relies on a "runner" and a `.gitlab-ci.yml` configuration file.
 
