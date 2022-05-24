@@ -201,7 +201,7 @@ Retrieves the deployment package.
 
 !!! warning ""
 
-    This is in the process of being phased out.
+    This is in the process of being phased out...
 
 Set namespace annotations to place workload in the correct Rancher project.
 
