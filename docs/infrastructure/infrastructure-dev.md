@@ -55,3 +55,5 @@ Helm chart configurations are generally stored in the `templates` path. When we 
 ### Terraform
 
 Terraform is used to apply Helm charts to Kubernetes clusters in a way that allows us to record configuration settings and versions.
+
+Terraform is a critical component of the [Vault](https://issues.ltc.bcit.ca/ltc-infrastructure/vault-configuration) configuration project.
