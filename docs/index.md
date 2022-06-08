@@ -16,7 +16,7 @@ In 2021 the Course Production team underook a large project to re-design and ren
 
 The LTC now has a modern, highly-available collection of systems that provide the department with the capability to deliver contemporary educational resources to the institute.
 
-![ltc-infrastructure](assets/ltc-infrastructure-simple.png#only-light)
+![ltc-infrastructure](assets/ltc-infrastructure-simple-light.png#only-light)
 ![ltc-infrastructure](assets/ltc-infrastructure-simple-dark.png#only-dark)
 
 !!! tip ""

@@ -21,7 +21,7 @@ We use GitLab to:
 
 !!! note "Starting a project"
 
-    We start a project by creating a code repository in GitLab in one of these "top-level" groups:
+    Start a project by creating a code repository in GitLab in one of these "top-level" groups:
 
     `Web Apps`
     :   Projects that have some front-end component; UI required.
