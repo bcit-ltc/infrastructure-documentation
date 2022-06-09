@@ -71,7 +71,7 @@ The cluster was installed without configuration files; all configuration was add
 
 One node has been reserved for testing - whatever that may be.
 
-## Experimental
+## Research/Experimental
 
 ### Nomad server
 
