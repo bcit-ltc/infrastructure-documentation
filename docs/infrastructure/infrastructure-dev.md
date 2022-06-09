@@ -48,7 +48,7 @@ When the ping is successful, decide what the new node is for...
 
 ### Helm
 
-Helm is a "package manager" for Kubernetes, and it's used here to deploy sets of resources to the clusters. Helm is normally run from the command line, which makes it difficult to record a "current state" of the deployment (anyone could login and run some commands and nobody would know what happened). In order to mitigate this, our Helm installs, are run using [Terraform](https://www.terraform.io/docs/index.html), which allows us to record the deployment configuration in the version control system (VCS).
+Helm is a "package manager" for Kubernetes, and it's used here to deploy sets of resources to the clusters. Helm is normally run from the command line, which makes it difficult to record a "current state" of the deployment (anyone could login and run some commands and nobody would know what happened). In order to mitigate this, our Helm installs, are applied using [Terraform](https://www.terraform.io/docs/index.html) (see below), which allows us to record the deployment configuration in the version control system (VCS).
 
 Helm chart configurations are generally stored in the `templates` path. When we want to deploy an application using a Helm chart, we use the Terraform Helm provider to deploy the chart so that we can commit the configuration using git. The current configurations that have been used (for applications deployed with Helm) are in the [LTC Infrastructure](https://issues.ltc.bcit.ca/ltc-infrastructure/ltc-infrastructure) repository.
 
