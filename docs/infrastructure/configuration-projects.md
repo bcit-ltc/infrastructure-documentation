@@ -14,9 +14,9 @@ When a new VM is provisioned by ITS, the Ansible scripts in this project are use
 
 This repo contains the authoritative source of LTC server information.
 
-## [HAProxy](https://issues.ltc.bcit.ca/ltc-infrastructure/haproxy)
+## [Traefik-docker](https://issues.ltc.bcit.ca/ltc-infrastructure/traefik-docker)
 
-HAProxy is the load balancer entrypoint for the LTC's web apps and services. It sits in the DMZ and forwards traffic to apps that run on Kubernetes clusters.
+Traefik is the load balancer entrypoint for the LTC's web apps and services. It sits in the DMZ and forwards traffic to apps that run on Kubernetes clusters. Traefik runs inside a docker container to enable version-controlled releases and roll-backs.
 
 ## [Vault](https://issues.ltc.bcit.ca/ltc-infrastructure/vault-configuration)
 
