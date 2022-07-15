@@ -55,7 +55,7 @@ Docker can be used in a few different ways. A nice way to try out an app is to r
 
     1. Start Docker
     1. Open a terminal and run `docker container run -p 8080:80 nginx`
-    1. Open a browser and navigate to `localhost:8080`
+    1. Open a browser and navigate to `http://localhost:8080`
 
 #### Dockerfiles
 

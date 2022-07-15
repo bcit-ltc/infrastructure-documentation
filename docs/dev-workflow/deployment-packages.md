@@ -70,7 +70,7 @@ When the [Default LTC GitLab CI/CD Pipeline](https://issues.ltc.bcit.ca/-/snippe
 
 ## First steps *kustomizing* the Deployment Package
 
-The `generic-dev` deployment package contains example bases that might help give you an idea about how different workloads can be structured. The package also has an example `dev` overlay that demonstrates what a kustomized overlay looks like.
+The `generic-dev` deployment package contains example bases that might help give you an idea about how different workloads can be structured. The package also has example `dev`, `staging`, and `production` overlays that can be used as starting points for the kustomization.
 
 === "nginx-unprivileged"
 
@@ -136,4 +136,23 @@ After you have a working `dev` overlay, most of the "heavy lifting" is done. Mak
 
 The biggest differences between `staging`/`production` overlays and the `dev` overlay has to do with routing and security. If your application uses any kind of secret, you should be storing and retrieving these from Vault.
 
-In terms of routing, most of it is taken care-of automatically, but if you need a unique URL, you may need to setup an additional **ingress** rule.
+!!! tip "Retrieving secrets from Vault"
+
+    Use the following annotations in your `staging`/`production` overlay `deployment.yaml` file to configure automatic secret retrieval:
+
+    ```
+        spec:
+        ...
+          template:
+            metadata:
+              annotations:
+                vault.hashicorp.com/agent-inject: 'true'
+                vault.hashicorp.com/role: '{projectName}-production-kubeauthbot'
+                vault.hashicorp.com/agent-inject-secret-config: 'web-apps/data/{projectName}'
+                vault.hashicorp.com/agent-inject-template-config: |
+                  {{ with secret "web-apps/data/{projectName}" -}}
+                  {secretKey}="{{ .Data.data.{secretKey} }}"
+                  {{- end }}
+    ```
+
+In terms of routing, most of it is taken care-of automatically, but if you need a unique URL, you may need to setup an additional **public-endpoint** (ingress) rule.
