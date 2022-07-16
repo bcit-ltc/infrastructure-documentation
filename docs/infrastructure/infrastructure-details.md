@@ -50,9 +50,8 @@ Longhorn is a persistent disk provisioner for Kubernetes; it allows pods to requ
 
 ## Load Balancer Roles
 
-`(?:prod|dev)-gate*` nodes run the community version of [HAProxy](http://www.haproxy.org/) as a layer 4 load balancer (LB). DNS entries are updated programmatically using an Ansible script; details are in the [HAProxy](https://issues.ltc.bcit.ca/ltc-infrastructure/haproxy) project.
+`(?:prod|dev)-gate*` nodes run the community version of [Traefik](https://traefik.io/) as a layer 4 load balancer (LB). DNS entries are updated programmatically using an Ansible script; details are in the [traefik-docker](https://issues.ltc.bcit.ca/ltc-infrastructure/traefik-docker) project.
 
-* HAProxy doesn't terminate SSL.
 * The LB's have `firewalld` configured to block most traffic. See the `base-firewalld-config` path in the [VM Node Configuration](https://issues.ltc.bcit.ca/ltc-infrastructure/vm-node-configuration) project for playbooks that set this up.
 
 ## Legacy Systems
