@@ -48,6 +48,10 @@ This project houses the configuration and base images used in other projects. Ch
 
 GitLab Runner is the CI/CD pipline agent that performs actions to build and deploy apps. This repo stores the Terraform state file and Helm `values.yaml` used to deploy this service.
 
+## Certs/Keys
+
+Houses TLS certs and keys for the `*.ltc.bcit.ca` and `*.dev.ltc.bcit.ca` domains.
+
 ## Longhorn
 
 Longhorn is the name of the service that provisions persistent storage in the LTC's Kubernetes clusters. This repo stores the Terraform state file and Helm `values.yaml` used to deploy this service.
