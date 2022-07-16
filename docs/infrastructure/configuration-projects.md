@@ -22,6 +22,8 @@ This repo contains the authoritative source of LTC server information.
 
 Traefik is the load balancer entrypoint for the LTC's web apps and services. It sits in the DMZ and forwards traffic to apps that run on Kubernetes clusters. Traefik runs inside a docker container to enable version-controlled releases and roll-backs.
 
+A corresponding "Traefik-docker-dev" project houses the load balancer configuration for `dev-gate3`.
+
 ## [Vault](https://issues.ltc.bcit.ca/ltc-infrastructure/vault-configuration)
 
 Vault is the LTC's secrets management platform. This project houses the configuration of secrets engines, not the secrets themselves.
