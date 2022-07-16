@@ -10,7 +10,7 @@ Information about the architecture and makeup of the LTC's server infrastructure
 
     docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
 
-1. Browse to `localhost:8000` to see site with *live reload* enabled.
+1. Browse to `http://localhost:8000` to see site with *live reload* enabled.
 
 ## Building
 
