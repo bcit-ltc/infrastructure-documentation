@@ -30,6 +30,10 @@ Vault is currently deployed as a single-node resource (which eases backup/restor
 
 * Vault was provisioned with the `deploy_vault.yaml` playbook, which uses configuration settings in the `templates/vault` path. See the [Hashicorp Vault Production Deployment Guide](https://learn.hashicorp.com/tutorials/vault/raft-deployment-guide?in=vault/day-one-raft).
 
+## Error Pages
+
+This project houses the error pages for the `*.ltc.bcit.ca` and `*.dev.ltc.bcit.ca` domains.
+
 ## Configuration Development
 
 This sub group is a place to start projects for automating infrastructure. Projects that have been tested and are in general use should be moved out of this subgroup into the main `LTC Infrastructure` group.
