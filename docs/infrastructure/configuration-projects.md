@@ -1,10 +1,14 @@
-# Configuration Projects
+# LTC Infrastructure Configuration Projects
 
 !!! warning "Under Construction"
 
     This page is still being written
 
 Projects in the `LTC Infrastructure` group contain the configuration files for a variety of services. The projects and their purpose are briefly described below.
+
+## Infrastructure Documentation
+
+This site!
 
 ## VM Node Configuration
 
