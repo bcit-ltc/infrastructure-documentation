@@ -59,6 +59,7 @@ nav:
   - services-systems.md
   - Development Workflow:
     - dev-workflow/index.md
+    - dev-workflow/gitlab.md
     - dev-workflow/getting-started-dev.md
     - dev-workflow/deployment-release.md
     - CI/CD Pipelines:

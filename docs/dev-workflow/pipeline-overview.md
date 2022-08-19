@@ -64,10 +64,10 @@ We use [Semantic Versioning](https://semver.org/) to automatically determine whe
 
 To begin using semver tagging in your projects, add any of the following keywords to the beginning of your commit messages:
 
-| **Prefix:** ...commit message...                                          | Release type  |
-| ----------------------                                                    | ------------  |
-| `fix: ...some smaller bugfix...`                                          | patch         |
-| `feat: ...add functionality message...`                                   | minor         |
+| **Prefix:** ...commit message...                                           | Release type  |
+| ----------------------                                                     | ------------  |
+| `fix: ...some smaller bugfix...`                                           | patch         |
+| `feat: ...add functionality message...`                                    | minor         |
 | `any term!: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
 `*` *the "footer" of the commit message must start with **BREAKING CHANGE:***
 
