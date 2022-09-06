@@ -1,4 +1,7 @@
-# Build
+# Dockerfile
+
+
+## Build
 FROM squidfunk/mkdocs-material as build
 
 WORKDIR /docs
@@ -12,7 +15,7 @@ RUN set -ex; \
     mkdocs build --site-dir /public;
 
 
-# Release
+## Release
 FROM nginxinc/nginx-unprivileged:1.20
 
 LABEL maintainer courseproduction@bcit.ca
