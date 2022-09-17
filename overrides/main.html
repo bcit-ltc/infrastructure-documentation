@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{{ super() }}
+  <script src="{{ 'javascripts/elastic-apm-rum.umd.min.js' | url }}" crossorigin></script>
+  <script>
+    elasticApm.init({
+      serviceName: 'infrastructure-documentation',
+      serverUrl: 'http://localhost:8200',
+    })
+  </script>
+{% endblock %}
