@@ -6,6 +6,7 @@ repo_url: https://issues.ltc.bcit.ca/ltc-infrastructure/infrastructure-documenta
 
 theme:
   name: material
+  custom_dir: overrides
   palette: 
     - scheme: default
       primary: blue
@@ -38,7 +39,6 @@ plugins:
   - search
 
 markdown_extensions:
-  - meta
   - abbr
   - pymdownx.highlight
   - pymdownx.superfences
