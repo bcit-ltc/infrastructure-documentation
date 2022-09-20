@@ -1,5 +1,5 @@
 ---
-title: Infrastructure Introduction
+title: Introduction
 ---
 
 The LTC's infrastructure has been serving blogs, multimedia assets, simple websites, and full database-driven applications since 2010. As the demands for our services grow, our infrastructure has required renewal and operational maintenance.
