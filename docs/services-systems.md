@@ -21,24 +21,15 @@ We use GitLab to:
 
 !!! note "Starting a project"
 
-    Start a project by creating a code repository in GitLab in one of these "top-level" groups:
+    Start a project by creating a code repository in GitLab:
 
-    `Web Apps`
+    `Apps`
     :   Projects that have some front-end component; UI required.
 
     `Utilities`
     :   Tools, resources, and services (both local and server-based) that do not have a front-end
 
-    `LTC Infrastructure`
-    :   Infrastructure code to manage the LTC's systems and servers
-
-    `Prototypes`
-    :   Sandbox for proof-of-concept (PoC) ideas
-
-    `External`
-    :   Projects developed in collaboration with external parties
-
-    There are also `admin` groups for team-specific projects, as well as a `Templates` group that holds projects that we re-use frequently.
+    Depending on your permissions you may also notice that there are `admin` groups for team-specific projects.
 
 ## Mattermost
 
@@ -73,5 +64,3 @@ See the [Kubernetes section](kubernetes/index.md) for more info.
 Several applications are still served from older virtual machines; work to migrate these workloads to Kubernetes is ongoing.
 
 **prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)
-
-**test1.ltc.bcit.ca**: [http://test.ltc.bcit.ca](http://test.ltc.bcit.ca)
