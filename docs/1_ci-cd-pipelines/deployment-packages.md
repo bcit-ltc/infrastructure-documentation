@@ -2,14 +2,14 @@
 
 The default pipeline file can help you get started with an automated build and deploy, but it's not configured to do much out of the box - it requires configuration before you can see your app on a cluster.
 
-Up until now, we've covered the `Dockerfile` and the CI/CD pipeline configuration file, `.gitlab-ci.yml`. But the other part of the picture is the set of Kubernetes Resource Manifest files (KRM's) you configure to tell the cluster how to deploy your app. Together, these files are called a **deployment package**.
+Up until now, we've covered the `Dockerfile` and the `.gitlab-ci.yml` CI/CD pipeline configuration file. But the other part of the picture is the set of Kubernetes Resource Manifest files (KRM's) you configure to tell the cluster how to deploy your app. Together, these files are called a **deployment package**.
 
 ## Pipelines and Deployment Packages
 
 Your source code project runs the pipeline that builds and deploys your app. The diagram below outlines how the pipeline gets triggered and how the deployment package gets deployed to a `dev` cluster.
 
-![Deployment Pipeline](../assets/deployment-package-apply.png#only-light)
-![Deployment Pipeline](../assets/deployment-package-apply-dark.png#only-dark)
+![Deployment Pipeline](../assets/deploy-pipeline-overview-light.png#only-light)
+![Deployment Pipeline](../assets/deploy-pipeline-overview-dark.png#only-dark)
 
 ## Kustomize Concepts
 
@@ -19,11 +19,11 @@ Here's what the structure of a kustomize-based *deployment package* looks like:
 
 <!-- markdownlint-disable MD033 -->
 <figure markdown>
-![kustomized deploy package](../assets/kustomize.png){ width="500" }
+![kustomized deploy package](../assets/kustomize-overview.png){ width="500" }
   <figcaption>An example nginx deployment package</figcaption>
 </figure>
 
-### The Base
+### Base
 
 The base in the example above consists of some standard KRM's:
 
@@ -46,7 +46,7 @@ The base in the example above consists of some standard KRM's:
 
 * `service.yaml`
 
-### The Overlay
+### Overlays
 
 The files in the overlay are *patches* that describe how a resource is changed when it is applied to a cluster.
 

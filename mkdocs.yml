@@ -58,19 +58,18 @@ nav:
   - index.md
   - services-systems.md
   - Development Workflow:
-    - dev-workflow/index.md
-    - dev-workflow/code-repositories.md
-    - dev-workflow/getting-started-dev.md
-    - dev-workflow/deployment-release.md
-    - CI/CD Pipelines:
-      - dev-workflow/pipeline-overview.md
-      - dev-workflow/deployment-packages.md
-      - dev-workflow/pipeline-details.md
+    - 0_dev-workflow/index.md
+    - 0_dev-workflow/getting-started-dev.md
+    - 0_dev-workflow/deployments-releases.md
+  - CI/CD Pipelines:
+    - 1_ci-cd-pipelines/pipeline-overview.md
+    - 1_ci-cd-pipelines/deployment-packages.md
+    - 1_ci-cd-pipelines/pipeline-details.md
   - Kubernetes:
-    - kubernetes/index.md
-    - kubernetes/role-cluster-details.md
+    - 2_kubernetes/index.md
+    - 2_kubernetes/role-cluster-details.md
   - Infrastructure:
-    - infrastructure/index.md
-    - infrastructure/infrastructure-details.md
-    - infrastructure/configuration-projects.md
-    - infrastructure/infrastructure-dev.md
+    - 3_infrastructure/index.md
+    - 3_infrastructure/infrastructure-details.md
+    - 3_infrastructure/configuration-projects.md
+    - 3_infrastructure/infrastructure-dev.md

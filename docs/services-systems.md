@@ -57,7 +57,7 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 
 We use Kubernetes to deliver our apps and services and Rancher is an easy-to-use UI for Kubernetes. Rancher helps us manage the workloads and services on our clusters.
 
-See the [Kubernetes section](kubernetes/index.md) for more info.
+See the [Kubernetes section](2_kubernetes/index.md) for more info.
 
 ## Legacy Web Servers
 

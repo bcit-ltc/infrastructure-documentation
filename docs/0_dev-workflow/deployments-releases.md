@@ -32,7 +32,7 @@ This page describes the general steps involved in creating a deployment, whether
 
 When an image is ready to be scheduled on a Kubernetes cluster, there are a few configuration files that need to be defined for the workload to run. Together, these files - and the image they refer to - are considered a **deployment package**. When the deployment is scheduled and running on a cluster, it's called a **workload**.
 
-![deployment image](../assets/deployment.png#only-light){ align=right }
+![deployment image](../assets/deployment-light.png#only-light){ align=right }
 ![deployment image](../assets/deployment-dark.png#only-dark){ align=right }
 
 !!! info ""
@@ -94,7 +94,7 @@ So how or where do we get these files? They can be created from scratch, but the
 
 ## Working with Kubernetes
 
-> * See the [Kubernetes section](../kubernetes/index.md) for more details about the LTC's Kubernetes architecture.
+> * See the [Kubernetes section](../2_kubernetes/index.md) for more details about the LTC's Kubernetes architecture.
 
 Besides the image and the workload configuration files, you need a cluster to deploy to! An easy way to get started is to download and run a local Kubernetes distribution, but because Kubernetes is resource-intensive, it's generally not a good idea to keep it running continuously; start one up, use it, and then stop it to preserve battery!
 

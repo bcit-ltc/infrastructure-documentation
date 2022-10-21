@@ -8,6 +8,37 @@ Whether it's a small interaction for an single course, or a larger, more complic
 
     For example, an authentication component that interfaces with a front-end does not need to be part of the same code base as a data conversion engine that is part of the back-end.
 
+## Preamble
+
+### Source Code Repositories
+
+!!! tip inline end "LTC Code Repository"
+
+    [https://issues.ltc.bcit.ca](https://issues.ltc.bcit.ca)
+
+    To clone a repo, click the blue "Clone" button at the top right of a project:
+
+    ![gitlab clone](../assets/gitlab-clone.png)
+
+GitLab is the centralized platform for the LTC's source code.
+
+The LTC also has repositories on other platforms like GitHub ([BCIT-LTC](https://github.com/bcit-ltc)) and BitBucket ([BCIT Bitbucket](https://bcitltc.atlassian.com), Bitbucket.com), but GitLab is considered to be the authoritiative source for the apps that we develop.
+
+In addition to storing source code, GitLab also enables teams to rapidly test and develop their apps through a deployment pipeline that is securely connected with the LTC's Kubernetes clusters.
+
+The CI/CD deployment pipeline and the Kubernetes cluster endpoints are described in other sections.
+
+### Creating a GitLab Project
+
+A pre-requisite for any development is creating a project to store your source code.
+
+1. Login to [GitLab](https://issues.ltc.bcit.ca) and navigate to the **Apps** group
+1. Click the [+] in the top navigation bar to create a new project
+1. Name the project, assign it to an appropriate group, and click "Create Project"
+1. Open your code editing IDE and clone the project
+
+## Getting Started with Container Development
+
 Containerizing everything can present a challenge when developing locally unless you can also create up an environment that has all the components needed to run the app.
 
 !!! info inline end ""
@@ -21,8 +52,6 @@ Docker makes it easier to containerize apps by providing a tool stack that build
 Docker also helps avoid deployment trouble because of a mismatch between a local dev environment and the deployment server environment.
 
 Building a single containerized app is pretty easy! Usually all you have to do is look for a good **base image** in the [Docker Hub](https://hub.docker.com/) and then copy your code into the container during the *build* stage. Let's take a look at how to get started.
-
-## Requirements
 
 Download and install [Docker desktop](https://www.docker.com/products/docker-desktop).
 

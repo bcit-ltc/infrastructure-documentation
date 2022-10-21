@@ -1,9 +1,5 @@
 # Infrastructure Details
 
-!!! warning "Under Construction"
-
-    This page is still being written
-
 ## Virtual Machines
 
 Our virtual machines (VM's) are provisioned by ITS using VMWare vSphere. The [vSphere hypervisor client interface](https://vcsa01.tis.bcit.ca/) is where we control the state of a VM (stopped, running, paused, snapshots, etc..).
@@ -14,7 +10,7 @@ The LTC's servers are located in the ITS machine rooms of the Burnaby and the Do
 
 ## Kubernetes
 
-Most nodes are configured to be members of a [Kubernetes](https://kubernetes.io/docs/home/) cluster, and details of the LTC's setup are outlined on the [Kubernetes](../kubernetes/index.md) page. Other VM's have different, specialized roles, described below.
+Most nodes are configured to be members of a [Kubernetes](https://kubernetes.io/docs/home/) cluster, and details of the LTC's setup are outlined on the [Kubernetes](../2_kubernetes/index.md) page. Other VM's have different, specialized roles, described below.
 
 ## VM (Node) Roles
 
@@ -66,16 +62,18 @@ In 2018 a proof-of-concept Kubernetes cluster was built to research and validate
 
 The cluster was installed without configuration files; all configuration was added through the GUI and is not recorded.
 
-### Testing
-
-One node has been reserved for testing - whatever that may be.
-
 ## Research/Experimental
 
-### Nomad server
+Some example projects being researched:
 
-Nomad is an alternative workload orchestrator that has been deployed as an R&D project. See <https://learn.hashicorp.com/nomad>
+* **Nomad server**
 
-### Waypoint server
+    Nomad is an alternative workload orchestrator that has been deployed as an R&D project. See <https://learn.hashicorp.com/nomad>
 
-Waypoint is a development/deployment/release pipeline tool that has been deployed as a Nomad workload for R&D. See <https://learn.hashicorp.com/waypoint>.
+* **Waypoint server**
+
+    Waypoint is a development/deployment/release pipeline tool that has been deployed as a Nomad workload for R&D. See <https://learn.hashicorp.com/waypoint>.
+
+* **Consul service mesh**
+
+* **HAProxy Ingress Controller**
