@@ -2,7 +2,7 @@
 
 After an image is built, it is ready to be scheduled on a cluster as a workload. An image is a static collection of application *layers* that have been packaged according to a standardized specification, but when an image is *running*, it is called a container.
 
-Images only have information about themselves; they can't describe to the cluster how they should be run (also known as being *scheduled*). So when we are deploying an image to a cluster, we need to generate configuration files that specify to the cluster how to run the workload. The canonical Kubernetes resource that specifies how to run an image is called a **Deployment**.
+Images only have information about themselves; they can't describe to the cluster how they should be run (also known as being *scheduled*). So when we are deploying an image to a cluster, we need to generate configuration files that specify to the cluster how to run the workload. The Kubernetes resource that specifies how to run an image is called a **Deployment**.
 
 This page describes the general steps involved in creating a deployment, whether it's manually through the command line or using a CI/CD pipeline.
 
@@ -57,7 +57,7 @@ A Kubernetes resource called a **deployment** tells the cluster how to run the i
 
 ### Workload Configuration Files
 
-KRM configuration files are YAML formatted and they define the types of Kubernetes resources to create. Although they can be named anything, the names in our example files correspond to the types of resources that are created.
+Configuration files are YAML formatted and they define the types of Kubernetes resources to create. Although they can be named anything, the names in our example files correspond to the types of resources that are created.
 
 **`deployment.yaml`**
 

@@ -1,4 +1,4 @@
-site_name: LTC Infrastructure
+site_name: LTC Infrastructure Documentation
 site_url: https://infrastructure-documentation.ltc.bcit.ca/
 
 repo_name: infrastructure-documentation
@@ -59,7 +59,7 @@ nav:
   - services-systems.md
   - Development Workflow:
     - dev-workflow/index.md
-    - dev-workflow/gitlab.md
+    - dev-workflow/code-repositories.md
     - dev-workflow/getting-started-dev.md
     - dev-workflow/deployment-release.md
     - CI/CD Pipelines:

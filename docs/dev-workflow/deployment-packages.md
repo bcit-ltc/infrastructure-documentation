@@ -2,7 +2,7 @@
 
 The default pipeline file can help you get started with an automated build and deploy, but it's not configured to do much out of the box - it requires configuration before you can see your app on a cluster.
 
-Up until now, we've talked about the `Dockerfile` and the `CI/CD pipeline configuration file` (`.gitlab-ci.yml`). But the other part of the picture is the set of Kubernetes Resource Manifest files (KRM's) you configure to tell the cluster how to deploy your app. Together, these files are called a **deployment package**.
+Up until now, we've covered the `Dockerfile` and the CI/CD pipeline configuration file, `.gitlab-ci.yml`. But the other part of the picture is the set of Kubernetes Resource Manifest files (KRM's) you configure to tell the cluster how to deploy your app. Together, these files are called a **deployment package**.
 
 ## Pipelines and Deployment Packages
 

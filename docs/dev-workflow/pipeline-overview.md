@@ -5,7 +5,7 @@
 
 # CI/CD Pipelines
 
-A CI/CD pipeline automatically builds your application and deploys it to a cluster.
+A CI/CD pipeline is an infrastructure function that watches repositories for changes and then performs actions when a new commit is pushed. Our CI/CD pipelines build images and deploy them to a cluster.
 
 CI/CD stands for "continuous integration/continuous deployment", and it refers to an integration between the code base and the deployment environment. A CI/CD pipeline is a set of `jobs` that are configured to run automatically every time a new commit is pushed to a repository. These jobs can do many things, including testing code, building images, and pushing a deployment to a cluster. Examples of popular CI/CD pipeline tools are Drone, CircleCI, and TravisCI.
 
@@ -29,10 +29,9 @@ Once you have the requirements met, commit your files to trigger the pipeline.
 
 The default LTC pipeline has the following stages or steps:
 
-1. project initialization
-1. gather_info
-1. test
-1. build
+1. project init
+1. gather info
+1. build an image
 1. deploy
 
 Pushing a commit triggers the pipeline to run through each of these stages.
@@ -40,17 +39,17 @@ Pushing a commit triggers the pipeline to run through each of these stages.
 !!! example "Working with the CI/CD Pipeline"
 
     1. Create an Issue
-    1. Create a Merge Request and a branch
+    1. Create a Merge Request and a new dev branch
 
         ![Create-MR-Branch](../assets/create-mr.png){ width="250" }
 
-    1. Open a code editor and checkout the new branch
+    1. Open a code editor and checkout the new dev branch
     1. Develop locally using `docker run...`, `docker compose up`, and/or `skaffold dev`
     1. Commit changes and push back to the repo
 
-### Project Initialization
+### Project Init
 
-**The default pipeline file will fail the first time it runs** - it's OK, this is by design! The first job checks to see if the project has any *project access tokens*, and when it finds that there are none, it runs a job that creates one.
+**The default pipeline file will fail the first time it runs** - it's OK! The first job checks to see if the project has any *project access tokens*, and when it finds that there are none, it runs a job to create one.
 
 ### Gather Info
 
@@ -71,11 +70,7 @@ To begin using semver tagging in your projects, add any of the following keyword
 | `any term!: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
 `*` *the "footer" of the commit message must start with **BREAKING CHANGE:***
 
-### Test
-
-This stage performs basic Static Application Security Testing (SAST). The job scans files of various languages for vulnerabilities and produces a report that suggests potential remediation.
-
-### Build
+### Build an Image
 
 This stage uses the in-cluster container builder Kaniko to generate `Docker` compatible images.
 

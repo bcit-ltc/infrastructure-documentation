@@ -41,7 +41,7 @@ Because our goal is to develop an image, we use Docker to:
 - develop locally using the `docker compose` command
 - build a development image
 - scan the image for vulnerabilities
-- push the image to the LTC private registry
+- push the image to an LTC private registry
 
 Once an image is stored in a registry it can be deployed to a development Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline.
 
@@ -77,7 +77,7 @@ The `Dockerfile` is a sequence of commands that the build engine reads to create
 
 For more information about options and best-practices about how to build a `Dockerfile`, see the [`Dockerfile` reference documentation](https://docs.docker.com/engine/reference/builder/).
 
-### `docker compose`
+#### `docker compose`
 
 When you install `docker`, the executable includes functionality that creates a local dev environment to simulate how microservices would run in production. The `docker compose` command reads a `docker-compose.yml` file and launches containers connected by a virtual network.
 
@@ -104,7 +104,7 @@ See [Docker Compose File Basics](https://takacsmark.com/docker-compose-tutorial-
           - 8080:8080
     ```
 
-### Building Images
+### Publishing Images
 
 When you are ready to turn your app into an image and push it to a registry, navigate to the GitLab project page and look for the `Packages and Registries` menu link. Click on `Container Registry` and look for the CLI commands to login to the registry, build (and tag) the image, and push it.
 
@@ -126,22 +126,27 @@ This workflow helps us keep track of bugfixes, new features, and major changes (
 
 !!! example "GitLab Flow-based Development Workflow"
 
-    ![versioning workflow](../assets/git-workflow-simple-new.png#only-light)
-    ![versioning workflow](../assets/git-workflow-simple-new-dark.png#only-dark)
+    ![versioning workflow](../assets/git-workflow-simple-light.png#only-light)
+    ![versioning workflow](../assets/git-workflow-simple-dark.png#only-dark)
 
     After creating or cloning a project, the workflow involves the following:
 
-    1. Create an Issue, a Merge Request (MR), and new branch
-    1. Commit and sync
-        * push your code to GitLab to trigger a CI/CD pipeline. The pipeline:
-            1. Builds an image (tagged with the git commit hash)
-            1. Pushes the image to the project registry
-            1. Deploys the workload to a *dev* cluster
-    1. Request a code review and approval
-    1. Merge into *main*
-        * Merging a MR into the *main* branch triggers a CI/CD pipeline that:
-            1. Builds an image (tagged with the label `latest`)
-            1. Pushes the image to the project registry
-            1. Deploys the workload to the *staging* and/or *production* clusters
+    1. **Create an Issue, a Merge Request (MR), and new dev branch**
+    1. **Checkout the new branch, develop, commit, and sync**
+        
+        Push your code to GitLab to trigger a CI/CD pipeline. The pipeline:
+        
+        1. Builds an image tagged with the git commit short sha hash
+        1. Pushes the image to the project registry
+        1. Deploys the workload to a *dev* cluster
 
-    * Commits that have a commit message that starts with "feat:", or "fix:" will automatically increment the version tag of the repo and deploy the workload to the production cluster.
+    1. **Request a code review and approval**
+    1. **Merge the new dev branch into *main***
+    
+        Merging a MR into the *main* branch triggers a CI/CD pipeline that:
+
+        1. Builds an image tagged with the label `latest`
+        1. Pushes the image to the project registry
+        1. Deploys the workload to the *staging* cluster
+
+            **Commits that have a commit message that starts with a semantic versioning keyword will automatically increment the version tag of the repo and deploy the workload to the *production* cluster.**
