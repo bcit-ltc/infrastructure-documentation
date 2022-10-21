@@ -20,7 +20,7 @@ The LTC's infrastructure is designed to make it easy to adopt a modern, automate
 
 The diagram below is an overview of the first steps of a development workflow.
 
-Before anything can happen, make sure you have a code repository (next page). Then, the "Getting Started" page will outline how to add a pipeline to your project, initialize a *deployment package*, and deploy to a Kubernetes cluster.
+[![Development workflow](../assets/devops-workflow-overview-light.png#only-light)](devops-workflow-overview-large-light.md)
+[![Development workflow](../assets/devops-workflow-overview-dark.png#only-dark)](devops-workflow-overview-large-dark.md)
 
-[![Development workflow](../assets/devops-workflow-overview-light.png#only-light)](devops-workflow-overview-light.md)
-[![Development workflow](../assets/devops-workflow-overview-dark.png#only-dark)](devops-workflow-overview-dark.md)
+Before anything can happen, make sure you have a code repository! The "Getting Started" page will outline how to add a pipeline to your project, initialize a *deployment package*, and deploy to a Kubernetes cluster.

@@ -1,22 +1,18 @@
 # Configuring Infrastructure
 
-!!! warning "Under Construction"
-
-    This page is still being written
-
 We strive to add or change infrastructure through declarative programming practices, where a desired state is coded into files that are then pushed to manage infrastructure.
 
 ## Infrastructure Configuration Requirements
 
-If you are creating or changing infrastructure you will also need these tools:
+!!! warning "Brand New Virtual Machines"
+
+    Brand new VM's need to be configured with the `ansible` user before performing configuration changes.
+
+If you are creating or changing infrastructure you will need these tools:
 
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip)
 - [Helm](https://helm.sh/docs/intro/install/)
 - [Terraform](https://www.terraform.io/downloads.html)
-
-!!! warning "Brand New Virtual Machines"
-
-    Brand new VM's need to be configured with the `ansible` user before performing configuration changes.
 
 ## Infrastructure Tool Usage
 
@@ -28,7 +24,7 @@ The VM's that playbooks connect to are listed in the `ansible-node-configuration
 
 To test that you can run a playbook, try running a `ping` test first:
 
-`ansible-playbook basic_tasks/ping.yaml`
+`ansible-playbook -l {vm_name} 00_ping.yaml`
 
 If the play fails, check that:
 
@@ -48,15 +44,15 @@ When the ping is successful, decide what the new node is for...
 
 ### Helm
 
-Helm is a "package manager" for Kubernetes, and it's used here to deploy sets of resources to the clusters. Helm is normally run from the command line, which makes it difficult to record a "current state" of the deployment (anyone could login and run some commands and nobody would know what happened). In order to mitigate this, our Helm installs, are applied using [Terraform](https://www.terraform.io/docs/index.html) (see below), which allows us to record the deployment configuration in the version control system (VCS).
+Helm is a "package manager" for Kubernetes, and it's used to deploy sets of resources to the clusters. Helm is normally run from the command line, which makes it difficult to record a "current state" of the deployment (anyone could login and run some commands and nobody would know what happened). In order to mitigate this, our Helm installs are applied using [Terraform](https://www.terraform.io/docs/index.html) (see below), which allows us to record the deployment configuration in GitLab.
 
-Helm chart configurations are generally stored in the `templates` path. When we want to deploy an application using a Helm chart, we use the Terraform Helm provider to deploy the chart so that we can commit the configuration using git. The current configurations that have been used (for applications deployed with Helm) are in the [LTC Infrastructure](https://issues.ltc.bcit.ca/ltc-infrastructure/ltc-infrastructure) repository.
+Helm chart configuration values are stored in a `{service_name}-values.yaml` file within the configuration project's repo.
 
 ### Terraform
 
 Terraform is used to apply Helm charts to Kubernetes clusters in a way that allows us to record configuration settings and versions.
 
-Terraform is a critical component of the managing the following projects:
+The following projects use Terraform:
 
 - [Vault](https://issues.ltc.bcit.ca/ltc-infrastructure/vault-configuration)
 - [Longhorn](https://issues.ltc.bcit.ca/ltc-infrastructure/longhorn)

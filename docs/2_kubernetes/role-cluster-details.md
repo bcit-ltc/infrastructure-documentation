@@ -1,9 +1,5 @@
 # Roles and Cluster Details
 
-!!! warning "Under Construction"
-
-    This page is still being written
-
 Kubernetes cluster nodes provisioned by RKE2 have 3 roles: Manager, Worker, or Combo (Manager+Worker).
 
 !!! info "RKE2 Node Roles"
@@ -26,8 +22,8 @@ Different clusters (admin, prod, staging, etc...) use a mix of different roles.
 
 ### Production
 
-![prod-cluster diagram](../assets/prod-cluster.png#only-light)
-![prod-cluster diagram dark](../assets/prod-cluster-dark.png#only-dark)
+![prod-cluster diagram](../assets/kubernetes-prod-cluster-light.png#only-light)
+![kubernetes-prod-cluster diagram dark](../assets/kubernetes-prod-cluster-dark.png#only-dark)
 
 * manager nodes do not run workloads, they are dedicated `manager` nodes
 * there are three nodes to ensure replication and high availability
@@ -35,8 +31,8 @@ Different clusters (admin, prod, staging, etc...) use a mix of different roles.
 
 ### Staging
 
-![staging-cluster diagram](../assets/staging-cluster.png#only-light)
-![staging-cluster diagram dark](../assets/staging-cluster-dark.png#only-dark)
+![staging-cluster diagram](../assets/kubernetes-staging-cluster-light.png#only-light)
+![staging-cluster diagram dark](../assets/kubernetes-staging-cluster-dark.png#only-dark)
 
 * all nodes run combo (manager+worker) roles
 
