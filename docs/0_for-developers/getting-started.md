@@ -11,7 +11,7 @@ The first step is to create a GitLab project to store your code. This project wi
     * Basic CI/CD concepts (jobs, environments)
     * Basic Kubernetes concepts (deployments, services, ingresses)
 
-    See the [tech stack documentation](../2_tech-stack-documentation/index.md) for LTC-curated resources or see the respective technology's documentation.
+    See the [tech stack documentation](../1_tech-stack-documentation/index.md) for LTC-curated resources or see the respective technology's documentation.
 
 ## Create a GitLab project
 

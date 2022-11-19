@@ -10,7 +10,7 @@ The LTC's servers are located in the ITS machine rooms of the Burnaby and the Do
 
 ## Kubernetes
 
-Most nodes are configured to be members of a [Kubernetes](https://kubernetes.io/docs/home/) cluster, and details of the LTC's setup are outlined on the [Kubernetes](../2_kubernetes/index.md) page. Other VM's have different, specialized roles, described below.
+Most nodes are configured to be members of a [Kubernetes](https://kubernetes.io/docs/home/) cluster, and details of the LTC's setup are outlined on the [Kubernetes](./kubernetes-details.md) page. Other VM's have different, specialized roles, described below.
 
 ## VM (Node) Roles
 
