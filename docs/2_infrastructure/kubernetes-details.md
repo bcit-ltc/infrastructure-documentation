@@ -1,4 +1,4 @@
-# Roles and Cluster Details
+# Kubernetes Details
 
 Kubernetes cluster nodes provisioned by RKE2 have 3 roles: Manager, Worker, or Combo (Manager+Worker).
 

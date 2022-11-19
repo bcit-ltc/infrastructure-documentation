@@ -1,43 +1,4 @@
-# Getting Started
-
-Whether it's a small interaction for an single course, or a larger, more complicated application for an entire program, we develop and build *containerized apps* that can be deployed on Kubernetes.
-
-!!! tip "Development Strategy"
-
-    Rather than building every functional component into one large monolith, the approach is to build smaller apps that have one purpose, and then connect them together with API calls. This makes it easier to update a specific component without having to change to something that already works well.
-
-    For example, an authentication component that interfaces with a front-end does not need to be part of the same code base as a data conversion engine that is part of the back-end.
-
-## Preamble
-
-### Source Code Repositories
-
-!!! tip inline end "LTC Code Repository"
-
-    [https://issues.ltc.bcit.ca](https://issues.ltc.bcit.ca)
-
-    To clone a repo, click the blue "Clone" button at the top right of a project:
-
-    ![gitlab clone](../assets/gitlab-clone.png)
-
-GitLab is the centralized platform for the LTC's source code.
-
-The LTC also has repositories on other platforms like GitHub ([BCIT-LTC](https://github.com/bcit-ltc)) and BitBucket ([BCIT Bitbucket](https://bcitltc.atlassian.com), Bitbucket.com), but GitLab is considered to be the authoritiative source for the apps that we develop.
-
-In addition to storing source code, GitLab also enables teams to rapidly test and develop their apps through a deployment pipeline that is securely connected with the LTC's Kubernetes clusters.
-
-The CI/CD deployment pipeline and the Kubernetes cluster endpoints are described in other sections.
-
-### Creating a GitLab Project
-
-A pre-requisite for any development is creating a project to store your source code.
-
-1. Login to [GitLab](https://issues.ltc.bcit.ca) and navigate to the **Apps** group
-1. Click the [+] in the top navigation bar to create a new project
-1. Name the project, assign it to an appropriate group, and click "Create Project"
-1. Open your code editing IDE and clone the project
-
-## Getting Started with Container Development
+# Container development
 
 Containerizing everything can present a challenge when developing locally unless you can also create up an environment that has all the components needed to run the app.
 
@@ -55,7 +16,7 @@ Building a single containerized app is pretty easy! Usually all you have to do i
 
 Download and install [Docker desktop](https://www.docker.com/products/docker-desktop).
 
-## Container Development Workflow
+## Container development workflow
 
 A typical container "dev loop" involves committing code, building an image, running tests, and deploying the image to a registry.
 
@@ -146,36 +107,3 @@ When you are ready to turn your app into an image and push it to a registry, nav
     `$ docker push registry.dev.ltc.bcit.ca/web-apps/qcon/qcon-api`
 
 When you have an image in a registry, either in the LTC's private registry or on a public site like [hub.docker.com](https://hub.docker.com), it can be deployed to a Kubernetes cluster as a workload.
-
-### Repository Branches and GitLab Flow
-
-For us, a pattern has emerged that is loosely based on [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html). Projects have a persistent *main* branch, and new bugfixes or features are added to ephemeral *feat* or *fix* branches. Feature and fix branch code is deployed to a `dev` cluster and main branch code is deployed to the `staging` and `production` clusters.
-
-This workflow helps us keep track of bugfixes, new features, and major changes (and the work done to resolve those issues) without maintaining an overly-complex branching practice.
-
-!!! example "GitLab Flow-based Development Workflow"
-
-    ![versioning workflow](../assets/git-workflow-simple-light.png#only-light)
-    ![versioning workflow](../assets/git-workflow-simple-dark.png#only-dark)
-
-    After creating or cloning a project, the workflow involves the following:
-
-    1. **Create an Issue, a Merge Request (MR), and new dev branch**
-    1. **Checkout the new branch, develop, commit, and sync**
-        
-        Push your code to GitLab to trigger a CI/CD pipeline. The pipeline:
-        
-        1. Builds an image tagged with the git commit short sha hash
-        1. Pushes the image to the project registry
-        1. Deploys the workload to a *dev* cluster
-
-    1. **Request a code review and approval**
-    1. **Merge the new dev branch into *main***
-    
-        Merging a MR into the *main* branch triggers a CI/CD pipeline that:
-
-        1. Builds an image tagged with the label `latest`
-        1. Pushes the image to the project registry
-        1. Deploys the workload to the *staging* cluster
-
-            **Commits that have a commit message that starts with a semantic versioning keyword will automatically increment the version tag of the repo and deploy the workload to the *production* cluster.**

@@ -31,7 +31,9 @@ theme:
     logo: fontawesome/brands/connectdevelop
     repo: fontawesome/brands/git-alt
   features:
-    - navigation.sections
+    # - navigation.sections
+    # - navigation.expand
+    - navigation.indexes
     - navigation.tracking
     - navigation.top
 
@@ -43,6 +45,7 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
   - pymdownx.details
+  - pymdownx.critic
   - admonition
   - pymdownx.tabbed:
       alternate_style: true
@@ -57,19 +60,21 @@ markdown_extensions:
 nav:
   - index.md
   - services-systems.md
-  - Development Workflow:
-    - 0_dev-workflow/index.md
-    - 0_dev-workflow/getting-started-dev.md
-    - 0_dev-workflow/deployments-releases.md
-  - CI/CD Pipelines:
-    - 1_ci-cd-pipelines/pipeline-overview.md
-    - 1_ci-cd-pipelines/deployment-packages.md
-    - 1_ci-cd-pipelines/pipeline-details.md
-  - Kubernetes:
-    - 2_kubernetes/index.md
-    - 2_kubernetes/role-cluster-details.md
+  - For Developers:
+    - 0_for-developers/index.md
+    - 0_for-developers/getting-started.md
+    - 0_for-developers/continuous-deployment.md
+  - Tech Stack Documentation:
+    - 1_tech-stack-documentation/index.md
+    - 1_tech-stack-documentation/container-development.md
+    - 1_tech-stack-documentation/kubernetes.md
+    - 1_tech-stack-documentation/deployments-releases.md
+    - 1_tech-stack-documentation/pipeline-overview.md
+    - 1_tech-stack-documentation/deployment-packages.md
   - Infrastructure:
-    - 3_infrastructure/index.md
-    - 3_infrastructure/infrastructure-details.md
-    - 3_infrastructure/configuration-projects.md
-    - 3_infrastructure/infrastructure-dev.md
+    - 2_infrastructure/index.md
+    - 2_infrastructure/node-details.md
+    - 2_infrastructure/kubernetes-details.md
+    - 2_infrastructure/pipeline-details.md
+    - 2_infrastructure/configuration-projects.md
+    - 2_infrastructure/developing-infrastructure.md

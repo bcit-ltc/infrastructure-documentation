@@ -19,9 +19,7 @@ The LTC now has a modern, highly-available collection of systems that provide th
 ![ltc-infrastructure](assets/ltc-infrastructure-simple-light.png#only-light)
 ![ltc-infrastructure](assets/ltc-infrastructure-simple-dark.png#only-dark)
 
-!!! tip ""
-
-    The LTC...
+!!! tip "The LTC..."
 
     * practices infrastructure as code (IaC) and uses CI/CD pipelines to limit manual deployment and configuration
     * configures infrastructure through the files in the "LTC Infrastructure" group of projects

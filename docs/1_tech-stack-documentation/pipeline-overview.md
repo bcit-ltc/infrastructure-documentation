@@ -1,8 +1,3 @@
----
-  title: "Overview"
----
-<!-- markdownlint-disable MD025 -->
-
 # CI/CD Pipelines
 
 A CI/CD pipeline is an infrastructure function that watches repositories for changes and then performs actions when a new commit is pushed. Our CI/CD pipelines build images and deploy them to a cluster.
@@ -15,19 +10,17 @@ A CI/CD pipeline is a set of `jobs` that are configured to run automatically eve
 
 GitLab comes with a built-in CI/CD sub-system; it relies on a **runner** and a `.gitlab-ci.yml` configuration file.
 
-When an app is ready to be tested on a cluster, a commit to a repo configured with a `.gitlab-ci.yml` file triggers a pipeline that builds the app and then deploys it to a cluster.
+A commit to a repo configured with a `.gitlab-ci.yml` file triggers a pipeline that builds the app and then deploys it to a cluster.
 
 ![Deployment Pipeline](../assets/deploy-pipeline-overview-light.png#only-light)
 ![Deployment Pipeline](../assets/deploy-pipeline-overview-dark.png#only-dark)
 
-## Requirements
+!!! warning "Requirements"
 
-1. `Dockerfile` - the configuration file that tells the system how to build an image of your app
-1. `.gitlab-ci.yml` file
+    1. `Dockerfile` - the configuration file that tells the system how to build an image of your app
+    1. `.gitlab-ci.yml` file
 
-The [Default LTC GitLab CI/CD Pipeline](https://issues.ltc.bcit.ca/-/snippets/60) file can be added to any project with a Dockerfile to get started.
-
-Once you have the requirements met, commit your files to trigger the pipeline.
+    The [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/60) file can be added to any project with a `Dockerfile` to get started.
 
 ## Stages
 
@@ -43,29 +36,27 @@ Pushing a commit triggers the pipeline to run through each of these stages.
 !!! example "Working with a CI/CD Pipeline"
 
     1. Create an Issue
-    1. Create a Merge Request and a new dev branch
+    1. Create a Merge Request and a new branch for development
 
         ![Create-MR-Branch](../assets/create-mr.png){ width="250" }
 
-    1. Open a code editor and checkout the new dev branch
+    1. Open a code editor and checkout the new branch
     1. Develop locally using `docker run...`, `docker compose up`, and/or `skaffold dev`
-    1. Commit changes and push back to the repo
+    1. Commit and push changes to the remote
 
-### Project Init
+### Project init
 
-**The default pipeline file will fail the first time it runs** - that's OK! The first job checks to see if the project has any *project access tokens*, and when it finds that there are none, it runs a job to create one.
+`Project init` checks to see if the project has any *project access tokens*, any deployment packages, and any deployment package trigger tokens. If it finds that any of these are missing, it creates them.
 
-### Gather Info
+### Gather info
 
-This stage analyzes the repository for git tags. It determines if there are any existing tags and whether any tags should be created.
-
-Tag analysis and creation is automatically handled using `semantic-release`.
+This stage analyzes the repository for git tags. It determines if there are any existing tags and whether any tags should be created. Tag analysis and creation is automatically handled using `semantic-release`.
 
 #### Semantic-Release
 
 We use [Semantic Versioning](https://semver.org/) to determine whether a commit should be tagged. [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) analyzes commit messages and increments versions based on the type of keyword included in a commit message.
 
-To use semver tagging in your projects, add any of the following keywords to the beginning of your commit messages:
+To use automatic semver tagging, add any of the following keywords to the beginning of your commit messages:
 
 | **Prefix:** ...commit message...                                           | Release type  |
 | ----------------------                                                     | ------------  |
@@ -99,4 +90,4 @@ This stage has two jobs depending on the target of the commit.
 
     * requires a deployment package with a **`development`** overlay
 
-When the [Default LTC GitLab CI/CD Pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is added to a project, the first run deploys a simple generic deployment package called `generic-dev`. This package is based on an `nginx` deployment and it demonstrates how `kustomize` overlays work.
+When the [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is added to a project, the first run deploys a simple generic deployment package called `generic-dev`. This package is based on an `nginx` deployment and it demonstrates how `kustomize` overlays work.

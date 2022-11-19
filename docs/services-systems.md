@@ -17,9 +17,9 @@ We use GitLab to:
 * record our work using version controlled code repositories
 * track issues related to projects
 * run CI/CD pipelines that automate building and deploying
-* save copies of images in each project's private image registry
+* store images in each project's private image registry
 
-!!! note "Starting a project"
+??? note "Starting a project"
 
     Start a project by creating a code repository in GitLab:
 
@@ -41,12 +41,12 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 
 ## Vault
 
-> [https://vault.ltc.bcit.ca:8200](https://vault.ltc.bcit.ca:8200)
+> [https://vault.ltc.bcit.ca](https://vault.ltc.bcit.ca)
 >
 > * VPN required
-> * Login with your BCIT credentials using the **LDAP** authentication method.
+> * Login with your BCIT credentials using the **LDAP** authentication method
 
-[Hashicorp Vault](https://vaultproject.io) is the LTC's secrets management platform. It stores secrets used for apps, database credentials, certificates, and more, and serves as an authentication middleware to secure communication between source code repositories, and a deployment endpoint in our Kubernetes clusters.
+[Hashicorp Vault](https://vaultproject.io) is the LTC's secrets management platform. It stores secrets used for apps, database credentials, certificates, etc..., and serves as an authentication middleware to secure communication between source code repositories and deployment endpoints.
 
 ## Rancher
 
@@ -56,8 +56,6 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 > * Login with your BCIT credentials
 
 We use Kubernetes to deliver our apps and services and Rancher is an easy-to-use UI for Kubernetes. Rancher helps us manage the workloads and services on our clusters.
-
-See the [Kubernetes section](2_kubernetes/index.md) for more info.
 
 ## Legacy Web Servers
 

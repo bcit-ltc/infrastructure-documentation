@@ -1,19 +1,17 @@
-# Deployment Packages
+# Deployment package details
 
-The default pipeline file can help you get started with an automated build and deploy, but it's not configured to do much out of the box - it requires configuration before you can see your app on a cluster.
+!!! warning "Under Construction"
 
-Up until now, we've covered the `Dockerfile` and the `.gitlab-ci.yml` CI/CD pipeline configuration file. But the other part of the picture is the set of Kubernetes Resource Manifest files (KRM's) you configure to tell the cluster how to deploy your app. Together, these files are called a **deployment package**.
+    This page is still being written
 
-## Pipelines and Deployment Packages
+Your source code project runs the pipeline that builds your app, but there's a second project called a ***deployment package*** that deploys your app to Kubernetes.
 
-Your source code project runs the pipeline that builds and deploys your app. The diagram below outlines how the pipeline gets triggered and how the deployment package gets deployed to a `dev` cluster.
+The source code pipeline **triggers** a pipeline in the deployment package to deploy an app:
 
 ![Deployment Pipeline](../assets/deploy-pipeline-overview-light.png#only-light)
 ![Deployment Pipeline](../assets/deploy-pipeline-overview-dark.png#only-dark)
 
-## Kustomize Concepts
-
-A deployment package is built around [`kustomize`](https://kubectl.docs.kubernetes.io/), where a base set of configuration files are modified by *overlays* based on the cluster they're being applied to.
+A deployment package is built around [`kustomize`](https://kubectl.docs.kubernetes.io/), where a *base* set of configuration files are modified by *overlays* before being applied to a cluster.
 
 Here's what the structure of a kustomize-based *deployment package* looks like:
 
@@ -23,7 +21,7 @@ Here's what the structure of a kustomize-based *deployment package* looks like:
   <figcaption>An example nginx deployment package</figcaption>
 </figure>
 
-### Base
+## Base
 
 The base in the example above consists of some standard KRM's:
 
@@ -46,7 +44,7 @@ The base in the example above consists of some standard KRM's:
 
 * `service.yaml`
 
-### Overlays
+## Overlays
 
 The files in the overlay are *patches* that describe how a resource is changed when it is applied to a cluster.
 
@@ -54,7 +52,7 @@ In the example above, the `dev` cluster overlay adds a `deployment-patch.yaml`, 
 
 ## LTC `generic-dev` deployment package
 
-When the [Default LTC GitLab CI/CD Pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is first used in your project, it deploys a `generic-dev` package that demonstrates how the deployment package works. If you create an issue, a merge request, and a branch, the pipeline deploys the `generic-dev` deployment package to your `dev` cluster. To view it, click on the `View App` button in the merge request.
+When the [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is first used in your project, it deploys a `generic-dev` package that demonstrates how the deployment package works. If you create an issue, a merge request, and a branch, the pipeline deploys the `generic-dev` deployment package to your `dev` cluster. To view it, click on the `View App` button in the merge request.
 
 !!! tip "Create a Deployment Package for your project"
 
