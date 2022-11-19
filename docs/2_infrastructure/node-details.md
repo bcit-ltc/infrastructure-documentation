@@ -1,4 +1,4 @@
-# Infrastructure Details
+# Node Details
 
 ## Virtual Machines
 

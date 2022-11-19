@@ -64,17 +64,17 @@ nav:
     - 0_for-developers/index.md
     - 0_for-developers/getting-started.md
     - 0_for-developers/continuous-deployment.md
-  - DevOps & Engineering:
-    - 1_devops-engineering/index.md
-    - Kubernetes:
-      - 1_devops-engineering/kubernetes/index.md
-      - 1_devops-engineering/kubernetes/role-cluster-details.md
-    - CI/CD Pipelines:
-      - 1_devops-engineering/ci-cd-pipelines/pipeline-overview.md
-      - 1_devops-engineering/ci-cd-pipelines/deployment-packages.md
-      - 1_devops-engineering/ci-cd-pipelines/pipeline-details.md
-    - 1_devops-engineering/infrastructure-details.md
-    - 1_devops-engineering/configuration-projects.md
-    - 1_devops-engineering/infrastructure-dev.md
   - Tech Stack Documentation:
-    - 2_tech-stack-documentation/index.md
+    - 1_tech-stack-documentation/index.md
+    - 1_tech-stack-documentation/container-development.md
+    - 1_tech-stack-documentation/kubernetes.md
+    - 1_tech-stack-documentation/deployments-releases.md
+    - 1_tech-stack-documentation/pipeline-overview.md
+    - 1_tech-stack-documentation/deployment-packages.md
+  - Infrastructure:
+    - 2_infrastructure/index.md
+    - 2_infrastructure/node-details.md
+    - 2_infrastructure/kubernetes-details.md
+    - 2_infrastructure/pipeline-details.md
+    - 2_infrastructure/configuration-projects.md
+    - 2_infrastructure/developing-infrastructure.md

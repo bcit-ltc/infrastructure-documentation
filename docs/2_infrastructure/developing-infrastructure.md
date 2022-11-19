@@ -1,4 +1,4 @@
-# Configuring Infrastructure
+# Developing Infrastructure
 
 We strive to add or change infrastructure through declarative programming practices, where a desired state is coded into files that are then pushed to manage infrastructure.
 

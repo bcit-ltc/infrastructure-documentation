@@ -1,4 +1,4 @@
-# LTC Infrastructure Configuration Projects
+# Configuration Projects
 
 Projects in the `LTC Infrastructure` group contain the configuration files for a variety of services.
 

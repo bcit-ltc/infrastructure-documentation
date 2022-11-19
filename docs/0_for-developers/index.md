@@ -5,7 +5,7 @@
 
 # Development Overview
 
-The LTC's infrastructure is designed to make it easy to adopt a modern, automated, development workflow:
+The LTC's infrastructure makes it easy to adopt a modern, automated, development workflow:
 
 - [x] local development using `docker compose`
 - [x] centralized version control, image registries, and automated deployment using [GitLab](https://gitlab.com)

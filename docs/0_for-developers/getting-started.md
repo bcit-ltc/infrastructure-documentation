@@ -4,7 +4,7 @@ The first step is to create a GitLab project to store your code. This project wi
 
 !!! warning "Requirements"
 
-    These pages assume some working knowledge of the following:
+    This page assumes some working knowledge of the following:
 
     * Git
     * Docker
@@ -53,26 +53,74 @@ The LTC has repositories on other platforms like GitHub ([BCIT-LTC](https://gith
 
 Now that the project has been *initialized*, it's ready for source code.
 
-1. Copy your source code into the project; *a working `Dockerfile` is required*
+1. Copy your source code into the project
 
-    !!! tip "Semantic versioning"
+    !!! warning "`Dockerfile` Requirement"
 
-        The pipeline uses [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) to analyze commit messages and determine if a new tag should be created.
-
-        To use automatic [semver tagging](https://semver.org/), add any of the following to your commit messages:
-
-        | **Prefix:** ...commit message...                                           | Release type  |
-        | ----------------------                                                     | ------------  |
-        | `fix: ...some smaller bugfix...`                                           | patch         |
-        | `feat: ...add functionality message...`                                    | minor         |
-        | `any term!: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
-        `*` *the "footer" of the commit message must start with **BREAKING CHANGE:***
+        A working `Dockerfile` is required.
 
 1. Commit and push your code
 
-!!! failure ""
+    !!! failure "If your pipeline fails..."
 
-    If your pipeline fails, troubleshoot the `Dockerfile` before moving on.
+        Troubleshoot the `Dockerfile` before moving on.
+
+## Development workflow
+
+We adopted a workflow pattern that is loosely based on [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html). Projects have a persistent **`main`** branch, and new bugfixes or features are added to ephemeral **`feat/`** or **`fix/`** branches.
+
+Feature and fix branch code is deployed to a `dev` cluster and `main` branch code is deployed to the `staging` and `production` clusters.
+
+![deployment workflow](../assets/deployment-workflow-simple-light.png#only-light)
+![deployment workflow](../assets/deployment-workflow-simple-dark.png#only-dark)
+
+This workflow helps us keep track of bugfixes, new features, and major changes without complex branching.
+
+!!! example "Development workflow"
+
+    ![versioning workflow](../assets/git-workflow-simple-light.png#only-light)
+    ![versioning workflow](../assets/git-workflow-simple-dark.png#only-dark)
+
+    After cloning a project repository:
+
+    1. **Create an Issue, a Merge Request (MR), and new branch for development**
+
+        1. Create an Issue (eg. `updates README with project description`)
+        1. Create a Merge Request (MR) and a new branch
+
+            ![Create-MR-Branch](../assets/create-mr.png)
+
+    1. **Checkout the new branch, develop, commit, and sync**
+        
+        Pushing your code triggers a pipeline run. The pipeline:
+        
+        1. Builds an image
+        1. Pushes the image to the project registry
+        1. Deploys the workload to a **`dev`** cluster
+
+    1. **Request a code review and approval**
+    1. **Merge the branch into `main`**
+    
+        Merging a development branch into **`main`** triggers a pipeline run that:
+
+        1. Builds an image tagged with the label `latest`
+        1. Pushes the image to the project registry
+        1. Deploys the workload to the *staging* cluster
+
+            **Commits that have a commit message that starts with a semantic versioning keyword will automatically increment the version tag of the repo and deploy the workload to the *production* cluster.**
+
+### Semantic versioning
+
+The pipeline uses [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) to analyze commit messages and determine if a new tag should be created.
+
+To use automatic [semver tagging](https://semver.org/), add any of the following to your commit messages:
+
+| **Prefix:** ...commit message...                                           | Release type  |
+| ----------------------                                                     | ------------  |
+| `fix: ...some smaller bugfix...`                                           | patch         |
+| `feat: ...add functionality message...`                                    | minor         |
+| `any term!: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
+`*` *the "footer" of the commit message must start with **BREAKING CHANGE:***
 
 ## First deployment
 
@@ -91,11 +139,6 @@ When the default pipeline runs for the first time, it simply prints out a messag
     #####
 
 If we see this message, the pipeline is configured correctly! It confirms that the `Dockerfile` can be built successfully, that the integration between GitLab and Vault is configured correctly, and that a **GENERIC_DEPLOYMENT** is configured.
-
-The message also states that *"Generic packages are not deployed to staging/production"*... to understand this concept, take a look at the following diagram.
-
-![deployment workflow](../assets/deployment-workflow-simple-light.png#only-light)
-![deployment workflow](../assets/deployment-workflow-simple-dark.png#only-dark)
 
 Out-of-the-box, the pipeline only deploys a generic deployment package from a `dev` branch to verify that things are configured correctly. After we replace the generic package with a package specific to our project, we'll be able to deploy code from the `main` branch.
 
