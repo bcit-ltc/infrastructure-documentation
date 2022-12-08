@@ -59,7 +59,7 @@ Rancher's default Ingress is powered by nginx. See [Rancher Docs - Adding Ingres
 
 ### Longhorn
 
-> *Longhorn is used by all worker nodes*
+> *Longhorn is deployed on all worker nodes*
 
 [Longhorn](https://www.longhorn.io) is a persistent disk provisioner for Kubernetes; it allows pods to request storage that remains available independent of the pod lifecycle. Regardless of the cluster, any node with a worker role (including the combo role) has an additional block device that is dedicated for use by Longhorn.
 
