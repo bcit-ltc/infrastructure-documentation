@@ -5,8 +5,8 @@
 
 # Infrastructure Overview
 
-[![architecture](../assets/ltc-infrastructure-oct2022-light.png#only-light)](ltc-infrastructure-large-light.md)
-[![architecture](../assets/ltc-infrastructure-oct2022-dark.png#only-dark)](ltc-infrastructure-large-dark.md)
+[![architecture](../assets/ltc-infrastructure-dec2022-light.png#only-light)](ltc-infrastructure-large-light.md)
+[![architecture](../assets/ltc-infrastructure-dec2022-dark.png#only-dark)](ltc-infrastructure-large-dark.md)
 
 !!! note ""
 
