@@ -6,13 +6,13 @@ FROM squidfunk/mkdocs-material as build
 
 WORKDIR /docs
 
-RUN set -ex; \
-    pip install Pygments pymdown-extensions;
+RUN set -ex \
+    && pip install Pygments pymdown-extensions
 
 COPY . ./
 
-RUN set -ex; \
-    mkdocs build --site-dir /public;
+RUN set -ex \
+    && mkdocs build --site-dir /public
 
 
 ## Release
