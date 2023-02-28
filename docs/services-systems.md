@@ -4,7 +4,7 @@ The LTC operates systems and services based on virtual machines provisioned by I
 
 !!! warning "Access Requirements"
 
-    Most systems and services require that you are part of the `LTC Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to ITS](https://techhelp.bcit.ca/).
+    Most systems and services require that you are part of the `LTC Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to the ITS TechHelp desk](https://techhelp.bcit.ca/).
 
 ## GitLab
 
