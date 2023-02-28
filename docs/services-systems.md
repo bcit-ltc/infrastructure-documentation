@@ -12,9 +12,9 @@ The LTC operates systems and services based on virtual machines provisioned by I
 
 GitLab is the LTC's code repository, CI/CD pipeline coordinator, and container registry. It is also used as an issue tracker and comes with a built-in version of [Mattermost](https://mattermost.com/) for chat-style team communication.
 
-We use GitLab to:
+Use GitLab to:
 
-* record our work using version controlled code repositories
+* record work using version controlled code repositories
 * track issues related to projects
 * run CI/CD pipelines that automate building and deploying
 * store images in each project's private image registry
