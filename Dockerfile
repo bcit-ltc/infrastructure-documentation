@@ -1,6 +1,3 @@
-# Dockerfile
-
-
 ## Build
 FROM squidfunk/mkdocs-material as build
 
