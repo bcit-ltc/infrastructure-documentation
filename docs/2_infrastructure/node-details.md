@@ -4,7 +4,7 @@
 
 Our virtual machines (VM's) are provisioned by ITS using VMWare vSphere. The [vSphere hypervisor client interface](https://vcsa01.tis.bcit.ca/) is where we control the state of a VM (stopped, running, paused, snapshots, etc..).
 
-The base image for all nodes is [CentOS 7.8](https://www.centos.org/download/), patched periodically with security updates by an [Ansible](https://docs.ansible.com/ansible/latest/user_guide/index.html) script. The one exception is a legacy Windows 2012R2 server that allows Course Production to use Respondus from their Mac laptops.
+The base image for all nodes is [CentOS 7.9](https://www.centos.org/download/), patched periodically with security updates by an [Ansible](https://docs.ansible.com/ansible/latest/user_guide/index.html) script. The one exception is a legacy Windows 2012R2 server that allows Course Production to use Respondus from their Mac laptops.
 
 The LTC's servers are located in the ITS machine rooms of the Burnaby and the Downtown campus. IP's with a subnet of `.76` are located on the Burnaby campus, while those with `.110` are located at the Downtown campus.
 
