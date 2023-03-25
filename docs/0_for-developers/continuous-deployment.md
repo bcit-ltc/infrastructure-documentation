@@ -177,3 +177,7 @@ To configure a unique URL for your app, setup an additional **public-endpoint** 
             rules:
             - host: {--generic-dev--}{++{appName}++}.ltc.bcit.ca
         ...
+
+
+[![Development workflow](../assets/devops-workflow-overview-light.png#only-light)](devops-workflow-overview-large-light.md)
+[![Development workflow](../assets/devops-workflow-overview-dark.png#only-dark)](devops-workflow-overview-large-dark.md)
