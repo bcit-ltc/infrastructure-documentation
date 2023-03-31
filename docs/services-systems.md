@@ -1,10 +1,14 @@
-# Services and Systems
+# Systems and Services
 
 The LTC operates systems and services based on virtual machines provisioned by ITS. This provides flexibility to research and develop educational solutions that are not typically bound by "enterprise" or "corporate" operational policies. With this flexibility comes responsibility, so we are careful about how we "operationalize" a system or service. Regardless of the application's audience or purpose, we adhere to and promote the guidelines outlined in [Policy 3501: Acceptable Use of Information Technology](https://www.bcit.ca/files/pdf/policies/3501.pdf).
 
 !!! warning "Access Requirements"
 
-    Most systems and services require that you are part of the `LTC Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to the ITS TechHelp desk](https://techhelp.bcit.ca/).
+    Most systems and services have some basic access requirements:
+    
+    * Install and run BCIT's myVPN
+    * Membership in the `LTC Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to the ITS TechHelp desk](https://techhelp.bcit.ca/).
+
 
 ## GitLab
 
@@ -28,8 +32,6 @@ Use GitLab to:
 
     `Utilities`
     :   Tools, resources, and services (both local and server-based) that do not have a front-end
-
-    Depending on your permissions you may also notice that there are `admin` groups for team-specific projects.
 
 ## Mattermost
 
