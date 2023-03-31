@@ -35,7 +35,8 @@ theme:
     # - navigation.expand
     - navigation.indexes
     - navigation.tracking
-    - navigation.top
+    # - navigation.top
+    - navigation.tabs
 
 plugins:
   - search
@@ -58,11 +59,14 @@ markdown_extensions:
       permalink: true
 
 nav:
-  - index.md
-  - services-systems.md
+  - Home:
+    - index.md
+    - services-systems.md
   - For Developers:
     - 0_for-developers/index.md
     - 0_for-developers/getting-started.md
+    - 0_for-developers/development-workflow.md
+    - 0_for-developers/semantic-versioning.md
     - 0_for-developers/continuous-deployment.md
   - Tech Stack Documentation:
     - 1_tech-stack-documentation/index.md
