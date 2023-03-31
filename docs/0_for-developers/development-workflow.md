@@ -2,7 +2,7 @@
 
 Our workflow pattern is loosely based on [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html). Projects have a persistent **`main`** branch, and new bugfixes or features are added to ephemeral **`feature`** or **`fix`** branches.
 
-`Feature` and `fix` branch code is deployed to a `review` cluster and `main` branch code (the default) is deployed to the `latest` and `stable` clusters.
+`feature` and `fix` branch code is deployed to a `review` cluster and `main` branch code (the default) is deployed to the `latest` and `stable` clusters.
 
 ![deployment workflow](../assets/deployment-workflow-simple-light.png#only-light)
 ![deployment workflow](../assets/deployment-workflow-simple-dark.png#only-dark)

@@ -1,6 +1,8 @@
 # Semantic versioning
 
-The pipelines uses [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) to analyze commit messages and determine if a new git tag should be created.
+The pipelines use [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) to analyze commit messages and determine if a new git tag should be created.
+
+## Semver keywords
 
 To use automatic [semver tagging](https://semver.org/), add any of the following to your commit messages:
 
@@ -11,7 +13,7 @@ To use automatic [semver tagging](https://semver.org/), add any of the following
 | `any term!: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
 `*` *the "footer" of the commit message must start with **BREAKING CHANGE:***
 
-## First tag
+## Initial run
 
 When the default pipeline runs for the first time, it simply prints out a message:
 
@@ -80,6 +82,8 @@ When the default pipeline runs for the first time, it simply prints out a messag
 In Gitlab, take a look the "CI/CD > Pipelines" navigation menu and click on one of the job icons in the latest pipeline. If you see a message like the one above, the pipeline is configured correctly! It confirms that the `Dockerfile` can be built successfully, that the integration between GitLab and Vault is configured correctly, and that a **GENERIC_DEPLOYMENT** is configured.
 
 Out-of-the-box, the pipeline only deploys a generic deployment package from a development branch to verify that things are configured correctly. After we replace the generic package with a package specific to our project, we'll be able to deploy code from the `main` branch.
+
+## First deployment
 
 To verify that GitLab can deploy to Kubernetes, create a `feature` or `fix` development branch and make a commit to that branch:
 
