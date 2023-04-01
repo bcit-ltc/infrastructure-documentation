@@ -1,8 +1,4 @@
----
-title: Workflow
----
-
-# Development Workflow
+# Development workflow
 
 The workflow is loosely based on [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) where projects have a persistent **`main`** branch, and new bugfixes or features are added to ephemeral **`feature`** or **`fix`** branches.
 

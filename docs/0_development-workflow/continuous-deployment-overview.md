@@ -1,5 +1,5 @@
 ---
-  title: "Continuous deployment"
+  title: Continuous deployment
 ---
 <!-- markdownlint-disable MD025 -->
 

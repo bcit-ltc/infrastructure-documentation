@@ -1,8 +1,8 @@
 ---
-title: Overview
 hide:
   - toc
 ---
+# Development workflow
 
 Whether it's a small interaction for an single course, or a larger, more complicated application for an entire program, we develop and operate *containerized apps* that can be deployed on Kubernetes.
 

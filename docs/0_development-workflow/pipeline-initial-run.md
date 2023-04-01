@@ -1,4 +1,4 @@
-# Pipeline Initialization
+# Pipeline initialization
 
 When the default pipeline runs for the first time, it initializes the project by connecting GitLab to systems like Vault and Kubernetes. If you navigate to the GitLab `CI/CD > Pipelines` page you can monitor the status of pipelines.
 
