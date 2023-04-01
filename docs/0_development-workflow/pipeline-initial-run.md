@@ -1,21 +1,10 @@
-# Semantic versioning
+# Pipeline initialization
 
-The pipelines use [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) to analyze commit messages and determine if a new git tag should be created.
+When the default pipeline runs for the first time, it initializes the project by connecting GitLab to systems like Vault and Kubernetes. If you navigate to the GitLab `CI/CD > Pipelines` page you can monitor the status of pipelines.
 
-## Semver keywords
+The default pipeline has a couple of *stages*, and each stage has one or more **jobs**. Click on an icon in the stages column to see the status of individual jobs.
 
-To use automatic [semver tagging](https://semver.org/), add any of the following to your commit messages:
-
-| **Prefix:** ...commit message...                                           | Release type  |
-| ----------------------                                                     | ------------  |
-| `fix: ...some smaller bugfix...`                                           | patch         |
-| `feat: ...add functionality message...`                                    | minor         |
-| `any term!: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
-`*` *the "footer" of the commit message must start with **BREAKING CHANGE:***
-
-## Initial run
-
-When the default pipeline runs for the first time, it simply prints out a message:
+A commit to the `main` branch will trigger the pipeline, and the `deploy latest` job will print out the following:
 
     #####
     #####
@@ -79,9 +68,13 @@ When the default pipeline runs for the first time, it simply prints out a messag
     #####
     #####
 
-In Gitlab, take a look the "CI/CD > Pipelines" navigation menu and click on one of the job icons in the latest pipeline. If you see a message like the one above, the pipeline is configured correctly! It confirms that the `Dockerfile` can be built successfully, that the integration between GitLab and Vault is configured correctly, and that a **GENERIC_DEPLOYMENT** is configured.
+If you see a message like the one above, the pipeline is configured correctly! It confirms the following:
 
-Out-of-the-box, the pipeline only deploys a generic deployment package from a development branch to verify that things are configured correctly. After we replace the generic package with a package specific to our project, we'll be able to deploy code from the `main` branch.
+    * the `Dockerfile` can be built successfully
+    * the integration between GitLab and the secret manager, Vault, is configured correctly
+    * a **GENERIC_DEPLOYMENT** is configured
+
+Out-of-the-box, the pipeline is configured with a generic deployment so that the basic connections between systems are configured correctly. After we replace the generic package with a package specific to our project we'll be able to deploy code from the `main` branch.
 
 ## First deployment
 

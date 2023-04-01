@@ -36,7 +36,7 @@ theme:
     - navigation.indexes
     - navigation.tracking
     # - navigation.top
-    - navigation.tabs
+    # - navigation.tabs
 
 plugins:
   - search
@@ -63,22 +63,26 @@ nav:
     - index.md
     - services-systems.md
   - For Developers:
-    - 0_for-developers/index.md
-    - 0_for-developers/getting-started.md
-    - 0_for-developers/development-workflow.md
-    - 0_for-developers/semantic-versioning.md
-    - 0_for-developers/continuous-deployment.md
-  - Tech Stack Documentation:
-    - 1_tech-stack-documentation/index.md
-    - 1_tech-stack-documentation/container-development.md
-    - 1_tech-stack-documentation/kubernetes.md
-    - 1_tech-stack-documentation/deployments-releases.md
-    - 1_tech-stack-documentation/pipeline-overview.md
-    - 1_tech-stack-documentation/deployment-packages.md
-  - Infrastructure:
-    - 2_infrastructure/index.md
-    - 2_infrastructure/node-details.md
-    - 2_infrastructure/kubernetes-details.md
-    - 2_infrastructure/pipeline-details.md
-    - 2_infrastructure/configuration-projects.md
-    - 2_infrastructure/developing-infrastructure.md
+    - 0_development-workflow/index.md
+    - 0_development-workflow/getting-started.md
+    - 0_development-workflow/development-workflow.md
+    - 0_development-workflow/pipeline-initial-run.md
+    - 0_development-workflow/continuous-deployment-overview.md
+    - 0_development-workflow/developing-deployment-packages.md
+    - 0_development-workflow/semantic-versioning.md
+    - 0_development-workflow/secrets.md
+    - 0_development-workflow/routes-endpoints.md
+    - 0_development-workflow/continuous-deployment-details.md
+  - Additional Details:
+    - Container Development:
+      - 1_workflow-details/index.md
+      - 1_workflow-details/kubernetes.md
+      - 1_workflow-details/deployments-releases.md
+      - 1_workflow-details/pipeline-overview.md
+      - 1_workflow-details/deployment-packages.md
+    - Infrastructure:
+      - 2_infrastructure-details/node-details.md
+      - 2_infrastructure-details/kubernetes-details.md
+      - 2_infrastructure-details/pipeline-details.md
+      - 2_infrastructure-details/configuration-projects.md
+      - 2_infrastructure-details/developing-infrastructure.md

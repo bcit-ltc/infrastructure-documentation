@@ -12,7 +12,7 @@ The first step is to create a GitLab project (or clone if one already exists). T
 
 !!! note ""
 
-    The LTC also has repositories on other platforms like GitHub ([BCIT-LTC](https://github.com/bcit-ltc)) and BitBucket ([BCIT Bitbucket](https://bcitltc.atlassian.com), Bitbucket.com), but GitLab is the on-premise authoritiative source.
+    The LTC also has repositories on other platforms like GitHub ([BCIT-LTC](https://github.com/bcit-ltc)) and BitBucket ([BCIT Bitbucket](https://bcitltc.atlassian.net/), [Bitbucket.org](https://bitbucket.org/)), but GitLab is the on-premise authoritiative source.
 
 ## 2. Add the default ci/cd pipeline
 
@@ -24,15 +24,13 @@ When a `.gitlab-ci.yml` file is added to the project, the pipeline checks to see
 
 ## 3. First code commit
 
-When the `.gitlab-ci.yml` file has been committed, the app project is considered *initialized*. Now it's ready for source code.
+The next stage is to work with the source code to build a `Dockerfile` that builds without errors.
 
 1. Copy your source code into the project
 
-    !!! warning "`Dockerfile` Requirement"
+2. Create or edit a `Dockerfile` in the project root that builds an image of your app.
 
-        A working `Dockerfile` is required.
-
-2. Commit and push your code
+3. Commit and push your code
 
     !!! failure "If your pipeline fails..."
 
