@@ -36,7 +36,7 @@ theme:
     - navigation.indexes
     - navigation.tracking
     # - navigation.top
-    - navigation.tabs
+    # - navigation.tabs
 
 plugins:
   - search
@@ -59,26 +59,28 @@ markdown_extensions:
       permalink: true
 
 nav:
-  - Home:
-    - index.md
-    - services-systems.md
+  - index.md
+  - services-systems.md
   - For Developers:
     - 0_for-developers/index.md
     - 0_for-developers/getting-started.md
     - 0_for-developers/development-workflow.md
+    - 0_for-developers/pipeline-initial-run.md
+    - 0_for-developers/continuous-deployment-overview.md
+    - 0_for-developers/developing-deployment-packages.md
     - 0_for-developers/semantic-versioning.md
-    - 0_for-developers/continuous-deployment.md
-  - Tech Stack Documentation:
-    - 1_tech-stack-documentation/index.md
-    - 1_tech-stack-documentation/container-development.md
-    - 1_tech-stack-documentation/kubernetes.md
-    - 1_tech-stack-documentation/deployments-releases.md
-    - 1_tech-stack-documentation/pipeline-overview.md
-    - 1_tech-stack-documentation/deployment-packages.md
-  - Infrastructure:
-    - 2_infrastructure/index.md
-    - 2_infrastructure/node-details.md
-    - 2_infrastructure/kubernetes-details.md
-    - 2_infrastructure/pipeline-details.md
-    - 2_infrastructure/configuration-projects.md
-    - 2_infrastructure/developing-infrastructure.md
+    - 0_for-developers/secrets.md
+    - 0_for-developers/routes-endpoints.md
+    - 0_for-developers/continuous-deployment-details.md
+  - Infrastructure Documentation:
+    - 1_infrastructure-documentation/index.md
+    - 1_infrastructure-documentation/container-development.md
+    - 1_infrastructure-documentation/kubernetes.md
+    - 1_infrastructure-documentation/deployments-releases.md
+    - 1_infrastructure-documentation/pipeline-overview.md
+    - 1_infrastructure-documentation/deployment-packages.md
+    - 1_infrastructure-documentation/node-details.md
+    - 1_infrastructure-documentation/kubernetes-details.md
+    - 1_infrastructure-documentation/pipeline-details.md
+    - 1_infrastructure-documentation/configuration-projects.md
+    - 1_infrastructure-documentation/developing-infrastructure.md

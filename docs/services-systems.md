@@ -1,6 +1,6 @@
 # Systems and Services
 
-The LTC operates systems and services based on virtual machines provisioned by ITS. This provides flexibility to research and develop educational solutions that are not typically bound by "enterprise" or "corporate" operational policies. With this flexibility comes responsibility, so we are careful about how we "operationalize" a system or service. Regardless of the application's audience or purpose, we adhere to and promote the guidelines outlined in [Policy 3501: Acceptable Use of Information Technology](https://www.bcit.ca/files/pdf/policies/3501.pdf).
+We manage our own systems and services to facilitate the research and development of educational solutions. We are careful about how we "operationalize" a system or service. Regardless of an application's audience or purpose, we adhere to the guidelines outlined in [Policy 3501: Acceptable Use of Information Technology](https://www.bcit.ca/files/pdf/policies/3501.pdf).
 
 !!! warning "Access Requirements"
 
@@ -45,22 +45,20 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 
 > [https://vault.ltc.bcit.ca](https://vault.ltc.bcit.ca)
 >
-> * VPN required
 > * Login with your BCIT credentials using the **LDAP** authentication method
 
-[Hashicorp Vault](https://vaultproject.io) is the LTC's secrets management platform. It stores secrets used for apps, database credentials, certificates, etc..., and serves as an authentication middleware to secure communication between source code repositories and deployment endpoints.
+[Hashicorp Vault](https://vaultproject.io) is the LTC's secrets management platform. It stores secrets used for apps, database credentials, certificates, etc..., and serves as an authentication middleware to secure communication between source code repositories and deployments.
 
 ## Rancher
 
 > [https://rancher2.ltc.bcit.ca](https://rancher2.ltc.bcit.ca)
 >
-> * VPN required
 > * Login with your BCIT credentials
 
 We use Kubernetes to deliver our apps and services and Rancher is an easy-to-use UI for Kubernetes. Rancher helps us manage the workloads and services on our clusters.
 
-## Legacy Web Servers
+## Legacy Servers
+
+> **prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)
 
 Several applications are still served from older virtual machines; work to migrate these workloads to Kubernetes is ongoing.
-
-**prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)

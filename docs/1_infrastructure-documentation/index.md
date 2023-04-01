@@ -3,7 +3,7 @@
 ---
 <!-- markdownlint-disable MD025 -->
 
-# Infrastructure Overview
+## Architecture
 
 [![architecture](../assets/ltc-infrastructure-apr2023-light.png#only-light)](ltc-infrastructure-large-light.md)
 [![architecture](../assets/ltc-infrastructure-apr2023-dark.png#only-dark)](ltc-infrastructure-large-dark.md)
