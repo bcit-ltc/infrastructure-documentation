@@ -52,7 +52,7 @@ In the example above, the `dev` cluster overlay adds a `deployment-patch.yaml`, 
 
 ## LTC `generic-dev` deployment package
 
-When the [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is first used in your project, it deploys a `generic-dev` package that demonstrates how the deployment package works. If you create an issue, a merge request, and a branch, the pipeline deploys the `generic-dev` deployment package to your `dev` cluster. To view it, click on the `View App` button in the merge request.
+When the [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is first used in your project, it deploys a `generic-dev` package that demonstrates how the deployment package works. If you create an issue, a merge request, and a branch, the pipeline deploys the `generic-dev` deployment package to the `review` cluster. To view it, click on the `View App` button in the merge request.
 
 !!! tip "Create a Deployment Package for your project"
 
@@ -68,7 +68,7 @@ When the [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/6
 
 ## First steps *kustomizing* the Deployment Package
 
-The `generic-dev` deployment package contains example bases that might help give you an idea about how different workloads can be structured. The package also has example `dev`, `staging`, and `production` overlays that can be used as starting points for the kustomization.
+The `generic-dev` deployment package contains example bases that might help give you an idea about how different workloads can be structured. The package also has example `review`, `latest`, and `stable` overlays that can be used as starting points for the kustomization.
 
 === "nginx-unprivileged"
 
@@ -99,20 +99,23 @@ The `generic-dev` deployment package contains example bases that might help give
 
     * service.yaml
 
-=== "`dev` overlay"
+=== "`review` overlay"
 
     * ingress.yaml
-    * namespace.yaml
+    * kustomization.yaml
+    * Kptfile
+    * serviceaccount.yaml
+    * `secrets/` path
 
 **In the `deployment package` project**
 
-One of the easiest ways to update your app's deployment package is to do a "search and replace" on the dev overlay.
+One of the easiest ways to update your app's deployment package is to do a "search and replace" on the review overlay.
 
-1. Replace all instances of `generic-dev` in the `overlays/dev` path
+1. Replace all instances of `generic-dev` in the `overlays/review` path
 
-    Eg. run `sed` replacing `yourAppName` with the name of your project (lowercase, no spaces) on all the files in the `dev` path:
+    Eg. run `sed` replacing `yourAppName` with the name of your project (lowercase, no spaces) on all the files in the `review` path:
 
-        sed -i -- 's/generic-dev/yourAppName/g' overlays/dev/*
+        sed -i -- 's/generic-dev/yourAppName/g' overlays/review/*
 
 1. Commit the changes to the deployment package repo
 
@@ -126,31 +129,10 @@ One of the easiest ways to update your app's deployment package is to do a "sear
 
 The pipeline will look for an image in your project's registry and deploy it with sane defaults.
 
-You may need to make changes to your deployment package to run the pipeline successfully, but thankfully this effort is only required once. When your deployment package is configured correctly, it's effectively "set and forget"!
+You may need to make changes to your deployment package to run the pipeline successfully, but thankfully this effort is only required once.
 
-## `staging` and `production` Deployment Package Overlays
+## `latest` and `stable` Deployment Package Overlays
 
-After you have a working `dev` overlay, most of the "heavy lifting" is done. Make two copies of the `dev` overlay and rename the folders to `staging` and `production`, respectively.
+After you have a working `review` overlay, most of the "heavy lifting" is done. Make two copies of the `review` overlay and rename the folders to `latest` and `stable`, respectively.
 
-The biggest differences between `staging`/`production` overlays and the `dev` overlay has to do with routing and security. If your application uses any kind of secret, you should be storing and retrieving these from Vault.
-
-!!! tip "Retrieving secrets from Vault"
-
-    Use the following annotations in your `staging`/`production` overlay `deployment.yaml` file to configure automatic secret retrieval:
-
-    ```
-        spec:
-        ...
-          template:
-            metadata:
-              annotations:
-                vault.hashicorp.com/agent-inject: 'true'
-                vault.hashicorp.com/role: '{projectName}-production-kubeauthbot'
-                vault.hashicorp.com/agent-inject-secret-config: 'web-apps/data/{projectName}'
-                vault.hashicorp.com/agent-inject-template-config: |
-                  {{ with secret "web-apps/data/{projectName}" -}}
-                  {secretKey}="{{ .Data.data.{secretKey} }}"
-                  {{- end }}
-    ```
-
-In terms of routing, most of it is taken care-of automatically, but if you need a unique URL, you may need to setup an additional **public-endpoint** (ingress) rule.
+The biggest differences between `latest`/`stable` overlays and the `review` overlay has to do with routing and security. If your application uses any kind of secret, you should be storing and retrieving these from Vault (see [secrets](../0_development-workflow/secrets.md)).

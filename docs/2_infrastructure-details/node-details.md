@@ -1,5 +1,9 @@
 # Node Details
 
+!!! warning "Under Construction"
+
+    This page is still being written
+
 ## Virtual Machines
 
 Our virtual machines (VM's) are provisioned by ITS using VMWare vSphere. The [vSphere hypervisor client interface](https://vcsa01.tis.bcit.ca/) is where we control the state of a VM (stopped, running, paused, snapshots, etc..).

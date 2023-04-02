@@ -40,6 +40,9 @@ theme:
 
 plugins:
   - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+      enabled: !ENV [CI, true]
 
 markdown_extensions:
   - abbr
@@ -81,6 +84,7 @@ nav:
       - 1_workflow-details/pipeline-overview.md
       - 1_workflow-details/deployment-packages.md
     - Infrastructure:
+      - 2_infrastructure-details/index.md
       - 2_infrastructure-details/node-details.md
       - 2_infrastructure-details/kubernetes-details.md
       - 2_infrastructure-details/pipeline-details.md

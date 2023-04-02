@@ -80,14 +80,14 @@ This stage has two jobs depending on the target of the commit.
 
 === "`main` branch"
 
-    Triggers a deployment to the `staging` cluster, and the `production` cluster if the commit has been tagged.
+    Triggers a deployment to the `latest` cluster, and the `stable` cluster if the commit has been tagged.
 
-    * requires a deployment package with **`staging`** and a **`production`** overlays
+    * requires a deployment package with **`latest`** and a **`stable`** overlays
 
 === "any other branch"
 
-    Triggers a *review* deployment to a `development` cluster
+    Triggers a *review* deployment to a `review` cluster
 
-    * requires a deployment package with a **`development`** overlay
+    * requires a deployment package with a **`review`** overlay
 
 When the [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is added to a project, the first run deploys a simple generic deployment package called `generic-dev`. This package is based on an `nginx` deployment and it demonstrates how `kustomize` overlays work.

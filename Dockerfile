@@ -4,7 +4,11 @@ FROM squidfunk/mkdocs-material as build
 WORKDIR /docs
 
 RUN set -ex \
-    && pip install Pygments pymdown-extensions
+    && pip install \
+        Pygments \
+        pymdown-extensions \
+        mkdocs-git-revision-date-localized-plugin \
+    ;
 
 COPY . ./
 
