@@ -132,7 +132,7 @@ include:
       - ".vault.yml"
       - ".source-utilities.yml"
       - rules.yml
-#  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
 
 ## Specify which runner should pick up pipeline jobs
