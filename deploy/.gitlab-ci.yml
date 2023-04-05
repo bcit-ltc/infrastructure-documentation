@@ -9,10 +9,9 @@
 #   1. Gather info
 #   2. Build image
 #   3. Deploy to a cluster
-#     - development branches        => https://review.ltc.bcit.ca/{projectName}/{branchName}
-#     - main branch                 => https://latest.ltc.bcit.ca/{projectName}
-#     - tagged commits on main      => https://stable.ltc.bcit.ca/{projectName}
-#     - (optional public endpoint)  => https://{projectName}.ltc.bcit.ca/
+#     - development branches        => https://review_{branchName}_{projectName}.ltc.bcit.ca/   => review
+#     - main branch                 => https://latest_{projectName}.ltc.bcit.ca/                => latest
+#     - public endpoint             => https://{projectName}.ltc.bcit.ca/                       => stable
 
 stages:
   - get info
@@ -22,10 +21,10 @@ stages:
 
 ## Project initialization
 #   - a project access token is required; if it doesn't exist it is created on the first run
-project init:
-  stage: get info
-  extends:
-    - ".project_init"
+# project init:
+#   stage: get info
+#   extends:
+#     - ".project_init"
 
 ## Are there existing git tags? Is a new tag required?
 get info:
@@ -43,45 +42,45 @@ build image:
 ## Deploy to a development branch for review
 #   - uses a deployment package with a `review` overlay
 #   - `generic-dev` deployment package is used if one hasn't been initialized
-deploy review:
-  stage: publish
-  variables:
-    TARGET_ENV: review
-  extends:
-    - ".deploy_review"
-    - ".deploy_review_rules"
+# deploy review:
+#   stage: publish
+#   variables:
+#     TARGET_ENV: review
+#   extends:
+#     - ".deploy_review"
+#     - ".deploy_review_rules"
 
 ## Deploy latest/stable packages
 #   - must have a deployment package with `latest` and `stable` overlays
 #   - triggers pipelines in GitLab "Deployments/{projectName}" project
-deploy to latest:
-  stage: publish
-  variables:
-    TARGET_ENV: latest
-  extends:
-    - ".deploy"
-    - ".deploy_latest_rules"
-  environment:
-    name: latest
-    url: https://${HOST_LATEST}/$CI_PROJECT_NAME
+# deploy to latest:
+#   stage: publish
+#   variables:
+#     TARGET_ENV: latest
+#   extends:
+#     - ".deploy"
+#     - ".deploy_latest_rules"
+#   environment:
+#     name: latest
+#     url: https://latest_${CI_PROJECT_NAME}.ltc.bcit.ca
 
-deploy to stable:
-  stage: publish
-  variables:
-    TARGET_ENV: stable
-  extends:
-    - ".deploy"
-    - ".deploy_stable_rules"
-  environment:
-    name: stable
-    url: https://${HOST_STABLE}/${CI_PROJECT_NAME}
+# deploy to stable:
+#   stage: publish
+#   variables:
+#     TARGET_ENV: stable
+#   extends:
+#     - ".deploy"
+#     - ".deploy_stable_rules"
+#   environment:
+#     name: stable
+#     url: https://${CI_PROJECT_NAME}.ltc.bcit.ca
 
-## Removes dev branch review (and all assets in the review branch namespace)
-stop review:
-  stage: cleanup
-  extends:
-    - ".undeploy_review"
-    - ".undeploy_review_rules"
+# ## Removes dev branch review (and all assets in the review branch namespace)
+# stop review:
+#   stage: cleanup
+#   extends:
+#     - ".undeploy_review"
+#     - ".undeploy_review_rules"
 
 #
 ## ---------- Pipeline configuration ----------
@@ -101,7 +100,7 @@ variables:
   # add the deployment package project ID below
   #
   # DEPLOY_PKG_INIT: "true"
-  DEPLOY_PKG_PROJECT_ID: "403"
+  # DEPLOY_PKG_PROJECT_ID: "403"
   #
   # Set COMMON_NAMESPACE to combine apps into one namespace.
   # COMMON_NAMESPACE: ""
@@ -124,16 +123,16 @@ variables:
 include:
   - project: deployments/ci-config
     file:
-      - project-init.yml
+      # - project-init.yml
       - get-info.yml
       - build.yml
-      - deploy.yml
-      - ".common-utilities.yml"
-      - ".vault.yml"
-      - ".source-utilities.yml"
+      # - deploy-new.yml
       - rules.yml
-  - template: Jobs/Secret-Detection.gitlab-ci.yml
-  - template: Jobs/SAST.gitlab-ci.yml
+  #     - ".common-utilities.yml"
+  #     - ".vault.yml"
+  #     - ".source-utilities.yml"
+  # - template: Jobs/Secret-Detection.gitlab-ci.yml
+  # - template: Jobs/SAST.gitlab-ci.yml
 
 ## Specify which runner should pick up pipeline jobs
 default:
@@ -145,10 +144,10 @@ cache:
   key: $CI_COMMIT_REF_SLUG
 
 ## Configure security scanning
-sast:
-  stage: test
-  extends:
-    - ".deploy_stable_rules"
+# sast:
+#   stage: test
+#   extends:
+#     - ".deploy_stable_rules"
 
 ## Configure merge request pipelines
 workflow:

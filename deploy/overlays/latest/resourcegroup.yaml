@@ -1,0 +1,7 @@
+apiVersion: kpt.dev/v1alpha1
+kind: ResourceGroup
+metadata:
+  name: resourcegroup
+  namespace: infrastructure-documentation
+  labels:
+    cli-utils.sigs.k8s.io/inventory-id: b8f75c0c573be796796439430f8fe09215f8ee08-1651156200697457477

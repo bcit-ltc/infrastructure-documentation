@@ -1,0 +1,58 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: kustomization
+  annotations:
+    config.kubernetes.io/local-config: "true"
+resources:
+  - ../../bases/nginx-unprivileged
+  - ingress.yaml
+  - Kptfile
+  - public-endpoint.yaml
+  - resourcegroup.yaml # created by 'kpt live init'
+  - serviceaccount.yaml
+generatorOptions:
+  annotations:
+    kustomize.generated.resource: "true"
+#
+# Package-specific configurations; update the values below to fit your app
+#
+namePrefix: infrastructure-documentation-
+# All SSL is terminated at ingresses
+secretGenerator:
+  - type: kubernetes.io/tls
+    name: star-ltc-bcit-ca
+    files:
+      - secrets/tls.crt
+      - secrets/tls.key
+patches:
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: infrastructure-documentation
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: infrastructure-documentation
+      - op: add
+        path: /spec/template/spec/serviceAccountName
+        value: infrastructure-documentation-serviceaccount
+    # - target:
+    #     kind: Deployment
+    #   patch: |-
+    #     - op: add
+    #       path: /spec/template/spec/imagePullSecrets
+    #       value: [name: gitlab-registry-credentials]
+commonLabels:
+  environment: stable
+  app: infrastructure-documentation
+  app.kubernetes.io/name: infrastructure-documentation
+#
+# Items here are updated automatically by the pipeline
+#
+namespace: infrastructure-documentation # kpt-set: ${DEPLOY_NAMESPACE}
+commonAnnotations:
+  version: v2.4.1 # kpt-set: ${GIT_TAG}
+images: # kpt-set: ${IMAGE_REF}
+  - {name: "infrastructure-documentation", newName: "registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation", newTag: "2.4.1"}

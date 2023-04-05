@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: if ($request_uri ~ ^/infrastructure-documentation$) { return 301 $scheme://$http_host$request_uri/;} rewrite ^/infrastructure-documentation/(.*)$ /$1 break;
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - stable.ltc.bcit.ca
+      secretName: star-ltc-bcit-ca
+  rules:
+    - host: stable.ltc.bcit.ca
+      http:
+        paths:
+          - path: /infrastructure-documentation
+            pathType: Prefix
+            backend:
+              service:
+                name: service
+                port:
+                  number: 80

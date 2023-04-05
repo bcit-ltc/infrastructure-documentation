@@ -1,0 +1,68 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: kustomization
+  annotations:
+    config.kubernetes.io/local-config: "true"
+resources:
+  - ../../bases/nginx-unprivileged
+  - ingress.yaml
+  - Kptfile
+  - resourcegroup.yaml # created by 'kpt live init'
+  - serviceaccount.yaml
+generatorOptions:
+  annotations:
+    kustomize.generated.resource: "true"
+#
+# Package-specific configurations; update the values below to fit your app
+#
+namePrefix: infrastructure-documentation-
+# All SSL is terminated at ingresses
+secretGenerator:
+  - type: kubernetes.io/tls
+    name: star-ltc-bcit-ca
+    files:
+      - secrets/tls.crt
+      - secrets/tls.key
+  # #
+  # # # Enable this for local cluster development. See README.md
+  # #
+  # - name: gitlab-registry-credentials
+  #   type: kubernetes.io/dockerconfigjson
+  #   files:
+  #     - .dockerconfigjson=secrets/.dockerconfigjson
+patches:
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: infrastructure-documentation
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: infrastructure-documentation
+      - op: add
+        path: /spec/template/spec/serviceAccountName
+        value: infrastructure-documentation-serviceaccount
+  # - target:
+  #     kind: Deployment
+  #   patch: |-
+  #     - op: add
+  #       path: /spec/template/spec/imagePullSecrets
+  #       value: [name: gitlab-registry-credentials]
+commonLabels:
+  environment: review
+  app: infrastructure-documentation
+  app.kubernetes.io/name: infrastructure-documentation
+#
+# Items here are updated automatically by the pipeline
+#
+namespace: infrastructure-documentation # kpt-set: ${DEPLOY_NAMESPACE}
+commonAnnotations:
+  version: latest # kpt-set: ${GIT_TAG}
+images: # kpt-set: ${IMAGE_REF}
+  - {
+      name: infrastructure-documentation,
+      newName: registry.ltc.bcit.ca/ltc-infrastructure/images/infrastructure-documentation,
+      newTag: latest,
+    }
