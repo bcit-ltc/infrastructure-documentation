@@ -2,19 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress
-  annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: if ($request_uri ~ ^/infrastructure-documentation/main$) { return 301 $scheme://$http_host$request_uri/;} rewrite ^/infrastructure-documentation/main/(.*)$ /$1 break; # kpt-set: if ($request_uri ~ ^/${INGRESS_PATH}$) { return 301 $scheme://$http_host$request_uri/;} rewrite ^/${INGRESS_PATH}/(.*)$ /$1 break;
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - review.ltc.bcit.ca
+        - review_{branchName}_{projectName}.ltc.bcit.ca
       secretName: star-ltc-bcit-ca
   rules:
-    - host: review.ltc.bcit.ca
+    - host: review_{branchName}_{projectName}.ltc.bcit.ca
       http:
         paths:
-          - path: /infrastructure-documentation/main # kpt-set: /${INGRESS_PATH}
+          - path: /
             pathType: Prefix
             backend:
               service:
