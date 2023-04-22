@@ -1,8 +1,6 @@
 The Learning and Teaching Centre (LTC) has a collection of modern, highly-available systems that provide the capability to deliver agile software solutions to the BCIT community.
 
-We:
-
-* use CI/CD pipelines to automate deployments
-* deploy containerized workloads to Kubernetes
-* practice infrastructure as code (IaC) to store and track configuration
-* monitor and log workloads to minimize and respond to service interruptions
+* we use CI/CD pipelines to automate deployments
+* we deploy containerized workloads to Kubernetes
+* we practice infrastructure as code (IaC) to store and track configuration
+* we monitor and log workloads to minimize service interruptions and effectively respond to incidents
