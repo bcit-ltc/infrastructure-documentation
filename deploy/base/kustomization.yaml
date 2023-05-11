@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namePrefix: infrastructure-documentation-
+
+resources:
+  - serviceaccount.yaml
+  - ./nginx-unprivileged
+  - ingress.yaml
+
+commonLabels:
+  app: infrastructure-documentation
+  app.kubernetes.io/name: infrastructure-documentation
+
+patches:
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: infrastructure-documentation
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: infrastructure-documentation
+      - op: add
+        path: /spec/template/spec/serviceAccountName
+        value: infrastructure-documentation-serviceaccount

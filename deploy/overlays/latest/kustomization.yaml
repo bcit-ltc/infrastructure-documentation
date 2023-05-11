@@ -1,0 +1,35 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: infrastructure-documentation
+
+resources:
+  - ../../base
+
+commonLabels:
+  environment: latest
+
+commonAnnotations:
+  version: 2.4.1-73c6bd9d--2023-04-24--259 # {"$imagepolicy": "flux-system:infrastructure-documentation:tag"}
+
+configMapGenerator:
+  - name: elasticapm-config
+    literals:
+      - ELASTIC_APM_SERVICE_NAME=infrastructure-documentation-latest
+      - ELASTIC_APM_SERVER_URL=https://bcit-ltc.apm.westus2.azure.elastic-cloud.com
+
+patches:
+  - target:
+      kind: Ingress
+    path: ingress-patch.yaml
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/envFrom
+        value: [{"configMapRef": {"name":"elasticapm-config"}}]
+
+images:
+  - name: "infrastructure-documentation"
+    newName: "registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation"
+    newTag: "2.4.1-73c6bd9d--2023-04-24--259" # {"$imagepolicy": "flux-system:infrastructure-documentation:tag"}

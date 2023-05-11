@@ -1,0 +1,46 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Flux envsubst replaces variables found in `deploy-vars.yaml` or falls back to defaults
+namespace: ${DEPLOY_NAMESPACE:=infrastructure-documentation}
+
+resources:
+  - ../../base
+
+commonLabels:
+  environment: review
+
+commonAnnotations:
+  version: ${GIT_TAG:=stable}
+
+images:
+  - name: infrastructure-documentation
+    newName: registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation
+    newTag: ${IMAGE_TAG:=stable}
+
+patches:
+  - target:
+      kind: Ingress
+    path: ingress-patch.yaml
+    # - target:
+    #     kind: Deployment
+    #   patch: |-
+    #     - op: add
+    #       path: /spec/template/spec/imagePullSecrets
+    #       value: [name: gitlab-registry-credentials]
+
+# secretGenerator:
+#   - type: kubernetes.io/tls
+#     name: star-ltc-bcit-ca
+#     files:
+#       - secrets/tls.crt
+#       - secrets/tls.key
+#     options:
+#         disableNameSuffixHash: true
+  # #
+  # # # Enable this for local cluster development. See README.md
+  # #
+  # - name: gitlab-registry-credentials
+  #   type: kubernetes.io/dockerconfigjson
+  #   files:
+  #     - .dockerconfigjson=secrets/.dockerconfigjson
