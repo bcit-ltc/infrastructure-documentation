@@ -26,10 +26,14 @@ stages:
 #   extends:
 #     - ".project_init"
 
+
+# Retrieve tags, target environment info for downstream pipeline jobs
 get info:
   extends:
     - ".get_info"
 
+
+## Verify and create required Kubernetes resources
 verify namespace:
   extends:
     - ".verify_namespace"
@@ -41,6 +45,7 @@ verify secrets:
 verify configmap:
   extends:
     - ".verify_configmap"
+
 
 ## Build image and push to project registry
 build image:
