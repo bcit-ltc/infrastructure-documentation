@@ -68,7 +68,6 @@ build image:
 
 # # Link stable environment (only runs on branches other than main)
 
-
 # ## Auto-removes environments
 # stop environment:
 #   stage: cleanup
