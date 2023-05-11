@@ -9,9 +9,9 @@
 #   1. Gather info
 #   2. Build image
 #   3. FluxCD deploys images/resources to a cluster
-#     - development branches  => https://review--{branchName}--{projectName}.ltc.bcit.ca/ => review
-#     - main branch           => https://latest--{projectName}.ltc.bcit.ca/               => latest
-#     - public endpoint       => https://{projectName}.ltc.bcit.ca/                       => stable
+#     - development branches  => https://review--{branchName}--{projectName}.ltc.bcit.ca/ => review cluster
+#     - main branch           => https://latest--{projectName}.ltc.bcit.ca/               => latest cluster
+#     - public endpoint       => https://{projectName}.ltc.bcit.ca/                       => stable cluster
 
 stages:
   - get info
