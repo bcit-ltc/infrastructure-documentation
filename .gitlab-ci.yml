@@ -3,7 +3,7 @@
 ## Requirements
 #   - this file
 #   - a working `Dockerfile`
-#   - a deployment package (see https://infrastructure-documentation.ltc.bcit.ca/)
+#   - a `deploy/` folder with Kubernetes resources
 #
 ## General Pipeline Steps
 #   1. Gather info
@@ -15,7 +15,6 @@
 
 stages:
   - get info
-  - verify
   - test
   - publish
   - cleanup
@@ -27,172 +26,30 @@ stages:
 #   extends:
 #     - ".project_init"
 
-## Are there existing git tags? Is a new tag required?
-#   - based on branch name, does env exist?
-#   -   if no, create ns
 get info:
-  stage: get info
   extends:
     - ".get_info"
 
-
 verify namespace:
-  image: registry.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker-kustomize
-  stage: verify
-  variables:
-    CONTAINER_NAME: ${CI_PROJECT_NAME}
-    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
-    DEPLOY_NAMESPACE: ${CI_COMMIT_REF_SLUG}
+  extends:
+    - ".verify_namespace"
 
-  before_script:
+verify secrets:
+  extends:
+    - ".verify_secrets"
 
-    # Set kubernetes context based on TARGET_ENV
-    - !reference [.set-kubernetes-context-new, script]
-
-    # Apply config overrides for generic deployment and common namespaces
-    - !reference [.generic-deployment, script]
-    - !reference [.common-namespace, script]
-
-  script:
-
-    # Check for namespace; if it doesn't exist, create it
-    - !reference [.create-namespace, script]
-
-    # Store namespace
-    - |-
-      #
-      echo "
-        Saving namespace for later jobs.
-      "
-
-      echo -e "DEPLOY_NAMESPACE=${DEPLOY_NAMESPACE}" \
-        \
-        > namespace.env
-
-
-      if [[ ${PIPELINE_DEBUG} == "true" ]]; then
-        echo -e "
-          \n\e[31m##### tag debug #####\e[0m
-          DEPLOY_NAMESPACE: $DEPLOY_NAMESPACE
-
-          \n\e[31m##### namespace.env contents: #####\e[0m
-        "
-
-        if [[ -f "namespace.env" ]]; then
-          echo -e "
-            \n\e[33m##### namespace.env: #####\e[0m
-            \n$(cat namespace.env)
-          "
-        fi
-
-
-      fi
-
-  artifacts:
-    untracked: false
-    reports:
-      dotenv: namespace.env
-
-
-create TLS secrets:
-  image: registry.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker-kustomize
-  stage: publish
-  secrets:
-    TLS_CRT:
-      vault: ssl-certificates/star-ltc-bcit-ca-bundle.crt.base64@ltc-infrastructure
-      file: false
-
-    TLS_KEY:
-      vault: ssl-certificates/star-ltc-bcit-ca.key.base64@ltc-infrastructure
-      file: false
-
-  variables:
-    VAULT_AUTH_ROLE: "${CI_PROJECT_NAME}-dependabot"
-    VAULT_ADDR: "${VAULT_SERVER_URL}"
-    DEPLOY_NAMESPACE: ${DEPLOY_NAMESPACE}
-
-  before_script:
-
-    # Set kubernetes context based on TARGET_ENV
-    - !reference [.set-kubernetes-context-new, script]
-
-  script:
-      # Inject TLS certificates
-    - !reference [.inject_tls_certs, script]
-
-
-
-
-create configmap:
-  image: registry.ltc.bcit.ca/ltc-infrastructure/images/kpt-git-kubectl-docker-kustomize
-  stage: publish
-  variables:
-    DEPLOY_NAMESPACE: ${DEPLOY_NAMESPACE}
-
-  before_script:
-
-    # Set kubernetes context based on TARGET_ENV
-    - !reference [.set-kubernetes-context-new, script]
-
-  script:
-
-    # Generate review subdomain slug by combining branch name with project, truncating 
-    #   to a max of 63 characters (include accounting for 3 chars for dashes)
-    - |-
-      #
-      echo "
-        Generating ingress subdomain...
-      "
-
-      export \
-        INGRESS_SUBDOMAIN="${TARGET_ENV}--${DEPLOY_NAMESPACE}--${CI_PROJECT_NAME}" \
-        MAX_LENGTH=60
-      export INGRESS_SUBDOMAIN="${INGRESS_SUBDOMAIN:0:$MAX_LENGTH-${#CI_PROJECT_NAME}}--$CI_PROJECT_NAME"
-      echo "INGRESS_SUBDOMAIN=${INGRESS_SUBDOMAIN}" >> deploy.env
-
-      echo "
-        Ingress subdomain set to ${INGRESS_SUBDOMAIN}.
-      "
-
-    # Generate kv pairs for configmap
-    - |-
-      #
-      echo "
-        Generating configmap...
-      "
-
-      echo '{ "apiVersion": "v1", "data": { "DEPLOY_NAMESPACE": "'${DEPLOY_NAMESPACE}'", "GIT_TAG": "'${GIT_TAG}'", "IMAGE_TAG": "'${IMAGE_TAG}'", "INGRESS_SUBDOMAIN": "'${INGRESS_SUBDOMAIN}'" }, "kind": "ConfigMap", "metadata": { "name": "deploy-vars", "namespace": "'${DEPLOY_NAMESPACE}'" } }' \
-        \
-        | kubectl apply -f -
-
-
-      if [[ ${PIPELINE_DEBUG} == "true" ]]; then
-        echo -e "
-          \n\e[31m##### create TLS secret debug #####\e[0m
-          DEPLOY_NAMESPACE: ${DEPLOY_NAMESPACE}
-          GIT_TAG: ${GIT_TAG}
-          IMAGE_TAG: ${IMAGE_TAG}
-          INGRESS_SUBDOMAIN: ${INGRESS_SUBDOMAIN}
-        "
-      fi
-
-  artifacts:
-    untracked: false
-    reports:
-      dotenv: deploy.env
-
-
+verify configmap:
+  extends:
+    - ".verify_configmap"
 
 ## Build image and push to project registry
 build image:
-  stage: publish
   extends:
     - ".build_image"
     - ".build_image_rules"
 
 
-# # Deploy a review (only runs on branches other than main)
-# #   - requires a deployment package
+# # Link review environment (only runs on branches other than main)
 # deploy review:
 #   stage: publish
 #   variables:
@@ -201,12 +58,13 @@ build image:
 #     - ".deploy_review"
 #     - ".deploy_review_rules"
 
-# ## Deploy a latest/stable workload
-# #   - must have a deployment package with `latest` and `stable` overlays
-# #   - based on semver tagging
+# # Link latest environment (only runs on branches other than main)
 
-# ## Removes dev branch review (and all assets in the review branch namespace)
-# stop review:
+# # Link stable environment (only runs on branches other than main)
+
+
+# ## Auto-removes environments
+# stop environment:
 #   stage: cleanup
 #   variables:
 #     TARGET_ENV: review
@@ -224,19 +82,10 @@ variables:
   # GENERIC_DEPLOYMENT: "true"
   #
   #   - if GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects this
-  #     project to have a deployment package
-  #   - create a deployment package following the guide at https://infrastructure-documentation.ltc.bcit.ca/.
-  #
-  # Set DEPLOY_PKG_INIT=true to create an initial project deployment package. Then unset GENERIC_DEPLOYMENT and
-  # add the deployment package project ID below
-  #
-  # DEPLOY_PKG_INIT: "true"
+  #     project to have a `deploy/` folder. See https://infrastructure-documentation.ltc.bcit.ca/.
   #
   # Set COMMON_NAMESPACE to combine apps into one namespace.
   # COMMON_NAMESPACE: ""
-  #
-  # Deploy "development" overlay to a common namespace (the default is to deploy development branches to branch name namespaces)
-  # COMMON_NAMESPACE_OVERRIDE: "true"
   #
   # Set SKIP_BUILD to skip the build stage and deploy the latest image
   # SKIP_BUILD: "true"
@@ -254,13 +103,14 @@ include:
   - project: deployments/ci-config
     file:
       # - project-init.yml
-      - get-info-new.yml
-      - build-new.yml
-      - deploy-new.yml
+      - get-info.yaml
+      - build.yaml
+      - common.yaml
+      - verify.yaml
       - rules.yml
-      - ".common-utilities-new.yml"
-      - ".vault.yml"
-      - ".source-utilities-new.yml"
+      # - ".common-utilities-new.yml"
+      # - ".vault.yml"
+      # - ".source-utilities-new.yml"
   # - template: Jobs/Secret-Detection.gitlab-ci.yml
   # - template: Jobs/SAST.gitlab-ci.yml
 
