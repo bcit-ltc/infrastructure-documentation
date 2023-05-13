@@ -11,6 +11,7 @@ commonLabels:
 
 commonAnnotations:
   version: stable # {"$imagepolicy": "flux-system:infrastructure-documentation:tag"}
+  tab: ${GIT_TAG:=stable}
 
 configMapGenerator:
   - name: elasticapm-config

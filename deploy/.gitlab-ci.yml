@@ -8,7 +8,7 @@
 ## General Pipeline Steps
 #   1. Gather info
 #   2. Build image
-#   3. FluxCD deploys images/resources to a cluster
+#   3. FluxCD deploys resources to a cluster
 #     - dev branches          => https://review--{branchName}--{projectName}.ltc.bcit.ca/ => review cluster
 #     - main branch           => https://latest--{projectName}.ltc.bcit.ca/               => latest cluster
 #     - tagged commit on main => https://{projectName}.ltc.bcit.ca/                       => stable cluster
@@ -17,6 +17,7 @@ stages:
   - get info
   - test
   - publish
+  - review
   - cleanup
 
 
@@ -28,7 +29,7 @@ stages:
 #     - ".project_init"
 
 
-# Retrieve tags, target environment info for downstream pipeline jobs
+# Retrieve tags and target environment info for downstream pipeline jobs
 get info:
   extends:
     - ".get_info"
@@ -38,44 +39,42 @@ get info:
 verify namespace:
   extends:
     - ".verify_namespace"
+    - ".verify_rules"
 
 verify secrets:
   extends:
     - ".verify_secrets"
+    - ".verify_rules"
 
 verify configmap:
   extends:
     - ".verify_configmap"
+    - ".verify_rules"
 
 
-## Build image and push to project registry
+## Build image and configs. Push both to project registry
 build image:
   extends:
     - ".build_image"
     - ".build_image_rules"
 
+build review config:
+  extends:
+    - ".build_review_config"
+    - ".build_review_config_rules"
 
-# # Link review environment (only runs on branches other than main)
-# deploy review:
-#   stage: publish
-#   variables:
-#     TARGET_ENV: review
-#   extends:
-#     - ".deploy_review"
-#     - ".deploy_review_rules"
 
-# # Link latest environment (only runs on branches other than main)
+## Deploy project for review. Gracefully remove after 1 week.
+review:
+  extends:
+    - ".review"
+    - ".review_rules"
 
-# # Link stable environment (only runs on branches other than main)
+stop review:
+  extends:
+    - ".stop_review"
+    - ".stop_review_rules"
 
-# ## Auto-removes environments
-# stop environment:
-#   stage: cleanup
-#   variables:
-#     TARGET_ENV: review
-#   extends:
-#     - ".undeploy_review"
-#     - ".undeploy_review_rules"
 
 #
 ## ---------- Pipeline configuration ----------
@@ -112,10 +111,8 @@ include:
       - build.yaml
       - common.yaml
       - verify.yaml
-      - rules.yml
-      # - ".common-utilities-new.yml"
-      # - ".vault.yml"
-      # - ".source-utilities-new.yml"
+      - rules.yaml
+      - review.yaml
   # - template: Jobs/Secret-Detection.gitlab-ci.yml
   # - template: Jobs/SAST.gitlab-ci.yml
 
@@ -142,4 +139,3 @@ workflow:
     - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG
-
