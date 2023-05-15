@@ -33,23 +33,25 @@ stages:
 get info:
   extends:
     - ".get_info"
+    - ".get_info_rules"
 
 
 ## Verify and create required Kubernetes resources
 verify namespace:
   extends:
     - ".verify_namespace"
-    - ".review_config_rules"
+    - ".review_rules"
 
 verify secrets:
   extends:
     - ".verify_secrets"
-    - ".review_config_rules"
+    - ".review_rules"
 
 verify configmap:
   extends:
     - ".verify_configmap"
-    - ".review_config_rules"
+    - ".review_rules"
+
 
 
 ## Build image and configs. Push both to project registry
@@ -61,7 +63,8 @@ build image:
 build review config:
   extends:
     - ".build_review_config"
-    - ".review_config_rules"
+    - ".review_rules"
+
 
 
 ## Deploy project for review. Gracefully remove after 1 week.
@@ -131,12 +134,12 @@ cache:
 #   extends:
 #     - ".deploy_stable_rules"
 
-## Configure merge request pipelines
-workflow:
-  rules:
-    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
-      when: never
-    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG
+# ## Configure merge request pipelines
+# workflow:
+#   rules:
+#     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
+#       when: never
+#     - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+#       when: never
+#     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG
 
