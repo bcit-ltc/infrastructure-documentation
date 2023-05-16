@@ -118,6 +118,7 @@ include:
       - review.yaml
   # - template: Jobs/Secret-Detection.gitlab-ci.yml
   # - template: Jobs/SAST.gitlab-ci.yml
+  - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
 
 ## Specify which runner should pick up pipeline jobs
 default:
