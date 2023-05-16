@@ -33,7 +33,7 @@ stages:
 get info:
   extends:
     - ".get_info"
-    - ".get_info_rules"
+    # - ".get_info_rules"
 
 
 ## Verify and create required Kubernetes resources
