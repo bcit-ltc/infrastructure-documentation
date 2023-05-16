@@ -130,6 +130,7 @@ default:
 cache:
   key: $CI_COMMIT_REF_SLUG
 
+
 ## Configure security scanning
 # sast:
 #   stage: test
