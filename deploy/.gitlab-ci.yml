@@ -136,6 +136,7 @@ cache:
 #   extends:
 #     - ".deploy_stable_rules"
 
+
 # ## Configure merge request pipelines
 # workflow:
 #   rules:
