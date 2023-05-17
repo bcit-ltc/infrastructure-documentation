@@ -89,16 +89,13 @@ get_info:
             --repository-url ${CI_PROJECT_URL} \
             --plugins '@semantic-release/exec' > semantic-release.log
 
-          cat semantic-release.log | grep -c 'The next' || true
-
-          # NEXT_VERSION=$(grep 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+' semantic-release.log)
+          NEXT_VERSION=$(cat semantic-release.log | grep -c 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+' || true)
 
           if [ -n "${NEXT_VERSION}" ]; then
             echo "Determined next version $NEXT_VERSION"
           else
             echo "No new version to be released."
           fi
-
 
         else
           semantic-release \
