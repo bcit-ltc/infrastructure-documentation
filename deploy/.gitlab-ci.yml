@@ -90,7 +90,7 @@ get_info:
             --plugins '@semantic-release/exec' > semantic-release.log
           # | grep -oP 'The release version is \K[0-9]+\.[0-9]+\.[0-9]+')
 
-          cat semantic-release.log
+          echo "semantic release log: $(cat semantic-release.log)"
 
           echo "next version is ${NEXT_VERSION}"
 
