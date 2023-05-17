@@ -96,12 +96,12 @@ get_info:
           fi
 
 
-        # else
-        #   semantic-release \
-        #     --branches main \
-        #     --repository-url ${CI_PROJECT_URL} \
-        #     --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/gitlab'
-        # fi
+        else
+          semantic-release \
+            --branches main \
+            --repository-url ${CI_PROJECT_URL} \
+            --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/gitlab'
+        fi
 
 
       else
@@ -109,6 +109,7 @@ get_info:
           ...branch other than main detected. Not running semantic-release.
         "
       fi
+      
 
 # # Retrieve tags and target environment info for downstream pipeline jobs
 # get tags:
