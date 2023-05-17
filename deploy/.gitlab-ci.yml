@@ -81,6 +81,7 @@ get_info:
             GIT_COMMITTER_NAME: $GIT_COMMITTER_NAME
             GIT_COMMITTER_EMAIL: $GIT_COMMITTER_EMAIL
           "
+
           NEXT_VERSION=$(semantic-release \
             --debug \
             --branches main \
