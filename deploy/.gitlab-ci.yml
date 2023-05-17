@@ -29,60 +29,132 @@ stages:
 #     - ".project_init"
 
 
-# Retrieve tags and target environment info for downstream pipeline jobs
-get tags:
-  extends:
-    - ".get_tags"
+get_info:
+  image: registry.ltc.bcit.ca/ltc-infrastructure/images/semantic-release
+  secrets:
+    GITLAB_TOKEN:
+      vault: ${CI_PROJECT_NAME}-dependabot/token@tokens
+      file: false
 
-# Determine deployment namespace and ingress/app url for downstream pipeline jobs
-get namespace/url:
-  extends:
-    - ".get_ns-url"
+  variables:
+    VAULT_AUTH_ROLE: "${CI_PROJECT_NAME}-dependabot"
+    GIT_AUTHOR_NAME: ${GITLAB_USER_LOGIN}
+    GIT_AUTHOR_EMAIL: ${GITLAB_USER_EMAIL}
+    GIT_COMMITTER_NAME: ${GITLAB_USER_LOGIN}
+    GIT_COMMITTER_EMAIL: ${GITLAB_USER_EMAIL}
+    # required for semantic-release
+    GITLAB_URL: ${CI_SERVER_URL}
+    GITLAB_PREFIX: "/api/v4"
+    GIT_FETCH_EXTRA_FLAGS: "--tags"
 
-# Determine if a new git tag and GitLab release should be created
-run semantic release:
-  extends:
-    - ".semantic_release"
+  script:
 
-## Verify and create required Kubernetes resources
-verify namespace:
-  extends:
-    - ".verify_namespace"
-    - ".review_rules"
-
-verify secrets:
-  extends:
-    - ".verify_secrets"
-    - ".review_rules"
-
-apply :
-  extends:
-    - ".apply_configmap"
-    - ".review_rules"
+    # Run semantic-release if the branch is main ("latest" or "stable")
+    - |
+      #
+      echo "Checking if we should run semantic-release..."
 
 
-## Build image and configs. Push both to project registry
-build image:
-  extends:
-    - ".build_image"
-    - ".build_image_rules"
-
-build review configmap:
-  extends:
-    - ".build_review_config"
-    - ".review_rules"
+      if [[ ${PIPELINE_DEBUG} == "true" ]]; then
+        echo -e "
+          \n\e[31m##### get_info debug #####\e[0m
+          CI_COMMIT_REF_SLUG: ${CI_COMMIT_REF_SLUG}
+          CI_PIPELINE_SOURCE: ${CI_PIPELINE_SOURCE}
+        "
+      fi
 
 
-## Deploy project for review. Gracefully remove after 1 week.
-review:
-  extends:
-    - ".review"
-    - ".review_rules"
+      if [[ "${CI_COMMIT_REF_SLUG}" == "main" ]] \
+        && ([[ "${CI_PIPELINE_SOURCE}" == "push" ]] \
+        || [[ "${CI_COMMIT_TAG}" ]]) ; then
 
-stop review:
-  extends:
-    - ".stop_review"
-    - ".stop_review_rules"
+        echo "
+          ...main branch detected. Running semantic-release!
+        "
+
+
+        if [[ ${PIPELINE_DEBUG} == "true" ]]; then
+          echo -e "
+            \n\e[31m##### semantic-release debug #####\e[0m
+            GIT_AUTHOR_NAME: $GIT_AUTHOR_NAME
+            GIT_AUTHOR_EMAIL: $GIT_AUTHOR_EMAIL
+            GIT_COMMITTER_NAME: $GIT_COMMITTER_NAME
+            GIT_COMMITTER_EMAIL: $GIT_COMMITTER_EMAIL
+          "
+          semantic-release \
+            --debug \
+            --branches main \
+            --dry-run \
+            --repository-url ${CI_PROJECT_URL} \
+            --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/gitlab'
+        else
+          semantic-release \
+            --branches main \
+            --repository-url ${CI_PROJECT_URL} \
+            --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/gitlab'
+        fi
+
+
+      else
+        echo "
+          ...branch other than main detected. Not running semantic-release.
+        "
+      fi
+
+# # Retrieve tags and target environment info for downstream pipeline jobs
+# get tags:
+#   extends:
+#     - ".get_tags"
+
+# # Determine deployment namespace and ingress/app url for downstream pipeline jobs
+# get namespace/url:
+#   extends:
+#     - ".get_ns-url"
+
+# # Determine if a new git tag and GitLab release should be created
+# run semantic release:
+#   extends:
+#     - ".semantic_release"
+
+# ## Verify and create required Kubernetes resources
+# verify namespace:
+#   extends:
+#     - ".verify_namespace"
+#     - ".review_rules"
+
+# verify secrets:
+#   extends:
+#     - ".verify_secrets"
+#     - ".review_rules"
+
+# apply :
+#   extends:
+#     - ".apply_configmap"
+#     - ".review_rules"
+
+
+# ## Build image and configs. Push both to project registry
+# build image:
+#   extends:
+#     - ".build_image"
+#     - ".build_image_rules"
+
+# build review configmap:
+#   extends:
+#     - ".build_review_config"
+#     - ".review_rules"
+
+
+# ## Deploy project for review. Gracefully remove after 1 week.
+# review:
+#   extends:
+#     - ".review"
+#     - ".review_rules"
+
+# stop review:
+#   extends:
+#     - ".stop_review"
+#     - ".stop_review_rules"
 
 
 #
