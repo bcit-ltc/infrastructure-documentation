@@ -87,10 +87,10 @@ get_info:
             --dry-run \
             --repository-url ${CI_PROJECT_URL} \
             --plugins '@semantic-release/commit-analyzer' \
-            | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+')
+            | grep -oP 'The release version is \K[0-9]+\.[0-9]+\.[0-9]+')
           
           if [[ -n ${NEXT_VERSION} ]]; then
-            echo "Determined version: $NEXT_VERSION"
+            echo "Determined next version: $NEXT_VERSION"
           else
             echo "No new version to be released."
           fi
