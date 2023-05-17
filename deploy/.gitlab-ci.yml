@@ -30,10 +30,19 @@ stages:
 
 
 # Retrieve tags and target environment info for downstream pipeline jobs
-get info:
+get tags:
   extends:
-    - ".get_info"
+    - ".get_tags"
 
+# Determine deployment namespace and ingress/app url for downstream pipeline jobs
+get namespace/url:
+  extends:
+    - ".get_ns-url"
+
+# Determine if a new git tag and GitLab release should be created
+run semantic release:
+  extends:
+    - ".semantic_release"
 
 ## Verify and create required Kubernetes resources
 verify namespace:
@@ -46,9 +55,9 @@ verify secrets:
     - ".verify_secrets"
     - ".review_rules"
 
-verify configmap:
+apply :
   extends:
-    - ".verify_configmap"
+    - ".apply_configmap"
     - ".review_rules"
 
 
@@ -58,7 +67,7 @@ build image:
     - ".build_image"
     - ".build_image_rules"
 
-build review config:
+build review configmap:
   extends:
     - ".build_review_config"
     - ".review_rules"
