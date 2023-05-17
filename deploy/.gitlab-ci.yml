@@ -86,7 +86,8 @@ get_info:
             --branches main \
             --dry-run \
             --repository-url ${CI_PROJECT_URL} \
-            --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/gitlab'
+            --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/gitlab' \
+            | grep 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'
         else
           semantic-release \
             --branches main \
