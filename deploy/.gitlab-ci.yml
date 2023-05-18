@@ -82,14 +82,13 @@ get_info:
             GIT_COMMITTER_EMAIL: $GIT_COMMITTER_EMAIL
           "
 
-          semantic-release \
+          NEXT_VERSION=$(semantic-release \
             --debug \
             --branches main \
             --dry-run \
             --repository-url ${CI_PROJECT_URL} \
-            --plugins '@semantic-release/exec' > semantic-release.log
-
-          NEXT_VERSION=$(cat semantic-release.log | grep -Eq 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+')
+            --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/gitlab' | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+') \
+            && echo $NEXT_VERSION
 
           if [ -n "${NEXT_VERSION}" ]; then
             echo "Determined next version $NEXT_VERSION"
