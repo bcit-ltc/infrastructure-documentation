@@ -98,6 +98,12 @@ apply review configmap :
     - ".apply_review_configmap"
     - ".review_rules"
 
+trigger_job:
+  trigger:
+    include:
+      - local: deploy/.gitlab-ci.yml
+    strategy: depend
+  when: manual
 
 # # For `review` environments only: deploy project for review.
 # #
