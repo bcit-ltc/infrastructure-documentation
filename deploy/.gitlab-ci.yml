@@ -66,7 +66,7 @@ build image:
 ## For `review` environments only: build a configuration image and push to the project registry
 #
 build review config image:
-  stage: build
+  stage: verify review requirements
   extends:
     - ".build_review_config_image"
     - ".review_rules"
@@ -110,6 +110,7 @@ apply review configmap :
 # # For `review` environments only: gracefully remove `review` environment after 1 week.
 # #
 # stop review:
+#  stage: cleanup
 #   extends:
 #     - ".stop_review"
 #     - ".stop_review_rules"
