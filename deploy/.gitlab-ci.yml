@@ -48,10 +48,10 @@ get tags:
 
 # Determine if a new git tag and GitLab release should be created
 #
-run semantic release:
+determine version:
   stage: get info
   extends:
-    - ".get_next_version"
+    - ".determine_version"
 
 
 # Build image and push to project registry
