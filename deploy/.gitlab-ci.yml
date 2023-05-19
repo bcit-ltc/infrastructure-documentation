@@ -119,22 +119,26 @@ apply review configmap :
 # Other default pipeline configuration values
 #
 variables:
-  #
+
+
   # other global variables are set in GitLab Admin
   #
   # GENERIC_DEPLOYMENT: "true"
   #
   #   - if GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects this
   #     project to have a `deploy/` folder. See https://infrastructure-documentation.ltc.bcit.ca/.
-  #
+
+
   # Set COMMON_NAMESPACE to combine apps into one namespace
   #
   # COMMON_NAMESPACE: ""
-  #
+
+
   # Set SKIP_BUILD to skip the build stage and deploy the latest image
   #
   # SKIP_BUILD: "true"
-  #
+
+
   # Turn on verbose debugging console output
   #
   PIPELINE_DEBUG: "true"
