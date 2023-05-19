@@ -8,7 +8,7 @@ resources:
 - ../../base
 
 commonLabels:
-  environment: ${TARGET_ENV:=review}
+  environment: review
 
 commonAnnotations:
   version: ${GIT_TAG:=stable}
