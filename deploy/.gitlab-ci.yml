@@ -92,7 +92,7 @@ verify secrets:
 
 ## For `review` environments only: verify the required `deploy-vars` ConfigMap exists
 #
-apply configmap :
+apply review configmap :
   stage: verify review requirements
   extends:
     - ".apply_review_configmap"
