@@ -36,6 +36,7 @@ get environment info:
   stage: get info
   extends:
     - ".get_env"
+    - ".get_info_rules"
 
 
 # Retrieve and set git/image tags
@@ -44,6 +45,7 @@ get tags:
   stage: get info
   extends:
     - ".get_tags"
+    - ".get_info_rules"
 
 
 ## For `review` environments only: verify the required namespace exists
