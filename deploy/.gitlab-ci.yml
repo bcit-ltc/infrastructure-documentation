@@ -46,18 +46,44 @@ get tags:
     - ".get_tags"
 
 
+## For `review` environments only: verify the required namespace exists
+#
+verify namespace:
+  stage: get info
+  extends:
+    - ".verify_namespace"
+    - ".review_rules"
+
+
 # Determine if a new git tag and GitLab release should be created
 #
 determine version:
   stage: get info
+  needs:
+    - job: "get environment info"
   extends:
     - ".determine_version"
+    - ".determine_version_rules"
+
+
+## For `review` environments only: verify the required TLS Ingress secret exists
+#
+verify secrets:
+  stage: get info
+  needs:
+    - job: "get environment info"
+    - job: "verify namespace"
+  extends:
+    - ".verify_secrets"
+    - ".review_rules"
 
 
 # Build image and push to project registry
 #
 build image:
   stage: build
+  needs:
+    - job: "get tags"
   extends:
     - ".build_image"
     - ".build_image_rules"
@@ -66,54 +92,47 @@ build image:
 ## For `review` environments only: build a configuration image and push to the project registry
 #
 build review config image:
-  stage: verify review requirements
+  stage: build
+  needs:
+    - job: "get environment info"
+    - job: "verify namespace"
   extends:
     - ".build_review_config_image"
-    - ".review_rules"
-
-
-## For `review` environments only: verify the required namespace exists
-#
-verify namespace:
-  stage: verify review requirements
-  extends:
-    - ".verify_namespace"
-    - ".review_rules"
-
-
-## For `review` environments only: verify the required TLS Ingress secret exists
-#
-verify secrets:
-  stage: verify review requirements
-  extends:
-    - ".verify_secrets"
     - ".review_rules"
 
 
 ## For `review` environments only: verify the required `deploy-vars` ConfigMap exists
 #
 apply review configmap :
-  stage: verify review requirements
+  stage: build
+  needs:
+    - job: "get environment info"
+    - job: "verify namespace"
   extends:
     - ".apply_review_configmap"
     - ".review_rules"
 
 
-# # For `review` environments only: deploy project for review.
-# #
-# review:
-#   extends:
-#     - ".review"
-#     - ".review_rules"
+# For `review` environments only: deploy project for review.
+#
+review:
+  stage: review
+  needs:
+    - job: "get environment info"
+    - job: "build review config image"
+    - job: "apply review configmap"
+  extends:
+    - ".review"
+    - ".review_rules"
 
 
-# # For `review` environments only: gracefully remove `review` environment after 1 week.
-# #
-# stop review:
-#  stage: cleanup
-#   extends:
-#     - ".stop_review"
-#     - ".stop_review_rules"
+# For `review` environments only: gracefully remove `review` environment after 1 week.
+#
+stop review:
+  stage: cleanup
+  extends:
+    - ".stop_review"
+    - ".stop_review_rules"
 
 
 # Other default pipeline configuration values
