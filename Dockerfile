@@ -1,4 +1,5 @@
 ## Build
+#
 FROM squidfunk/mkdocs-material as build
 
 WORKDIR /docs
@@ -17,6 +18,7 @@ RUN set -ex \
 
 
 ## Release
+#
 FROM nginxinc/nginx-unprivileged:1.23
 
 LABEL maintainer courseproduction@bcit.ca
