@@ -12,6 +12,7 @@ images:
     newName: "registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation"
     newTag: "2.4.7-a0c754ac--2023-05-23.1684865756" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
 # Adds elasticapm config to deployment
+#
 patches:
   - target:
       kind: Ingress
@@ -23,6 +24,7 @@ patches:
         path: /spec/template/spec/containers/0/envFrom
         value: [{"configMapRef": {"name":"elasticapm-config"}}]
 # Generates elasticapm config
+#
 configMapGenerator:
   - name: elasticapm-config
     literals:
