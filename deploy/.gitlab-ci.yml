@@ -174,7 +174,6 @@ include:
       - common.yaml
       - get-env.yaml
       - get-tags.yaml
-      - parse.yaml
       # - project-init.yml
       - review.yaml
       - rules.yaml
