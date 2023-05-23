@@ -17,7 +17,6 @@ stages:
   - get info
   - test
   - build
-  - verify review requirements
   - review
   - cleanup
 
@@ -32,11 +31,10 @@ stages:
 
 # Determine target environment, deployment namespace, and ingress/app url
 #
-get environment info:
+get environment:
   stage: get info
   extends:
-    - ".get_env"
-    - ".get_info_rules"
+    - ".get_environment"
 
 
 # Retrieve and set git/image tags
@@ -48,6 +46,17 @@ get tags:
     - ".get_info_rules"
 
 
+# Determine if a new git tag and GitLab release should be created
+#
+determine version:
+  stage: get info
+  needs:
+    - job: "get environment"
+  extends:
+    - ".determine_version"
+    - ".release_rules"
+
+
 ## For `review` environments only: verify the required namespace exists
 #
 verify namespace:
@@ -57,23 +66,12 @@ verify namespace:
     - ".review_rules"
 
 
-# Determine if a new git tag and GitLab release should be created
-#
-determine version:
-  stage: get info
-  needs:
-    - job: "get environment info"
-  extends:
-    - ".determine_version"
-    - ".determine_version_rules"
-
-
 ## For `review` environments only: verify the required TLS Ingress secret exists
 #
 verify secrets:
   stage: get info
   needs:
-    - job: "get environment info"
+    - job: "get environment"
     - job: "verify namespace"
   extends:
     - ".verify_secrets"
@@ -88,7 +86,7 @@ build image:
     - job: "get tags"
   extends:
     - ".build_image"
-    - ".build_image_rules"
+    - ".build_rules"
 
 
 ## For `review` environments only: build a configuration image and push to the project registry
@@ -96,7 +94,7 @@ build image:
 build review config image:
   stage: build
   needs:
-    - job: "get environment info"
+    - job: "get environment"
     - job: "verify namespace"
   extends:
     - ".build_review_config_image"
@@ -108,7 +106,7 @@ build review config image:
 apply review configmap :
   stage: build
   needs:
-    - job: "get environment info"
+    - job: "get environment"
     - job: "verify namespace"
   extends:
     - ".apply_review_configmap"
@@ -120,7 +118,7 @@ apply review configmap :
 review:
   stage: review
   needs:
-    - job: "get environment info"
+    - job: "get environment"
     - job: "build review config image"
     - job: "apply review configmap"
   extends:
@@ -177,7 +175,7 @@ include:
       # - project-init.yml
       - review.yaml
       - rules.yaml
-      - semantic-release.yaml
+      - determine-version.yaml
       - verify.yaml
   # - template: Jobs/Secret-Detection.gitlab-ci.yml
   # - template: Jobs/SAST.gitlab-ci.yml
