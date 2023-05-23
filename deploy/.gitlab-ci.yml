@@ -50,6 +50,8 @@ get environment:
 #
 get tags:
   stage: get info
+  needs:
+    - job: "get environment"
   extends:
     - ".get_tags"
     - ".get_info_rules"
