@@ -35,7 +35,7 @@ parse trigger payload:
   stage: get info
   extends:
     - ".parse_trigger_payload"
-    - "parse_rules"
+    - ".parse_rules"
 
 
 # Determine target environment, deployment namespace, and ingress/app url
