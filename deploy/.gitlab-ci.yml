@@ -29,6 +29,15 @@ stages:
 #     - ".project_init"
 
 
+# If pipeline is triggered by an API event, parse the payload and set env vars
+#
+parse trigger payload:
+  stage: get info
+  extends:
+    - ".parse_trigger_payload"
+    - "parse_rules"
+
+
 # Determine target environment, deployment namespace, and ingress/app url
 #
 get environment:
@@ -172,6 +181,7 @@ include:
       - common.yaml
       - get-env.yaml
       - get-tags.yaml
+      - parse.yaml
       # - project-init.yml
       - review.yaml
       - rules.yaml
