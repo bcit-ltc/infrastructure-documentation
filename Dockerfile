@@ -17,7 +17,7 @@ RUN set -ex \
 
 
 ## Release
-FROM nginxinc/nginx-unprivileged:1.20
+FROM nginxinc/nginx-unprivileged:1.21
 
 LABEL maintainer courseproduction@bcit.ca
 
