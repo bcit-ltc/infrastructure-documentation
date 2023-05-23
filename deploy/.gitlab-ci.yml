@@ -89,7 +89,7 @@ build image:
     - ".build_rules"
 
 
-## For `review` environments only: build a configuration image and push to the project registry
+## For `review` environments only: build a kubernetes configuration image and push to the project registry
 #
 build review config image:
   stage: build
