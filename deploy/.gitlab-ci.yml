@@ -41,8 +41,6 @@ get info:
 #
 determine version:
   stage: get info
-  needs:
-    - job: "get info"
   extends:
     - ".determine_version"
     - ".release_rules"
