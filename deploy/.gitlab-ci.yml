@@ -14,9 +14,9 @@
 #     - tagged commit on main => https://{projectName}.ltc.bcit.ca/                       => stable cluster
 #
 stages:
+  - test
   - version
   - get info
-  - test
   - build
   - review
   - cleanup
