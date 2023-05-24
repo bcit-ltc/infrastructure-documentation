@@ -108,14 +108,15 @@ review:
     - ".review_rules"
 
 
-## Configure environments
+## Configure environments for "latest" and "stable"
 #
-configure environment:
-  stage: publish
-  needs:
-    - job: "get info"
+environment:latest:
   extends:
-    - ".configure_environment"
+    - ".environment:latest"
+
+environment:stable:
+  extends:
+    - ".environment:stable"
 
 
 ## For `review` environments only: gracefully remove `review` environment after 1 week.
