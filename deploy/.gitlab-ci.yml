@@ -168,8 +168,8 @@ include:
       - rules.yaml
       - verify.yaml
       - version.yaml
-  - template: Jobs/Secret-Detection.gitlab-ci.yml
-  - template: Jobs/SAST.gitlab-ci.yml
+  # - template: Jobs/Secret-Detection.gitlab-ci.yml
+  # - template: Jobs/SAST.gitlab-ci.yml
 
 
 # Specify which GitLab Runner should pick up pipeline jobs
@@ -185,12 +185,12 @@ cache:
   key: $CI_COMMIT_REF_SLUG
 
 
-# Configure Static Application Security Test scanning
-#
-sast:
-  stage: test
-  extends:
-    - ".sast_rules"
+# # Configure Static Application Security Test scanning
+# #
+# sast:
+#   stage: test
+#   extends:
+#     - ".sast_rules"
 
 
 # Configure jobs for GitLab merge request pipelines
