@@ -6,11 +6,11 @@ resources:
 commonLabels:
   environment: latest
 commonAnnotations:
-  version: 2.4.10-7731b9b1--2023-05-24.1684912629 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
+  version: 2.4.11-126b1700--2023-05-24.1684917730 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation"
-    newTag: "2.4.10-7731b9b1--2023-05-24.1684912629" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
+    newTag: "2.4.11-126b1700--2023-05-24.1684917730" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
 # Adds elasticapm config to deployment
 #
 patches:
