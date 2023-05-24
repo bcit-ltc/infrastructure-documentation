@@ -108,6 +108,16 @@ review:
     - ".review_rules"
 
 
+## Configure environments
+#
+configure environment:
+  stage: publish
+  needs:
+    - job: "get info"
+  extends:
+    - ".configure_environment"
+
+
 ## For `review` environments only: gracefully remove `review` environment after 1 week.
 #
 stop review:
@@ -115,15 +125,6 @@ stop review:
   extends:
     - ".stop_review"
     - ".stop_review_rules"
-
-
-## Configure environments
-#
-configure environment:
-  needs:
-    - job: "get info"
-  extends:
-    - ".configure_environment"
 
 
 ## Other default pipeline configuration values
