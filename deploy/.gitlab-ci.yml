@@ -40,10 +40,10 @@ get info:
 
 # Determine if a new git tag and GitLab release should be created
 #
-determine version:
+determine next version:
   stage: get info
   extends:
-    - ".determine_version"
+    - ".determine_next_version"
 
 
 # Build image and push to project registry
@@ -160,7 +160,7 @@ include:
       # - project-init.yml
       - review.yaml
       - rules.yaml
-      - determine-version.yaml
+      - version.yaml
       - verify.yaml
   # - template: Jobs/Secret-Detection.gitlab-ci.yml
   # - template: Jobs/SAST.gitlab-ci.yml
