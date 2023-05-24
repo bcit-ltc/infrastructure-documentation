@@ -31,10 +31,10 @@ stages:
 
 # Determine target environment, deployment namespace, and ingress/app url
 #
-get environment:
+get info:
   stage: get info
   extends:
-    - ".get_environment"
+    - ".get_info"
 
 
 # Determine if a new git tag and GitLab release should be created
@@ -42,7 +42,7 @@ get environment:
 determine version:
   stage: get info
   needs:
-    - job: "get environment"
+    - job: "get info"
   extends:
     - ".determine_version"
     - ".release_rules"
@@ -62,22 +62,11 @@ verify namespace:
 verify secrets:
   stage: get info
   needs:
-    - job: "get environment"
+    - job: "get info"
     - job: "verify namespace"
   extends:
     - ".verify_secrets"
     - ".review_rules"
-
-
-# Retrieve and set git/image tags
-#
-build tags:
-  stage: build
-  needs:
-    - job: "get environment"
-  extends:
-    - ".build_tags"
-    - ".build_rules"
 
 
 # Build image and push to project registry
@@ -85,7 +74,7 @@ build tags:
 build image:
   stage: build
   needs:
-    - job: "get environment"
+    - job: "get info"
     - job: "build tags"
   extends:
     - ".build_image"
@@ -97,7 +86,7 @@ build image:
 build review config image:
   stage: build
   needs:
-    - job: "get environment"
+    - job: "get info"
     - job: "verify namespace"
   extends:
     - ".build_review_config_image"
@@ -109,7 +98,7 @@ build review config image:
 apply review configmap :
   stage: build
   needs:
-    - job: "get environment"
+    - job: "get info"
     - job: "verify namespace"
   extends:
     - ".apply_review_configmap"
@@ -121,7 +110,7 @@ apply review configmap :
 review:
   stage: review
   needs:
-    - job: "get environment"
+    - job: "get info"
     - job: "build review config image"
     - job: "apply review configmap"
   extends:
@@ -173,8 +162,7 @@ include:
     file:
       - build.yaml
       - common.yaml
-      - get-env.yaml
-      - build-tags.yaml
+      - get-info.yaml
       # - project-init.yml
       - review.yaml
       - rules.yaml
