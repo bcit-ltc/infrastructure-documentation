@@ -155,8 +155,8 @@ include:
       - rules.yaml
       - verify.yaml
       - version.yaml
-  # - template: Jobs/Secret-Detection.gitlab-ci.yml
-  # - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
 
 
 # Specify which GitLab Runner should pick up pipeline jobs
