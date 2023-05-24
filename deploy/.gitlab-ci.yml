@@ -75,7 +75,6 @@ build image:
   stage: build
   needs:
     - job: "get info"
-    - job: "build tags"
   extends:
     - ".build_image"
     - ".build_rules"
