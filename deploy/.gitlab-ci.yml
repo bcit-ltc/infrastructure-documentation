@@ -30,20 +30,21 @@ stages:
 #     - ".project_init"
 
 
+# Determine if a new git tag and GitLab release should be created
+#
+determine version:
+  stage: get info
+  extends:
+    - ".determine_version"
+    - ".determine_version_rules"
+
+
 # Determine target environment, deployment namespace, and ingress/app url
 #
 get info:
   stage: get info
   extends:
     - ".get_info"
-
-
-# Determine if a new git tag and GitLab release should be created
-#
-determine next version:
-  stage: get info
-  extends:
-    - ".determine_next_version"
 
 
 # Build image and push to project registry
@@ -191,8 +192,8 @@ cache:
 #
 workflow:
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
+    # - if: $CI_COMMIT_TAG
+    #   when: never
     - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG
