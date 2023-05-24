@@ -14,10 +14,10 @@
 #     - tagged commit on main => https://{projectName}.ltc.bcit.ca/                       => stable cluster
 #
 stages:
+  - version
   - get info
   - test
   - build
-  - version
   - review
   - cleanup
 
@@ -33,7 +33,7 @@ stages:
 # Determine if a new git tag and GitLab release should be created
 #
 determine version:
-  stage: get info
+  stage: version
   extends:
     - ".determine_version"
     - ".determine_version_rules"
