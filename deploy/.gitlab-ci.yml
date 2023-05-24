@@ -35,6 +35,7 @@ get info:
   stage: get info
   extends:
     - ".get_info"
+    - ".get_info_rules"
 
 
 # Determine if a new git tag and GitLab release should be created
