@@ -17,6 +17,7 @@ stages:
   - get info
   - test
   - build
+  - version
   - review
   - cleanup
 
@@ -35,16 +36,22 @@ get info:
   stage: get info
   extends:
     - ".get_info"
-    - ".get_info_rules"
+
+
+# Build image and push to project registry
+#
+build image:
+  stage: build
+  extends:
+    - ".build_image"
 
 
 # Determine if a new git tag and GitLab release should be created
 #
 determine version:
-  stage: get info
+  stage: version
   extends:
     - ".determine_version"
-    - ".release_rules"
 
 
 ## For `review` environments only: verify the required namespace exists
@@ -66,17 +73,6 @@ verify secrets:
   extends:
     - ".verify_secrets"
     - ".review_rules"
-
-
-# Build image and push to project registry
-#
-build image:
-  stage: build
-  needs:
-    - job: "get info"
-  extends:
-    - ".build_image"
-    - ".build_rules"
 
 
 ## For `review` environments only: build a kubernetes configuration image and push to the project registry
