@@ -1,10 +1,14 @@
 # LTC GitLab CI/CD Source Project Pipeline
 #
+
+
 ## Requirements
 #   - this file
 #   - a working `Dockerfile`
 #   - a `deploy/` folder with Kubernetes resources
 #
+
+
 ## General Pipeline Steps
 #   1. Gather info
 #   2. Build image
