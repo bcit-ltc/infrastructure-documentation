@@ -37,17 +37,6 @@ get environment:
     - ".get_environment"
 
 
-# Retrieve and set git/image tags
-#
-get tags:
-  stage: get info
-  needs:
-    - job: "get environment"
-  extends:
-    - ".get_tags"
-    - ".get_info_rules"
-
-
 # Determine if a new git tag and GitLab release should be created
 #
 determine version:
@@ -80,12 +69,24 @@ verify secrets:
     - ".review_rules"
 
 
+# Retrieve and set git/image tags
+#
+build tags:
+  stage: build
+  needs:
+    - job: "get environment"
+  extends:
+    - ".build_tags"
+    - ".build_rules"
+
+
 # Build image and push to project registry
 #
 build image:
   stage: build
   needs:
-    - job: "get tags"
+    - job: "get environment"
+    - job: "build tags"
   extends:
     - ".build_image"
     - ".build_rules"
@@ -173,7 +174,7 @@ include:
       - build.yaml
       - common.yaml
       - get-env.yaml
-      - get-tags.yaml
+      - build-tags.yaml
       # - project-init.yml
       - review.yaml
       - rules.yaml
