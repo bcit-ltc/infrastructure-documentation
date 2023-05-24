@@ -47,18 +47,12 @@ get info:
     - ".get_info"
 
 
-# Build image and push to project registry
-#
-build image:
-  stage: build
-  extends:
-    - ".build_image"
-
-
 ## For `review` environments only: verify the required namespace exists
 #
 verify namespace:
   stage: get info
+  needs:
+    - job: "get info"
   extends:
     - ".verify_namespace"
     - ".review_rules"
@@ -76,13 +70,18 @@ verify secrets:
     - ".review_rules"
 
 
+# Build image and push to project registry
+#
+build image:
+  stage: build
+  extends:
+    - ".build_image"
+
+
 ## For `review` environments only: build a kubernetes configuration image and push to the project registry
 #
 build review config image:
   stage: build
-  needs:
-    - job: "get info"
-    - job: "verify namespace"
   extends:
     - ".build_review_config_image"
     - ".review_rules"
@@ -92,9 +91,6 @@ build review config image:
 #
 apply review configmap :
   stage: build
-  needs:
-    - job: "get info"
-    - job: "verify namespace"
   extends:
     - ".apply_review_configmap"
     - ".review_rules"
@@ -104,10 +100,6 @@ apply review configmap :
 #
 review:
   stage: review
-  needs:
-    - job: "get info"
-    - job: "build review config image"
-    - job: "apply review configmap"
   extends:
     - ".review"
     - ".review_rules"
@@ -197,3 +189,4 @@ workflow:
     - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG
+
