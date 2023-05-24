@@ -38,20 +38,20 @@ get info:
     - ".get_info"
 
 
+# Determine if a new git tag and GitLab release should be created
+#
+determine version:
+  stage: get info
+  extends:
+    - ".determine_version"
+
+
 # Build image and push to project registry
 #
 build image:
   stage: build
   extends:
     - ".build_image"
-
-
-# Determine if a new git tag and GitLab release should be created
-#
-determine version:
-  stage: version
-  extends:
-    - ".determine_version"
 
 
 ## For `review` environments only: verify the required namespace exists
