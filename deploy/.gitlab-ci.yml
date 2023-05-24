@@ -1,15 +1,13 @@
 # LTC GitLab CI/CD Source Project Pipeline
 #
-
-
 ## Requirements
+#
 #   - this file
 #   - a working `Dockerfile`
 #   - a `deploy/` folder with Kubernetes resources
 #
-
-
 ## General Pipeline Steps
+#
 #   1. Gather info
 #   2. Build image
 #   3. FluxCD deploys resources to a cluster
@@ -22,11 +20,12 @@ stages:
   - version
   - get info
   - build
-  - review
+  - publish
   - cleanup
 
 
 ## Project initialization
+#
 #   - a project access token is required; if it doesn't exist it is created on the first run
 # project init:
 #   stage: get info
@@ -34,7 +33,7 @@ stages:
 #     - ".project_init"
 
 
-# Determine if a new git tag and GitLab release should be created
+## Determine if a new git tag and GitLab release should be created
 #
 determine version:
   stage: version
@@ -43,7 +42,7 @@ determine version:
     - ".determine_version_rules"
 
 
-# Determine target environment, deployment namespace, ingress/app url, and tags
+## Determine target environment, deployment namespace, ingress/app url, and tags
 #
 get info:
   stage: get info
@@ -74,7 +73,7 @@ verify secrets:
     - ".review_rules"
 
 
-# Build image and push to project registry
+## Build image and push to project registry
 #
 build image:
   stage: build
@@ -100,16 +99,16 @@ apply review configmap :
     - ".review_rules"
 
 
-# For `review` environments only: deploy project for review.
+## For `review` environments only: deploy project for review.
 #
 review:
-  stage: review
+  stage: publish
   extends:
     - ".review"
     - ".review_rules"
 
 
-# For `review` environments only: gracefully remove `review` environment after 1 week.
+## For `review` environments only: gracefully remove `review` environment after 1 week.
 #
 stop review:
   stage: cleanup
@@ -118,7 +117,16 @@ stop review:
     - ".stop_review_rules"
 
 
-# Other default pipeline configuration values
+## Configure environments
+#
+configure environment:
+  needs:
+    - job: "get info"
+  extends:
+    - ".configure_environment"
+
+
+## Other default pipeline configuration values
 #
 variables:
 
