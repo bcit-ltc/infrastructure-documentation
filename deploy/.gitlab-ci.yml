@@ -39,7 +39,7 @@ determine version:
     - ".determine_version_rules"
 
 
-# Determine target environment, deployment namespace, and ingress/app url
+# Determine target environment, deployment namespace, ingress/app url, and tags
 #
 get info:
   stage: get info
@@ -153,8 +153,8 @@ include:
       # - project-init.yml
       - review.yaml
       - rules.yaml
-      - version.yaml
       - verify.yaml
+      - version.yaml
   # - template: Jobs/Secret-Detection.gitlab-ci.yml
   # - template: Jobs/SAST.gitlab-ci.yml
 
@@ -174,10 +174,10 @@ cache:
 
 # Configure Static Application Security Test scanning
 #
-# sast:
-#   stage: test
-#   extends:
-#     - ".deploy_stable_rules"
+sast:
+  stage: test
+  extends:
+    - ".sast_rules"
 
 
 # Configure jobs for GitLab merge request pipelines
