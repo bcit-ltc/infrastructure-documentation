@@ -6,19 +6,19 @@ resources:
 commonLabels:
   environment: latest
 commonAnnotations:
-  version: 2.5.6-21aaef86--2023-06-05.1685978597 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
+  version: 2.5.7-40dc17d7--2023-06-05.1686007316 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation"
-    newTag: "2.5.6-21aaef86--2023-06-05.1685978597" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
+    newTag: "2.5.7-40dc17d7--2023-06-05.1686007316" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
 patches:
-# Patches ingress to add "latest--" prefix to ingress URL
-#
+  # Patches ingress to add "latest--" prefix to ingress URL
+  #
   - target:
       kind: Ingress
     path: ingress-patch.yaml
-# Adds elasticapm config to deployment
-#
+    # Adds elasticapm config to deployment
+    #
   - target:
       kind: Deployment
     patch: |-
