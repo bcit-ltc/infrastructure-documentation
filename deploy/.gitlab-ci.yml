@@ -152,7 +152,7 @@ variables:
 # Include common pipeline scripts
 #
 include:
-  - project: ltc-infrastructure/ci-config
+  - project: deployments/ci-config
     file:
       - build.yaml
       - common.yaml
