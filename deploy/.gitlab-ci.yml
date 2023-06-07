@@ -173,13 +173,12 @@ default:
     - utility
 
 
-# Enable pipeline job cachine if a `.cache` folder is found
+# Enable pipeline job caching. Uncomment and configure paths to use 
 #
 cache:
-  key: build-cache
-  paths:
-    - ./**/.cache
-
+  key: $CI_COMMIT_REF_SLUG
+  # paths:
+  #   - ./node_modules
 
 # # Configure Static Application Security Test scanning
 # #
