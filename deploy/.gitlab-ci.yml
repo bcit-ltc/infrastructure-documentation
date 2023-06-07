@@ -1,16 +1,15 @@
 # LTC GitLab CI/CD Source Project Pipeline
 #
-## Requirements
+# Requirements
 #
-#   - this file
 #   - a working `Dockerfile`
 #   - a `deploy/` folder with Kubernetes resources
 #
-## General Pipeline Endpoints
+# Pipeline endpoints
 #
-#     - dev branches          => https://review--{branchName}--{projectName}.ltc.bcit.ca/ => review cluster
-#     - main branch           => https://latest--{projectName}.ltc.bcit.ca/               => latest cluster
-#     - tagged commit on main => https://{projectName}.ltc.bcit.ca/                       => stable cluster
+#   dev branches          => https://review--{branchName}--{projectName}.ltc.bcit.ca/ => review cluster
+#   main branch           => https://latest--{projectName}.ltc.bcit.ca/               => latest cluster
+#   tagged commit on main => https://{projectName}.ltc.bcit.ca/                       => stable cluster
 #
 stages:
   - get info
@@ -19,7 +18,7 @@ stages:
   - review:cleanup
 
 
-## Project initialization
+# Project initialization
 #
 #   - a project access token is required; if it doesn't exist it is created on the first run
 # project init:
@@ -28,7 +27,7 @@ stages:
 #     - ".project_init"
 
 
-## Determine if a new git tag and GitLab release should be created
+# Determine if a new git tag and GitLab release should be created
 #
 determine version:
   stage: get info
@@ -37,7 +36,7 @@ determine version:
     - ".determine_version_rules"
 
 
-## Determine target environment, deployment namespace, ingress/app url, and tags
+# Determine target environment, deployment namespace, ingress/app url, and tags
 #
 get info:
   stage: get info
@@ -47,7 +46,7 @@ get info:
     - ".get_info"
 
 
-## Build image and push to project registry
+# Build image and push to project registry
 #
 build image:
   stage: build
@@ -55,7 +54,7 @@ build image:
     - ".build_image"
 
 
-## Configure environments for "latest" and "stable"
+# Configure environments for "latest" and "stable"
 #
 environment:latest:
   stage: build
@@ -68,7 +67,7 @@ environment:stable:
     - ".environment:stable"
 
 
-## For `review` environments only: verify the required namespace exists
+# For `review` environments only: verify the required namespace exists
 #
 verify namespace:
   stage: get info
@@ -79,7 +78,7 @@ verify namespace:
     - ".review_rules"
 
 
-## For `review` environments only: verify the required TLS Ingress secret exists
+# For `review` environments only: verify the required TLS Ingress secret exists
 #
 verify secrets:
   stage: get info
@@ -91,7 +90,7 @@ verify secrets:
     - ".review_rules"
 
 
-## For `review` environments only: build a kubernetes configuration image and push to the project registry
+# For `review` environments only: build a kubernetes configuration image and push to the project registry
 #
 build review config image:
   stage: build
@@ -100,7 +99,7 @@ build review config image:
     - ".review_rules"
 
 
-## For `review` environments only: verify the required `deploy-vars` ConfigMap exists
+# For `review` environments only: verify the required `deploy-vars` ConfigMap exists
 #
 apply review configmap:
   stage: build
@@ -109,7 +108,7 @@ apply review configmap:
     - ".review_rules"
 
 
-## For `review` environments only: deploy project for review.
+# For `review` environments only: deploy project for review.
 #
 review:
   stage: review:publish
@@ -118,7 +117,7 @@ review:
     - ".review_rules"
 
 
-## For `review` environments only: gracefully remove `review` environment after 1 week.
+# For `review` environments only: gracefully remove `review` environment after 1 week.
 #
 stop review:
   stage: review:cleanup
@@ -127,7 +126,7 @@ stop review:
     - ".stop_review_rules"
 
 
-## Default pipeline configuration values (other global variables are set in GitLab Admin > CI/CD )
+# Default pipeline configuration values (other global variables are set in GitLab Admin > CI/CD )
 #
 variables:
 
@@ -152,7 +151,7 @@ variables:
 # Include common pipeline scripts
 #
 include:
-  - project: deployments/ci-config
+  - project: ltc-infrastructure/ci-config
     file:
       - build.yaml
       - common.yaml
@@ -160,8 +159,6 @@ include:
       # - project-init.yml
       - review.yaml
       - rules.yaml
-      - verify.yaml
-      - version.yaml
   # - template: Jobs/Secret-Detection.gitlab-ci.yml
   # - template: Jobs/SAST.gitlab-ci.yml
 
@@ -179,6 +176,7 @@ cache:
   key: $CI_COMMIT_REF_SLUG
   # paths:
   #   - ./node_modules
+
 
 # # Configure Static Application Security Test scanning
 # #
