@@ -6,22 +6,17 @@
 #   - a working `Dockerfile`
 #   - a `deploy/` folder with Kubernetes resources
 #
-## General Pipeline Steps
+## General Pipeline Endpoints
 #
-#   1. Gather info
-#   2. Build image
-#   3. FluxCD deploys resources to a cluster
 #     - dev branches          => https://review--{branchName}--{projectName}.ltc.bcit.ca/ => review cluster
 #     - main branch           => https://latest--{projectName}.ltc.bcit.ca/               => latest cluster
 #     - tagged commit on main => https://{projectName}.ltc.bcit.ca/                       => stable cluster
 #
 stages:
-  - test
-  - version
   - get info
   - build
-  - publish
-  - cleanup
+  - review:publish
+  - review:cleanup
 
 
 ## Project initialization
@@ -36,7 +31,7 @@ stages:
 ## Determine if a new git tag and GitLab release should be created
 #
 determine version:
-  stage: version
+  stage: get info
   extends:
     - ".determine_version"
     - ".determine_version_rules"
@@ -46,8 +41,31 @@ determine version:
 #
 get info:
   stage: get info
+  needs:
+    - job: "determine version"
   extends:
     - ".get_info"
+
+
+## Build image and push to project registry
+#
+build image:
+  stage: build
+  extends:
+    - ".build_image"
+
+
+## Configure environments for "latest" and "stable"
+#
+environment:latest:
+  stage: build
+  extends:
+    - ".environment:latest"
+
+environment:stable:
+  stage: build
+  extends:
+    - ".environment:stable"
 
 
 ## For `review` environments only: verify the required namespace exists
@@ -73,14 +91,6 @@ verify secrets:
     - ".review_rules"
 
 
-## Build image and push to project registry
-#
-build image:
-  stage: build
-  extends:
-    - ".build_image"
-
-
 ## For `review` environments only: build a kubernetes configuration image and push to the project registry
 #
 build review config image:
@@ -92,7 +102,7 @@ build review config image:
 
 ## For `review` environments only: verify the required `deploy-vars` ConfigMap exists
 #
-apply review configmap :
+apply review configmap:
   stage: build
   extends:
     - ".apply_review_configmap"
@@ -102,56 +112,39 @@ apply review configmap :
 ## For `review` environments only: deploy project for review.
 #
 review:
-  stage: publish
+  stage: review:publish
   extends:
     - ".review"
     - ".review_rules"
 
 
-## Configure environments for "latest" and "stable"
-#
-environment:latest:
-  extends:
-    - ".environment:latest"
-
-environment:stable:
-  extends:
-    - ".environment:stable"
-
-
 ## For `review` environments only: gracefully remove `review` environment after 1 week.
 #
 stop review:
-  stage: cleanup
+  stage: review:cleanup
   extends:
     - ".stop_review"
     - ".stop_review_rules"
 
 
-## Other default pipeline configuration values
+## Default pipeline configuration values (other global variables are set in GitLab Admin > CI/CD )
 #
 variables:
 
-
-  # other global variables are set in GitLab Admin
+  # If GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects this
+  #   project to have a `deploy/` folder. See https://infrastructure-documentation.ltc.bcit.ca/.
   #
   # GENERIC_DEPLOYMENT: "true"
-  #
-  #   - if GENERIC_DEPLOYMENT is set to anything but "true", the pipeline expects this
-  #     project to have a `deploy/` folder. See https://infrastructure-documentation.ltc.bcit.ca/.
-
-
-  # Set COMMON_NAMESPACE to combine apps into one namespace
+ 
+  # Deploy this app into a common namespace
   #
   # COMMON_NAMESPACE: ""
 
-
-  # Set SKIP_BUILD to skip the build stage and deploy the latest image
+  # Skip the build stage and deploy the latest image
   #
   # SKIP_BUILD: "true"
 
-
-  # Turn on verbose debugging console output
+  # Turn on verbose pipeline console output
   #
   PIPELINE_DEBUG: "true"
 
@@ -159,7 +152,7 @@ variables:
 # Include common pipeline scripts
 #
 include:
-  - project: deployments/ci-config
+  - project: ltc-infrastructure/ci-config
     file:
       - build.yaml
       - common.yaml
@@ -177,13 +170,15 @@ include:
 #
 default:
   tags:
-    - review
+    - utility
 
 
-# Cache pipeline jobs based on branch
+# Enable pipeline job cachine if a `.cache` folder is found
 #
 cache:
-  key: $CI_COMMIT_REF_SLUG
+  key: build-cache
+  paths:
+    - ./**/.cache
 
 
 # # Configure Static Application Security Test scanning
@@ -201,4 +196,3 @@ workflow:
     - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG
-
