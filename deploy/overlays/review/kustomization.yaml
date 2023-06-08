@@ -16,7 +16,7 @@ commonAnnotations:
 
 images:
 - name: infrastructure-documentation
-  newName: ${IMAGE_NAME:=registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation}
+  newName: ${IMAGE_NAME:=registry.ltc.bcit.ca/web-apps/infrastructure-documentation}
   newTag: ${IMAGE_TAG:=stable}
 
 patches:

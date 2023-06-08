@@ -2,7 +2,7 @@ site_name: LTC Infrastructure Documentation
 site_url: https://infrastructure-documentation.ltc.bcit.ca/
 
 repo_name: infrastructure-documentation
-repo_url: https://issues.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation.git
+repo_url: https://issues.ltc.bcit.ca/web-apps/infrastructure-documentation.git
 
 theme:
   name: material

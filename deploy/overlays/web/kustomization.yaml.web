@@ -18,5 +18,5 @@ commonAnnotations:
   version: 2.4.1-8b09e849--2023-04-22--944 # {"$imagepolicy": "flux-system:infrastructure-documentation-web:tag"}
 images:
   - name: "infrastructure-documentation"
-    newName: "registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation"
+    newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
     newTag: "2.4.1-8b09e849--2023-04-22--944" # {"$imagepolicy": "flux-system:infrastructure-documentation-web:tag"}
