@@ -6,11 +6,11 @@ resources:
 commonLabels:
   environment: latest
 commonAnnotations:
-  version: 2.5.7-40dc17d7--2023-06-05.1686007316 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
+  version: 2.5.8-2c9b8649--2023-06-07.1686175249 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/ltc-infrastructure/infrastructure-documentation"
-    newTag: "2.5.7-40dc17d7--2023-06-05.1686007316" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
+    newTag: "2.5.8-2c9b8649--2023-06-07.1686175249" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation:tag"}
 patches:
   # Patches ingress to add "latest--" prefix to ingress URL
   #
