@@ -10,7 +10,7 @@ commonLabels:
   environment: stable
 
 commonAnnotations:
-  version: stable # {"$imagepolicy": "flux-system:infrastructure-documentation:tag"}
+  version: stable # {"$imagepolicy": "flux-system:infrastructure-documentation-image-policy:tag"}
   tab: ${GIT_TAG:=stable}
 
 configMapGenerator:
@@ -30,4 +30,4 @@ patches:
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
-    newTag: "stable" # {"$imagepolicy": "flux-system:infrastructure-documentation:tag"}
+    newTag: "stable" # {"$imagepolicy": "flux-system:infrastructure-documentation-image-policy:tag"}
