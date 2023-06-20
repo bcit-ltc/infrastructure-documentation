@@ -8,7 +8,7 @@ Adapted from [Run nginx as unprivileged user in Docker container on Kubernetes](
 
 1. Apply the kustomized resources
 
-    `kustomize build | kpt live apply -`
+    `kubectl kustomize | kpt live apply -`
 
 1. (Optional) Validate resources by running the kpt `kubeval` function (requires Docker daemon to be running)
 

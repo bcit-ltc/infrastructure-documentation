@@ -4,6 +4,8 @@ metadata: # kpt-merge: /nginx
   name: deployment
   labels:
     app: nginx
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apps|Deployment|default|nginx'
 spec:
   progressDeadlineSeconds: 600
   revisionHistoryLimit: 2
@@ -23,7 +25,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginxinc/nginx-unprivileged:1.21-alpine
+          image: nginxinc/nginx-unprivileged:1.24-alpine
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -34,12 +36,6 @@ spec:
             runAsNonRoot: true
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            runAsUser: 999
-          volumeMounts:
-            - mountPath: /tmp
-              name: tmp
-            - name: nginx-config
-              mountPath: /etc/nginx/conf.d
           resources:
             limits:
               cpu: "100m"
@@ -47,6 +43,11 @@ spec:
             requests:
               cpu: "100m"
               memory: "100Mi"
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
       volumes:
         - name: nginx-config
           configMap:

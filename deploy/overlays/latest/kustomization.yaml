@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: infrastructure-documentation
+namespace: ltc-infrastructure-documentation
 resources:
   - ../../base
 commonLabels:
@@ -25,6 +25,12 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/envFrom
         value: [{"configMapRef": {"name":"elasticapm-config"}}]
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: add
+        path: /spec/template/spec/imagePullSecrets
+        value: [name: gitlab-registry-credentials]
 # Generates elasticapm config
 #
 configMapGenerator:
@@ -32,3 +38,8 @@ configMapGenerator:
     literals:
       - ELASTIC_APM_SERVICE_NAME=infrastructure-documentation-latest
       - ELASTIC_APM_SERVER_URL=https://bcit-ltc.apm.westus2.azure.elastic-cloud.com
+secretGenerator:
+- name: gitlab-registry-credentials
+  type: kubernetes.io/dockerconfigjson
+  files:
+    - .dockerconfigjson=secrets/.dockerconfigjson

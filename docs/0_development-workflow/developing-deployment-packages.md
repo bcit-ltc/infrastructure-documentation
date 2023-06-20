@@ -3,7 +3,7 @@
 ---
 # `deploy/` Configuration Development
 
-To develop a working deployment configuration, it's easiest to create and test on a local cluster (minikube, Rancher Desktop, etc...). This means you will need to be able to pull your app's image from a private registry.
+To configure a working deployment it's easiest to create and test on a local cluster (minikube, Rancher Desktop, etc...). This means you will need to be able to pull your app's image from a private registry.
 
 ### Requirements
 
@@ -101,7 +101,7 @@ With a local cluster up and running, start by getting the `latest` overlay worki
 10. Attempt to apply the resources to the cluster:
 
     ```bash
-    kustomize build overlays/${TARGET_ENV} | kubectl apply -
+    kustomize build overlays/${TARGET_ENV} | kubectl apply -f -
     ```
 
 11. Unset sensitive variables
