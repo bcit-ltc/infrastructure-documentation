@@ -33,7 +33,7 @@ Because our goal is to develop an image, we use Docker to:
 - scan the image for vulnerabilities
 - push the image to an LTC private registry
 
-Once an image is stored in a registry it can be deployed to a development Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline.
+Once an image is stored in a registry it can be deployed to a Kubernetes cluster. This can be done manually through the Rancher UI, or by configuring a project to deploy automatically using a CI/CD pipeline.
 
 But before we look at CI/CD pipelines in more detail, let's go over other important details about Docker.
 
@@ -100,10 +100,10 @@ When you are ready to turn your app into an image and push it to a registry, nav
 
 !!! example "Example CLI commands"
 
-    `$ docker login registry.dev.ltc.bcit.ca`
+    `$ docker login registry.ltc.bcit.ca`
 
-    `$ docker build -t registry.dev.ltc.bcit.ca/web-apps/qcon/qcon-api .`
+    `$ docker build -t registry.ltc.bcit.ca/web-apps/qcon/qcon-api .`
 
-    `$ docker push registry.dev.ltc.bcit.ca/web-apps/qcon/qcon-api`
+    `$ docker push registry.ltc.bcit.ca/web-apps/qcon/qcon-api`
 
-When you have an image in a registry, either in the LTC's private registry or on a public site like [hub.docker.com](https://hub.docker.com), it can be deployed to a Kubernetes cluster as a workload.
+When you have an image in a registry - either in the LTC's private registry or on a public site like [hub.docker.com](https://hub.docker.com) - it can be deployed to a Kubernetes cluster as a workload.

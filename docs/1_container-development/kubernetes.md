@@ -90,7 +90,7 @@ If everything looks good, you're ready to make your configuration files!
     
         If you're working with a remote cluster, define a default registry:
     
-            skaffold config set default-repo registry.dev.ltc.bcit.ca/{yourProjectPath}
+            skaffold config set default-repo registry.ltc.bcit.ca/{yourProjectPath}
 
 One of the best features of Skaffold is the `dev` mode, which automates the mundane tasks of rebuilding an image, pushing it to a registry, and then deploying it to a cluster. Skaffold continuously watches folders for code changes and automatically takes care of the rebuilding, pushing to a registry, and deployment to a cluster!
 

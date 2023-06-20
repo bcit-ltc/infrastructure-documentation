@@ -12,10 +12,10 @@ Use the following annotations in your `latest` and `stable` overlays to configur
                 metadata:
                 annotations:
                     vault.hashicorp.com/agent-inject: "true"
-                    vault.hashicorp.com/role: "ptracker-kubeauthbot-latest"
-                    vault.hashicorp.com/agent-inject-secret-config: "web-apps/data/ptracker"
+                    vault.hashicorp.com/role: "{yourProject}-kubeauthbot-latest"
+                    vault.hashicorp.com/agent-inject-secret-config: "web-apps/data/{yourProject}"
                     vault.hashicorp.com/agent-inject-template-config: |
-                    {{ with secret "web-apps/data/ptracker" -}}
+                    {{ with secret "web-apps/data/{yourProject}" -}}
                     MARIADB_PASSWORD={{ .Data.data.MARIADB_PASSWORD }}
                     MARIADB_USER={{ .Data.data.MARIADB_USER }}
                     {{- end }}
@@ -28,10 +28,10 @@ Use the following annotations in your `latest` and `stable` overlays to configur
                 metadata:
                 annotations:
                     vault.hashicorp.com/agent-inject: "true"
-                    vault.hashicorp.com/role: "ptracker-kubeauthbot-stable"
-                    vault.hashicorp.com/agent-inject-secret-config: "web-apps/data/ptracker"
+                    vault.hashicorp.com/role: "{yourProject}-kubeauthbot-stable"
+                    vault.hashicorp.com/agent-inject-secret-config: "web-apps/data/{yourProject}"
                     vault.hashicorp.com/agent-inject-template-config: |
-                    {{ with secret "web-apps/data/ptracker" -}}
+                    {{ with secret "web-apps/data/{yourProject}" -}}
                     MARIADB_PASSWORD={{ .Data.data.MARIADB_PASSWORD }}
                     MARIADB_USER={{ .Data.data.MARIADB_USER }}
                     {{- end }}

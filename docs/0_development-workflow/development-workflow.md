@@ -20,7 +20,7 @@ This workflow helps us keep track of bugfixes, new features, and major changes w
 
         1. Create an Issue
 
-                for example: `updates README with project description`
+            *for example*: `updates README with project description`
 
         2. Create a Merge Request (MR) and a new branch
 
@@ -28,19 +28,15 @@ This workflow helps us keep track of bugfixes, new features, and major changes w
 
     2. **Checkout the new branch, develop, commit, and push**
         
-        Pushing your code triggers a pipeline run. The pipeline:
-        
-        1. Builds an image
-        2. Pushes the image to the project registry
-        3. Deploys the workload to a cluster for **`review`**
+        Pushing your code triggers a pipeline run. The pipeline builds an image, pushes the image to the project registry, and deploys the workload to a cluster for **`review`**.
 
-    3. When you are satisfied with your work, **request a code review and approval**
-    4. **Merge your work into the `main` branch**
+    1. When you are satisfied with your work, **request a code review and approval**
+    2. **Merge your work into the `main` branch**
 
-!!! note "Viewing the workloads"
+!!! note "Workload endpoints"
 
-    * Commits to the **`main`** branch trigger a pipeline that deploys the workload to the **`latest`** cluster
-    * Commits with a **git tag** trigger a deployment to the **`stable`** cluster.
-    * Commits on a branch other than `main` trigger a deployment to the **`review`** cluster.
+    * **`main`** branch --> **`latest`** cluster
+    * **`main`** branch with a **git tag** --> **`stable`** cluster
+    * any branch other than `main` --> **`review`** cluster
 
     To automatically analyze and add git tags, include a semantic versioning keyword in your commit message. See [semantic-versioning](./semantic-versioning.md) for more info. 

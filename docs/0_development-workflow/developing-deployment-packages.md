@@ -1,24 +1,22 @@
 ---
-  title: "Deployment packages"
+  title: "Deployment configuration"
 ---
-# Deployment Package Development
+# `deploy/` Configuration Development
 
-## Overlay Development - Local cluster configuration
-
-To create a working deployment package, it's easiest to develop and test on a local cluster (minikube, Rancher Desktop, etc...). This means you need to be able to pull images from a private registry.
+To develop a working deployment configuration, it's easiest to create and test on a local cluster (minikube, Rancher Desktop, etc...). This means you will need to be able to pull your app's image from a private registry.
 
 ### Requirements
 
 Download and install the following:
 
-- [kpt](https://kpt.dev)
 - kubectl-cli
+- [kustomize](https://kubectl.docs.kubernetes.io/installation/)
 - Docker
 - a local cluster tool (minikube, k3s, Rancher Desktop, etc...)
 
 ### Configure an `ImagePullSecret` in `kustomization.yaml`
 
-With a local cluster up and running, get the overlay working:
+With a local cluster up and running, start by getting the `latest` overlay working:
 
 1. Set your GitLab username, password, and email
    
@@ -35,7 +33,7 @@ With a local cluster up and running, get the overlay working:
 3. Set a target environment:
    
     ```bash
-    export TARGET_ENV=review
+    export TARGET_ENV=latest
     ```
 
 4. Create a `.dockerconfigjson` in the secrets path:
@@ -82,37 +80,31 @@ With a local cluster up and running, get the overlay working:
     && echo "fake cert" > overlays/${TARGET_ENV}/secrets/tls.crt
     ```
 
-7. Initialize the overlay for `kpt`
-   
-    ```bash
-    kpt live init overlays/${TARGET_ENV}
-    ```
-
-8. Confirm the kustomization still renders correctly:
+7. Confirm the kustomization renders correctly:
 
     ```bash
-    kubectl kustomize overlays/${TARGET_ENV}
+    kustomize build overlays/${TARGET_ENV}
     ```
 
-9.  Confirm your Kubernetes context (should match your local kubernetes cluster)
+8.  Confirm your Kubernetes context (should match your local kubernetes cluster)
 
     ```bash
     kubectl config get-contexts
     ```
 
-10. Add a namespace
+9.  Add a namespace
 
     ```bash
     kubectl create ns {yourProjectName}
     ```
 
-11. Apply the resource package to the cluster:
+10. Attempt to apply the resources to the cluster:
 
     ```bash
-    kubectl kustomize overlays/${TARGET_ENV} | kpt live apply -
+    kustomize build overlays/${TARGET_ENV} | kubectl apply -
     ```
 
-12. Unset sensitive variables
+11. Unset sensitive variables
 
     ```bash
     unset \
@@ -123,9 +115,3 @@ With a local cluster up and running, get the overlay working:
     ```
 
 If the resources generate an error, destroy them, adjust the manifests, and try again.
-
-An optional step is to validate resources by running the kpt `kubeval` function (requires Docker daemon to be running)
-
-```bash
-kpt fn render overlays/${TARGET_ENV}
-```

@@ -42,7 +42,7 @@ plugins:
   - search
   - git-revision-date-localized:
       enable_creation_date: true
-      enabled: !ENV [CI, true]
+      fallback_to_build_date: true
 
 markdown_extensions:
   - abbr
@@ -78,15 +78,20 @@ nav:
     - 0_development-workflow/continuous-deployment-details.md
   - Additional Details:
     - Container Development:
-      - 1_workflow-details/index.md
-      - 1_workflow-details/kubernetes.md
-      - 1_workflow-details/deployments-releases.md
-      - 1_workflow-details/pipeline-overview.md
-      - 1_workflow-details/deployment-packages.md
+      - 1_container-development/index.md
+      - 1_container-development/kubernetes.md
+      - 1_container-development/deployments-releases.md
+      - 1_container-development/pipeline-overview.md
+      - 1_container-development/deployment-packages.md
     - Infrastructure:
       - 2_infrastructure-details/index.md
       - 2_infrastructure-details/node-details.md
       - 2_infrastructure-details/kubernetes-details.md
-      - 2_infrastructure-details/pipeline-details.md
-      - 2_infrastructure-details/configuration-projects.md
+      # - 2_infrastructure-details/pipeline-details.md
+      - 2_infrastructure-details/configuration.md
       - 2_infrastructure-details/developing-infrastructure.md
+    - Announcements:
+      - 3_announcements/index.md
+      - 3_announcements/gitlab-restructuring.md
+      - 3_announcements/deployment-package-changes.md
+
