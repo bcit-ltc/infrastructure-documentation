@@ -1,6 +1,6 @@
 # CI/CD Pipelines
 
-A CI/CD pipeline is an infrastructure function that watches repositories for changes and then performs actions when a new commit is pushed. Our CI/CD pipelines build images and deploy them to a cluster.
+A CI/CD pipeline is an infrastructure service that watches source code repositories for changes and then performs actions when a new commit is pushed. The LTC's CI/CD pipelines build images and deploy them to Kubernetes clusters.
 
 !!! note "CI/CD Pipeline"
 
@@ -56,14 +56,7 @@ This stage analyzes the repository for git tags. It determines if there are any 
 
 We use [Semantic Versioning](https://semver.org/) to determine whether a commit should be tagged. [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) analyzes commit messages and increments versions based on the type of keyword included in a commit message.
 
-To use automatic semver tagging, add any of the following keywords to the beginning of your commit messages:
-
-| **Prefix:** ...commit message...                                           | Release type  |
-| ----------------------                                                     | ------------  |
-| `fix: ...some smaller bugfix...`                                           | patch         |
-| `feat: ...add functionality message...`                                    | minor         |
-| `any term!: ...big version change...\nBREAKING CHANGE: some description`*  | major         |
-`*` *the "footer" of the commit message must start with **BREAKING CHANGE:***
+See [semantic versioning](../0_development-workflow/semantic-versioning.md) for details.
 
 ### Build
 
@@ -73,21 +66,19 @@ This stage builds an image using the in-cluster container builder, Kaniko. The i
 
 This is the stage where the deployment package is updated with the lastest build information (image tag) and applied to the cluster.
 
-![Deploy stage](../assets/deploy-pipeline-details-light.png#only-light)
-![Deploy stage](../assets/deploy-pipeline-details-dark.png#only-dark)
+FluxCD reads the configuration files from the `deploy/` folder and deploys an appropriate overlay to a Kubernetes cluster.
 
-This stage has two jobs depending on the target of the commit.
+This stage has two outcomes depending on the commit:
 
 === "`main` branch"
 
-    Triggers a deployment to the `latest` cluster, and the `stable` cluster if the commit has been tagged.
+    Triggers a deployment to the `latest` cluster, and the `stable` cluster if a git tag is committed.
 
-    * requires a deployment package with **`latest`** and a **`stable`** overlays
+    * requires **`latest`** and a **`stable`** overlays
 
 === "any other branch"
 
-    Triggers a *review* deployment to a `review` cluster
+    Triggers a deployment to the `review` cluster
 
     * requires a deployment package with a **`review`** overlay
 
-When the [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/60) is added to a project, the first run deploys a simple generic deployment package called `generic-dev`. This package is based on an `nginx` deployment and it demonstrates how `kustomize` overlays work.

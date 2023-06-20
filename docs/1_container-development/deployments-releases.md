@@ -1,16 +1,16 @@
 # Deployments and Releases
 
-After an image is built, it is ready to be scheduled on a cluster as a workload. An image is a static collection of application *layers* that have been packaged according to a standardized specification, but when an image is *running*, it is called a container.
+After an image is built, it can be scheduled on a cluster as a workload. An *image* is a static collection of application *layers* that have been packaged according to a standardized specification, but when an image is *running*, it is called a *container*.
 
-Images only have information about themselves; they can't describe to the cluster how they should be run (also known as being *scheduled*). So when we are deploying an image to a cluster, we need to generate configuration files that specify to the cluster how to run the workload. The Kubernetes resource that specifies how to run an image is called a **Deployment**.
+Images only have information about themselves; they can't describe to the cluster how they should run. So when we are deploying an image to a cluster, we need to use configuration files to specify to the cluster how to run the workload. One of the most popular Kubernetes resources that specifies how to run an image is called a **Deployment**.
 
-This page describes the general steps involved in creating a deployment, whether it's manually through the command line or using a CI/CD pipeline.
+This page describes the general steps involved in creating a workload deployment, whether it's manually through the command line or using a CI/CD pipeline.
 
 !!! info "Definitions"
 
     **Image**
 
-    :   An application packaged in layers according to the Open Container Initiative (OCI) specification
+    :   An application packaged in layers according to the *Open Container Initiative (OCI)* specification
 
     **Container**
 
@@ -30,7 +30,7 @@ This page describes the general steps involved in creating a deployment, whether
 
 ## Deploying a Workload
 
-When an image is ready to be scheduled on a Kubernetes cluster, there are a few configuration files that need to be defined for the workload to run. Together, these files - and the image they refer to - are considered a **deployment package**. When the deployment is scheduled and running on a cluster, it's called a **workload**.
+When an image is scheduled on a Kubernetes cluster, configuration files define how the workload should run. Together, these files - and the image they refer to - are considered a **deployment**. When the deployment is scheduled and running on a cluster, it's called a **workload**.
 
 ![deployment image](../assets/deployment-light.png#only-light){ align=right }
 ![deployment image](../assets/deployment-dark.png#only-dark){ align=right }
@@ -43,7 +43,7 @@ When an image is ready to be scheduled on a Kubernetes cluster, there are a few 
     * `service.yaml`
     * `deployment.yaml`
 
-A Kubernetes resource called a **deployment** tells the cluster how to run the image, and resources like **service**, and **ingress** define how the cluster should connect to the workload.
+Kubernetes resources called **Deployments** tell the cluster how to run an image, and resources like **Services**, and **Ingresses** define how the cluster should connect to the workload.
 
 !!! danger "Beware! Confusing Terminology"
 
