@@ -23,3 +23,15 @@ patches:
 - path: ingress-patch.yaml
   target:
     kind: Ingress
+  # - target:
+  #     kind: Deployment
+  #   patch: |-
+  #     - op: add
+  #       path: /spec/template/spec/imagePullSecrets
+  #       value: [name: gitlab-registry-credentials]
+
+# secretGenerator:
+# - name: gitlab-registry-credentials
+#   type: kubernetes.io/dockerconfigjson
+#   files:
+#     - .dockerconfigjson=secrets/.dockerconfigjson
