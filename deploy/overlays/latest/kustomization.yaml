@@ -6,11 +6,11 @@ resources:
 commonLabels:
   environment: latest
 commonAnnotations:
-  version: 2.5.10-f448fae7--2023-06-20.1687242953 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+  version: 2.5.13-23956aca--2023-06-21.1687388908 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
-    newTag: "2.5.10-f448fae7--2023-06-20.1687242953" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+    newTag: "2.5.13-23956aca--2023-06-21.1687388908" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
 patches:
   # Patches ingress to add "latest--" prefix to ingress URL
   #
@@ -25,7 +25,6 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/envFrom
         value: [{"configMapRef": {"name":"elasticapm-config"}}]
-
 # Generates elasticapm config
 #
 configMapGenerator:
