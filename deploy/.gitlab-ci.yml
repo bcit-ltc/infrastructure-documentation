@@ -144,7 +144,7 @@ variables:
 
   # Turn on verbose pipeline console output
   #
-  PIPELINE_DEBUG: "true"
+  PIPELINE_DEBUG: "false"
 
 
 # Include common pipeline scripts
