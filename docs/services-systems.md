@@ -60,5 +60,6 @@ We use Kubernetes to deliver our apps and services and Rancher is an easy-to-use
 ## Legacy Servers
 
 > **prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)
+> **prod4.ltc.bcit.ca**: [http://issues.ltc.bcit.ca](http://issues.ltc.bcit.ca)
 
 Several applications are still served from older virtual machines; work to migrate these workloads to Kubernetes is ongoing.
