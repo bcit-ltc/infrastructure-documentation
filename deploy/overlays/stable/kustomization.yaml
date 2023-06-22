@@ -7,12 +7,10 @@ commonLabels:
   environment: stable
 commonAnnotations:
   version: 2.5.15 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
-  tab: ${GIT_TAG:=stable}
-configMapGenerator:
-  - name: elasticapm-config
-    literals:
-      - ELASTIC_APM_SERVICE_NAME=infrastructure-documentation-stable
-      - ELASTIC_APM_SERVER_URL=https://bcit-ltc.apm.westus2.azure.elastic-cloud.com
+images:
+  - name: "infrastructure-documentation"
+    newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
+    newTag: "2.5.15" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
 patches:
   - target:
       kind: Deployment
@@ -20,7 +18,8 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/envFrom
         value: [{"configMapRef": {"name":"elasticapm-config"}}]
-images:
-  - name: "infrastructure-documentation"
-    newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
-    newTag: "2.5.15" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+configMapGenerator:
+  - name: elasticapm-config
+    literals:
+      - ELASTIC_APM_SERVICE_NAME=infrastructure-documentation-stable
+      - ELASTIC_APM_SERVER_URL=https://bcit-ltc.apm.westus2.azure.elastic-cloud.com
