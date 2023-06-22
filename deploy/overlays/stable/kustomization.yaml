@@ -6,7 +6,7 @@ resources:
 commonLabels:
   environment: stable
 commonAnnotations:
-  version: 2.5.14 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+  version: 2.5.15 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
   tab: ${GIT_TAG:=stable}
 configMapGenerator:
   - name: elasticapm-config
@@ -23,4 +23,4 @@ patches:
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
-    newTag: "2.5.14" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+    newTag: "2.5.15" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
