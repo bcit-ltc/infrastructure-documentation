@@ -8,6 +8,9 @@ resources:
   - ./nginx-unprivileged
   - ingress.yaml
 
+
+# Patch nginx base; simplify deployment name
+#
 commonLabels:
   app: infrastructure-documentation
   app.kubernetes.io/name: infrastructure-documentation
@@ -25,3 +28,6 @@ patches:
       - op: add
         path: /spec/template/spec/serviceAccountName
         value: infrastructure-documentation-serviceaccount
+      - op: replace
+        path: /metadata/name
+        value: deployment
