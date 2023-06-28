@@ -9,15 +9,15 @@ upstream:
   git:
     repo: https://issues.ltc.bcit.ca/web-apps/base-packages
     directory: /nginx-unprivileged
-    ref: v0.6
+    ref: v0.7
   updateStrategy: force-delete-replace
 upstreamLock:
   type: git
   git:
-    repo: https://issues.ltc.bcit.ca/web-apps/base-packages
+    repo: https://issues.ltc.bcit.ca/ltc-infrastructure/base-packages
     directory: /nginx-unprivileged
-    ref: nginx-unprivileged/v0.6
-    commit: b1b64e820dbce124ffb41c4f2e2cdad4ad043bc1
+    ref: nginx-unprivileged/v0.7
+    commit: 2688b8ab091e8010c6dc14cea41f75cc130ceddc
 info:
   emails:
     - courseproduction@bcit.ca

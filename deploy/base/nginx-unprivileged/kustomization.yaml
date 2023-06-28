@@ -10,7 +10,7 @@ resources:
   - Kptfile
   - service.yaml
 configMapGenerator:
-  - name: nginx-config
+  - name: config
     files:
       - nginx.conf
 namePrefix: nginx-
