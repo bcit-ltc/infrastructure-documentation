@@ -2,7 +2,7 @@
 
 {% block scripts %}
 {{ super() }}
-  <script src="{{ 'javascripts/elastic-apm-rum.umd.min.js' | url }}" crossorigin></script>
+  <script src="https://elastic-apm-rum.ltc.bcit.ca/elastic-apm-rum.umd.min.js" crossorigin></script>
   <script>
     elasticApm.init({
       serviceName: 'infrastructure-documentation',
