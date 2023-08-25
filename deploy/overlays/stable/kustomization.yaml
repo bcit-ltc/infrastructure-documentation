@@ -6,11 +6,11 @@ resources:
 commonLabels:
   environment: stable
 commonAnnotations:
-  version: 2.5.19 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+  version: 2.5.20 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
-    newTag: "2.5.19" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+    newTag: "2.5.20" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
 patches:
   - target:
       kind: Deployment
