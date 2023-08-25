@@ -6,7 +6,7 @@ This means it's easier to track current deployment image tags, create deployment
 
 ## Embedded `deploy/` deployment configuration
 
-Now, by copying the [generic deploy folder](./generic-deploy-folder/) into your project and making a small change to the default `.gitlab-ci.yml` pipeline location, all your app's deployment configuration can be embedded directly in the source code project.
+Now, by copying the **generic deploy folder** into your project and making a small change to the default `.gitlab-ci.yml` pipeline location, all your app's deployment configuration can be embedded directly in the source code project.
 
 ```
     |

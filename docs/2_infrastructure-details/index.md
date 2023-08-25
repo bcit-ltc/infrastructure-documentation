@@ -5,8 +5,8 @@
 ---
 <!-- markdownlint-disable MD025 -->
 
-[![architecture](../assets/ltc-infrastructure-apr2023-light.png#only-light)](ltc-infrastructure-large-light.md)
-[![architecture](../assets/ltc-infrastructure-apr2023-dark.png#only-dark)](ltc-infrastructure-large-dark.md)
+[![architecture](../assets/ltc-infrastructure-aug2023-light.png#only-light)](ltc-infrastructure-large-light.md)
+[![architecture](../assets/ltc-infrastructure-aug2023-dark.png#only-dark)](ltc-infrastructure-large-dark.md)
 
 !!! note ""
 

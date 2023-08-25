@@ -17,8 +17,9 @@ A commit to a repo configured with a `.gitlab-ci.yml` file triggers a pipeline t
 
 !!! warning "Requirements"
 
-    1. `Dockerfile` - the configuration file that tells the system how to build an image of your app
-    1. `.gitlab-ci.yml` file
+    * `Dockerfile` that builds successfully
+    * `deploy/` folder with Kubernetes configuration manifests
+    * `.gitlab-ci.yml` file
 
     The [default GitLab ci/cd pipeline](https://issues.ltc.bcit.ca/-/snippets/60) file can be added to any project with a `Dockerfile` to get started.
 
@@ -46,7 +47,7 @@ Pushing a commit triggers the pipeline to run through each of these stages.
 
 ### Project init
 
-`Project init` checks to see if the project has any *project access tokens*, any deployment packages, and any deployment package trigger tokens. If it finds that any of these are missing, it creates them.
+`Project init` checks to see if the project has any *project access tokens*; if it finds that any of these are missing, it creates them.
 
 ### Gather info
 
@@ -56,7 +57,7 @@ This stage analyzes the repository for git tags. It determines if there are any 
 
 We use [Semantic Versioning](https://semver.org/) to determine whether a commit should be tagged. [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) analyzes commit messages and increments versions based on the type of keyword included in a commit message.
 
-See [semantic versioning](../0_development-workflow/semantic-versioning.md) for details.
+See [semantic versioning](../0_for-developers/semantic-versioning.md) for details.
 
 ### Build
 
@@ -74,11 +75,11 @@ This stage has two outcomes depending on the commit:
 
     Triggers a deployment to the `latest` cluster, and the `stable` cluster if a git tag is committed.
 
-    * requires **`latest`** and a **`stable`** overlays
+    * requires overlays for **`latest`** and **`stable`**
 
 === "any other branch"
 
-    Triggers a deployment to the `review` cluster
+    Triggers a deployment to a **`review`** cluster
 
     * requires a deployment package with a **`review`** overlay
 

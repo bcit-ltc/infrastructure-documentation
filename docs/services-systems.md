@@ -1,6 +1,6 @@
 # Systems and Services
 
-We manage our own systems and services to facilitate the research and development of educational solutions. We are careful about how we "operationalize" a system or service. Regardless of an application's audience or purpose, we adhere to the guidelines outlined in [Policy 3501: Acceptable Use of Information Technology](https://www.bcit.ca/files/pdf/policies/3501.pdf).
+The LTC manages its own systems and services to facilitate the research and development of educational solutions. We are careful about how we "operationalize" a system or service. Regardless of an application's audience or purpose, we adhere to the guidelines outlined in [Policy 3501: Acceptable Use of Information Technology](https://www.bcit.ca/files/pdf/policies/3501.pdf).
 
 !!! warning "Access Requirements"
 
@@ -60,6 +60,7 @@ We use Kubernetes to deliver our apps and services and Rancher is an easy-to-use
 ## Legacy Servers
 
 > **prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)
+> 
 > **prod4.ltc.bcit.ca**: [http://issues.ltc.bcit.ca](http://issues.ltc.bcit.ca)
 
 Several applications are still served from older virtual machines; work to migrate these workloads to Kubernetes is ongoing.

@@ -26,7 +26,7 @@ The `ansible-rke2` collection is used to configure and provision the kubernetes 
 
 After deploying RKE2, Rancher is installed via Helm using the Helm chart found in the [Rancher](https://issues.ltc.bcit.ca/ltc-infrastructure/rancher) project.
 
-* See the [helm-install-rancher](helm-install-rancher) `values.yaml` file which is deployed using Terraform
+* See the **helm-install-rancher** `values.yaml` file which is deployed using Terraform
 
 ### Manager nodes
 
