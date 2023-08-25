@@ -6,10 +6,6 @@
 
 Projects in the `LTC Infrastructure` group contain the configuration files for a variety of services.
 
-## Infrastructure Documentation
-
-This site!
-
 ## VM Node Configuration
 
 When a new VM is provisioned by ITS, the Ansible scripts in this project are used to configure the node. The scripts perform operations like:

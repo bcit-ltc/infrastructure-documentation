@@ -4,7 +4,7 @@ When the default pipeline runs for the first time, it initializes the project by
 
 The default pipeline has a couple of *stages*, and each stage has one or more **jobs**. Click on an icon in the stages column to see the status of individual jobs.
 
-Any commit to the `main` branch of an *initialized project* will trigger the pipeline. The pipeline:
+Any commit to the `main` branch of a project with a pipeline configuration file will trigger the pipeline. The pipeline:
 
 1. Checks whether the project has existing Git Tags, or whether a new semantic version should be created
 2. Builds an image of the application
@@ -16,9 +16,13 @@ Any commit to the `main` branch of an *initialized project* will trigger the pip
 * `deploy/` folder with Kubernetes configuration manifests
 * `.gitlab-ci.yml` file
 
-The default `deploy/` folder contains a pipeline that is configured with a generic deployment so that the basic connections between systems can be configured and tested. After we replace the generic deployment with our own project's information we'll be able to deploy our app.
+The default `deploy/` folder contains a configuration file that deploys a generic workload so that the basic connections between systems can be verified. After we replace the generic workload with our own project's information we'll be able to deploy our app.
 
 ## First deployment
+
+!!! note
+
+    Make sure to add a `deploy/` folder to your main branch before going further
 
 To verify that GitLab can deploy to Kubernetes, create a `feature` or `fix` development branch and make a commit to that branch:
 
