@@ -4,7 +4,7 @@ Kubernetes is a workload orchestration system that administers services on a clu
 
 Kubernetes monitors, schedules, and manages workloads so they are highly available.
 
-## Working with Kubernetes
+## Kubernetes in real life (IRL)
 
 An easy way to get started with Kubernetes is to download and run a local Kubernetes distribution. But because Kubernetes is resource-intensive, it's generally not a good idea to keep it running continuously; start one up, use it, and then stop it to preserve battery!
 
@@ -72,7 +72,19 @@ If you don't see any namespaces, troubleshoot before moving on.
 
 If everything looks good, you're ready to make your configuration files!
 
-## Skaffold
+## Kubernetes tools
+
+### FluxCD
+
+[FluxCD](https://fluxcd.io/flux/) is a GitOps tool that constantly polls source code repositories for resources and reconciles the configuration on the cluster to match the source code.
+
+### Kustomize
+
+[Kustomize](https://kustomize.io) is a tool to build deployment configuration files for different contexts without duplicating content. Kustomize uses *overlays* to change deployment parameters from one configuration for a dev cluster to slightly different configuration for a production cluster.
+
+Our template `deploy` folder uses Kustomize to ensure workloads are configured for the context they are being deployed to.
+
+### Skaffold
 
 [Skaffold](https://skaffold.dev) is a tool that, among other things, helps create and test deployment configuration files. By setting a default registry and connecting to a cluster, you can validate that your deployment will create the resources that you expect.
 
@@ -98,12 +110,6 @@ Try it out by running:
 
     skaffold dev
 
-## Kustomize
-
-[Kustomize](https://kustomize.io) is a tool to build deployment configuration files for different contexts without duplicating content. Kustomize uses *overlays* to change deployment parameters from one configuration for a dev cluster to slightly different configuration for a production cluster.
-
-Our template `deploy` folder uses Kustomize to ensure workloads are configured for the context they are being deployed to.
-
-## Kpt
+### Kpt
 
 [`Kpt`](https://kpt.dev/) is a Kubernetes Resource Manifest (KRM) package manager. It simplifies the management of workloads by associating resources together as an "inventory". This inventory is associated with all KRM's that are deployed together so that they can be tracked, updated, and pruned as necessary.
