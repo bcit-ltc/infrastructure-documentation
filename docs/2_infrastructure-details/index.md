@@ -1,5 +1,5 @@
 ---
-  title: "Architecture"
+  title: "LTC Architecture"
   hide:
     - toc
 ---
