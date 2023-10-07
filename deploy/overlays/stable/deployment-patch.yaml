@@ -1,0 +1,8 @@
+# adds secrets to deployment
+#
+---
+- op: add
+  path: /spec/template/spec/containers/0/envFrom/-
+  value:
+    secretRef:
+      name: elastic-apm-token

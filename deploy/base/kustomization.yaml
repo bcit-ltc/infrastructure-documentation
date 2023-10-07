@@ -1,20 +1,22 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namePrefix: infrastructure-documentation-
-
 resources:
   - serviceaccount.yaml
   - ./nginx-unprivileged
   - ingress.yaml
 
-
-# Patch nginx base; simplify deployment name
+# Facilitate kustomization name updating
 #
+configurations:
+  - kustomizeconfig.yaml
+
 commonLabels:
   app: infrastructure-documentation
   app.kubernetes.io/name: infrastructure-documentation
 
+# Patch nginx base; simplify deployment name (json6902 patch instead of strategic merge)
+#
 patches:
   - target:
       kind: Deployment
@@ -31,3 +33,13 @@ patches:
       - op: replace
         path: /metadata/name
         value: deployment
+      - op: add
+        path: /spec/template/spec/containers/0/envFrom
+        value: [{"configMapRef": {"name":"elasticapm-config"}}]
+
+configMapGenerator:
+  # Generates elasticapm initial config
+  #
+  - name: elasticapm-config
+    literals:
+      - ELASTIC_APM_SERVER_URL=https://bcit-ltc.apm.westus2.azure.elastic-cloud.com

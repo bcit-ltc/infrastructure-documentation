@@ -1,25 +1,42 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: infrastructure-documentation
 resources:
   - ../../base
 commonLabels:
   environment: stable
+# Prefix/Suffix required for VaultAuth configuration
+#
+namePrefix: infrastructure-documentation-
+nameSuffix: -stable
+# Teach kustomize how to update generated names
+#
+configurations:
+  - kustomizeconfig.yaml
 commonAnnotations:
-  version: 2.5.22 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+  version: 2.5.22 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-stable:tag"}
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
-    newTag: "2.5.22" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy:tag"}
+    newTag: "2.5.22" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-stable:tag"}
 patches:
+  # Patches deployment with secrets
   - target:
       kind: Deployment
-    patch: |-
-      - op: add
-        path: /spec/template/spec/containers/0/envFrom
-        value: [{"configMapRef": {"name":"elasticapm-config"}}]
+    path: deployment-patch.yaml
+  # Incorporate vault-secrets
+  #
+  # adds `-latest` suffix to VaultAuth `spec.mount`
+  - target:
+      kind: VaultAuth
+    path: vault-secrets-stable/vault-auth-patch.yaml
+components:
+  # Include environment-specific secrets
+  - ./vault-secrets-stable
+  # Required for VaultAuth role and serviceaccounts
+  - ../../base/components/vault-auth
 configMapGenerator:
+  # Updates elasticapm config
   - name: elasticapm-config
     literals:
       - ELASTIC_APM_SERVICE_NAME=infrastructure-documentation-stable
-      - ELASTIC_APM_SERVER_URL=https://bcit-ltc.apm.westus2.azure.elastic-cloud.com
+    behavior: merge
