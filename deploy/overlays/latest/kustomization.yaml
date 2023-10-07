@@ -13,11 +13,11 @@ nameSuffix: -latest
 configurations:
   - kustomizeconfig.yaml
 commonAnnotations:
-  version: 2.5.22-26406012--2023-09-20.1695233953 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-latest:tag"}
+  version: 2.5.22-644689d2--2023-09-29.1696017186 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-latest:tag"}
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
-    newTag: "2.5.22-26406012--2023-09-20.1695233953" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-latest:tag"}
+    newTag: "2.5.22-644689d2--2023-09-29.1696017186" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-latest:tag"}
 patches:
   # Patches ingress with "latest--"
   - target:
