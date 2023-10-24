@@ -9,7 +9,6 @@ The LTC manages its own systems and services to facilitate the research and deve
     * Install and run BCIT's myVPN
     * Membership in the `LTC Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to the ITS TechHelp desk](https://techhelp.bcit.ca/).
 
-
 ## GitLab
 
 > [https://issues.ltc.bcit.ca](https://issues.ltc.bcit.ca)
@@ -60,7 +59,7 @@ We use Kubernetes to deliver our apps and services and Rancher is an easy-to-use
 ## Legacy Servers
 
 > **prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)
-> 
+>
 > **prod4.ltc.bcit.ca**: [http://issues.ltc.bcit.ca](http://issues.ltc.bcit.ca)
 
 Several applications are still served from older virtual machines; work to migrate these workloads to Kubernetes is ongoing.

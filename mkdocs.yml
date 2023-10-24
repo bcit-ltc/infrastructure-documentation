@@ -66,32 +66,34 @@ nav:
     - index.md
     - services-systems.md
   - For Developers:
-    - 0_for-developers/index.md
-    - 0_for-developers/getting-started.md
-    - 0_for-developers/development-workflow.md
-    - 0_for-developers/pipeline-initial-run.md
-    - 0_for-developers/continuous-deployment-overview.md
-    - 0_for-developers/developing-deployment-packages.md
-    - 0_for-developers/semantic-versioning.md
-    - 0_for-developers/secrets.md
-    - 0_for-developers/routes-endpoints.md
-    - 0_for-developers/continuous-deployment-details.md
+    - for-developers/index.md
+    - for-developers/getting-started.md
+    - for-developers/development-workflow.md
+    - for-developers/routes-endpoints.md
+    - for-developers/secrets.md
+    - for-developers/semantic-versioning.md
+    - for-developers/continuous-deployment-overview.md
+    - Deployment details:
+      - for-developers/developing-deployment-packages.md
+      - for-developers/continuous-deployment-details.md
+    # - for-developers/pipeline-initial-run.md
   - Additional Details:
     - Container Development:
-      - 1_container-development/index.md
-      - 1_container-development/kubernetes.md
-      - 1_container-development/deployments-releases.md
-      - 1_container-development/pipeline-overview.md
-      - Deployment config details: 1_container-development/deployment-packages.md
+      - container-development/index.md
+      - container-development/kubernetes.md
+      - container-development/deployments-releases.md
+      - container-development/pipeline-overview.md
+      - Deployment config details: container-development/deployment-packages.md
     - Infrastructure:
-      - 2_infrastructure-details/index.md
-      - 2_infrastructure-details/node-details.md
-      - 2_infrastructure-details/kubernetes-details.md
-      # - 2_infrastructure-details/pipeline-details.md
-      - 2_infrastructure-details/configuration.md
-      - 2_infrastructure-details/developing-infrastructure.md
+      - infrastructure-details/index.md
+      - infrastructure-details/node-details.md
+      - infrastructure-details/kubernetes-details.md
+      # - infrastructure-details/pipeline-details.md
+      - infrastructure-details/configuration.md
+      - infrastructure-details/initializing-latest-stable.md
+      - infrastructure-details/developing-infrastructure.md
     - Announcements:
-      - 3_announcements/index.md
-      - 3_announcements/gitlab-restructuring.md
-      - 3_announcements/deployment-package-changes.md
+      - announcements/index.md
+      - announcements/gitlab-restructuring.md
+      - announcements/deployment-package-changes.md
 
