@@ -13,11 +13,11 @@ nameSuffix: -stable
 configurations:
   - kustomizeconfig.yaml
 commonAnnotations:
-  version: 2.5.24 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-stable:tag"}
+  version: 2.5.25 # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-stable:tag"}
 images:
   - name: "infrastructure-documentation"
     newName: "registry.ltc.bcit.ca/web-apps/infrastructure-documentation"
-    newTag: "2.5.24" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-stable:tag"}
+    newTag: "2.5.25" # {"$imagepolicy": "infrastructure-documentation:infrastructure-documentation-image-policy-stable:tag"}
 patches:
   # Patches deployment with secrets
   - target:
