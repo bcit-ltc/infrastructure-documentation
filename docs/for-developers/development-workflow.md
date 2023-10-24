@@ -2,14 +2,16 @@
 
 The workflow is loosely based on [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) where projects have a persistent **`main`** branch, and new bugfixes or features are added to ephemeral **`feature`** or **`fix`** branches.
 
-`feature` and `fix` branch code is deployed to a `review` cluster and `main` branch (default) code is deployed to the `latest` and `stable` clusters.
-
 ![deployment workflow](../assets/deployment-workflow-simple-light.png#only-light)
 ![deployment workflow](../assets/deployment-workflow-simple-dark.png#only-dark)
+
+`feature` and `fix` branches are deployed to a `review` cluster and `main` branch (default) code is deployed to the `latest` and `stable` clusters.
 
 This workflow helps us keep track of bugfixes, new features, and major changes without complex branching.
 
 !!! example "Development workflow"
+
+    The following example shows how to use the workflow to make a change to a project.
 
     ![versioning workflow](../assets/git-workflow-simple-light.png#only-light)
     ![versioning workflow](../assets/git-workflow-simple-dark.png#only-dark)

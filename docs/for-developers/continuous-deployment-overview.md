@@ -3,7 +3,7 @@
 ---
 <!-- markdownlint-disable MD025 -->
 
-# Continuous deployment workflow
+# Continuous deployment overview
 
 After [initializing the project](./getting-started.md) the next step is to replace the generic deployment with your own project's info. Here's how to do that.
 
