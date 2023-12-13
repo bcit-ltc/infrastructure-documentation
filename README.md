@@ -23,3 +23,4 @@ Information about the architecture and makeup of the LTC's server infrastructure
 To remove pods stuck in `Terminating`, run the following:
 
     kubectl get pods --all-namespaces | grep Terminating | while read namespace pod rest; do kubectl delete pod $pod -n $namespace --force; done
+
