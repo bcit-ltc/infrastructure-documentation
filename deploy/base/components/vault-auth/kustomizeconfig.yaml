@@ -4,13 +4,11 @@
 nameReference:
 
 - kind: ServiceAccount
-  name: serviceaccount
   fieldSpecs:
     - kind: VaultAuth
       path: spec/kubernetes/serviceAccount
 
 - kind: VaultAuth
-  name: vault-auth
   fieldSpecs:
     - kind: VaultAuth
       path: spec/kubernetes/role
