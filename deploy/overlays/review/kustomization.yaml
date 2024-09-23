@@ -36,11 +36,6 @@ patches:
     target:
       kind: Ingress
 
-  # Adjusts secrets for review branches
-  - target:
-      kind: Deployment
-    path: deployment-patch.yaml
-
   # Incorporate vault-secrets
   #
   # adds `-review` suffix to VaultAuth `spec.mount`
