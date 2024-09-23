@@ -6,13 +6,12 @@ repo_url: https://issues.ltc.bcit.ca/web-apps/infrastructure-documentation.git
 
 theme:
   name: material
-  custom_dir: overrides
-  palette: 
+  palette:
     - scheme: default
       primary: blue
       accent: indigo
       toggle:
-        icon: material/toggle-switch-off-outline 
+        icon: material/toggle-switch-off-outline
         name: Switch to dark mode
     - scheme: slate
       primary: blue
@@ -63,37 +62,36 @@ markdown_extensions:
 
 nav:
   - Home:
-    - index.md
-    - services-systems.md
+      - index.md
+      - services-systems.md
   - For Developers:
-    - for-developers/index.md
-    - for-developers/getting-started.md
-    - for-developers/development-workflow.md
-    - for-developers/routes-endpoints.md
-    - for-developers/secrets.md
-    - for-developers/semantic-versioning.md
-    - for-developers/continuous-deployment-overview.md
-    - Deployment details:
-      - for-developers/developing-deployment-packages.md
-      - for-developers/continuous-deployment-details.md
+      - for-developers/index.md
+      - for-developers/getting-started.md
+      - for-developers/development-workflow.md
+      - for-developers/routes-endpoints.md
+      - for-developers/secrets.md
+      - for-developers/semantic-versioning.md
+      - for-developers/continuous-deployment-overview.md
+      - Deployment details:
+          - for-developers/developing-deployment-packages.md
+          - for-developers/continuous-deployment-details.md
     # - for-developers/pipeline-initial-run.md
   - Additional Details:
-    - Container Development:
-      - container-development/index.md
-      - container-development/kubernetes.md
-      - container-development/deployments-releases.md
-      - container-development/pipeline-overview.md
-      - Deployment config details: container-development/deployment-packages.md
-    - Infrastructure:
-      - infrastructure-details/index.md
-      - infrastructure-details/node-details.md
-      - infrastructure-details/kubernetes-details.md
-      # - infrastructure-details/pipeline-details.md
-      - infrastructure-details/configuration.md
-      - infrastructure-details/initializing-latest-stable.md
-      - infrastructure-details/developing-infrastructure.md
-    - Announcements:
-      - announcements/index.md
-      - announcements/gitlab-restructuring.md
-      - announcements/deployment-package-changes.md
-
+      - Container Development:
+          - container-development/index.md
+          - container-development/kubernetes.md
+          - container-development/deployments-releases.md
+          - container-development/pipeline-overview.md
+          - Deployment config details: container-development/deployment-packages.md
+      - Infrastructure:
+          - infrastructure-details/index.md
+          - infrastructure-details/node-details.md
+          - infrastructure-details/kubernetes-details.md
+          # - infrastructure-details/pipeline-details.md
+          - infrastructure-details/configuration.md
+          - infrastructure-details/initializing-latest-stable.md
+          - infrastructure-details/developing-infrastructure.md
+      - Announcements:
+          - announcements/index.md
+          - announcements/gitlab-restructuring.md
+          - announcements/deployment-package-changes.md
