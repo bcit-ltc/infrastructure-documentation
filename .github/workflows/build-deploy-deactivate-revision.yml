@@ -11,6 +11,8 @@ permissions:
 
   # for Azure login with OIDC
   # id-token: write
+  id-token: write #This is required for requesting the OIDC JWT Token
+  contents: read #Required when GH token is used to authenticate with private repo
 
 env:
   CONTAINER_REGISTRY: bcitltc.azurecr.io
