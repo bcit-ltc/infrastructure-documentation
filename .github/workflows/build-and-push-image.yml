@@ -1,4 +1,4 @@
-name: Trigger auto deployment for app1
+name: App build and deployment
 
 env:
   CONTAINERAPP_NAME: your-app-name  # set this to the name of your Azure Container App
