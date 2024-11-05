@@ -32,17 +32,13 @@ jobs:
           subscription-id: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_SUBSCRIPTION_ID }}
 
       - name: Build and push container image to registry
-        uses: azure/container-apps-deploy-action@v2
-        with:
-          appSourcePath: ${{ github.workspace }}
-          _dockerfilePathKey_: _dockerfilePath_
-          registryUrl: bcitltc.azurecr.io
-          registryUsername: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_REGISTRY_USERNAME }}
-          registryPassword: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_REGISTRY_PASSWORD }}
-          containerAppName: infrastructure-documentat-stable
-          resourceGroup: LTC-ResourceGroup-CA
-          imageToBuild: bcitltc.azurecr.io/infrastructure-documentat-stable:${{ github.sha }}
-          _buildArgumentsKey_: |
-            _buildArgumentsValues_
-
-
+        run: |
+          az acr build --registry bcitltc --image infrastructure-documentat-stable:${{ github.sha }} .
+          az containerapp update --name infrastructure-documentat-stable --resource-group LTC-ResourceGroup-CA --image bcitltc.azurecr.io/infrastructure-documentat-stable:${{ github.sha }} --set-env-vars GITHUB_SHA=${{ github.sha }}
+          az containerapp revision label add --name infrastructure-documentat-stable --resource-group LTC-ResourceGroup-CA --revision infrastructure-documentat-stable-${{ github.sha }} --label stable
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_SUBSCRIPTION_ID }}
+          AZURE_REGISTRY_USERNAME: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_REGISTRY_USERNAME }}
+          AZURE_REGISTRY_PASSWORD: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_REGISTRY_PASSWORD }}
