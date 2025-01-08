@@ -56,5 +56,5 @@ jobs:
       - name: Build and push the image
         run: |
           echo "${{ secrets.GA_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker build . --tag ghcr.io/bcit-ltc/explore:$(cat NEXT_VERSION)
-          docker push ghcr.io/bcit-ltc/explore:$(cat NEXT_VERSION)
+          docker build . --tag ghcr.io/bcit-ltc/infrastructure-documentation:$(cat NEXT_VERSION)
+          docker push ghcr.io/bcit-ltc/infrastructure-documentation:$(cat NEXT_VERSION)

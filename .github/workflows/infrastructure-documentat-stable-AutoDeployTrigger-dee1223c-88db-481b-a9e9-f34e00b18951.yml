@@ -1,44 +1,44 @@
-name: Trigger auto deployment for infrastructure-documentat-stable
+# name: Trigger auto deployment for infrastructure-documentat-stable
 
-# When this action will be executed
-on:
-  # Automatically trigger it when detected changes in repo
-  push:
-    branches: 
-      [ main ]
-    paths:
-    - '**'
-    - '.github/workflows/infrastructure-documentat-stable-AutoDeployTrigger-dee1223c-88db-481b-a9e9-f34e00b18951.yml'
+# # When this action will be executed
+# on:
+#   # Automatically trigger it when detected changes in repo
+#   push:
+#     branches: 
+#       [ main ]
+#     paths:
+#     - '**'
+#     - '.github/workflows/infrastructure-documentat-stable-AutoDeployTrigger-dee1223c-88db-481b-a9e9-f34e00b18951.yml'
 
-  # Allow manual trigger 
-  workflow_dispatch:      
+#   # Allow manual trigger 
+#   workflow_dispatch:      
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions: 
-      id-token: write #This is required for requesting the OIDC JWT Token
-      contents: read #Required when GH token is used to authenticate with private repo
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     permissions: 
+#       id-token: write #This is required for requesting the OIDC JWT Token
+#       contents: read #Required when GH token is used to authenticate with private repo
 
-    steps:
-      - name: Checkout to the branch
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout to the branch
+#         uses: actions/checkout@v2
 
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_SUBSCRIPTION_ID }}
+#       - name: Azure Login
+#         uses: azure/login@v1
+#         with:
+#           client-id: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_CLIENT_ID }}
+#           tenant-id: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_TENANT_ID }}
+#           subscription-id: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_SUBSCRIPTION_ID }}
 
-      - name: Build and push container image to registry
-        run: |
-          az acr build --registry bcitltc --image infrastructure-documentat-stable:${{ github.sha }} .
-          az containerapp update --name infrastructure-documentat-stable --resource-group LTC-ResourceGroup-CA --image bcitltc.azurecr.io/infrastructure-documentat-stable:${{ github.sha }} --set-env-vars GITHUB_SHA=${{ github.sha }}
-          az containerapp revision label add --name infrastructure-documentat-stable --resource-group LTC-ResourceGroup-CA --revision infrastructure-documentat-stable-${{ github.sha }} --label stable
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_SUBSCRIPTION_ID }}
-          AZURE_REGISTRY_USERNAME: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_REGISTRY_USERNAME }}
-          AZURE_REGISTRY_PASSWORD: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_REGISTRY_PASSWORD }}
+#       - name: Build and push container image to registry
+#         run: |
+#           az acr build --registry bcitltc --image infrastructure-documentat-stable:${{ github.sha }} .
+#           az containerapp update --name infrastructure-documentat-stable --resource-group LTC-ResourceGroup-CA --image bcitltc.azurecr.io/infrastructure-documentat-stable:${{ github.sha }} --set-env-vars GITHUB_SHA=${{ github.sha }}
+#           az containerapp revision label add --name infrastructure-documentat-stable --resource-group LTC-ResourceGroup-CA --revision infrastructure-documentat-stable-${{ github.sha }} --label stable
+#         env:
+#           AZURE_CLIENT_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_CLIENT_ID }}
+#           AZURE_TENANT_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_TENANT_ID }}
+#           AZURE_SUBSCRIPTION_ID: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_AZURE_SUBSCRIPTION_ID }}
+#           AZURE_REGISTRY_USERNAME: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_REGISTRY_USERNAME }}
+#           AZURE_REGISTRY_PASSWORD: ${{ secrets.INFRASTRUCTUREDOCUMENTATSTABLE_REGISTRY_PASSWORD }}
