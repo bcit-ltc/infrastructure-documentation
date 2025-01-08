@@ -1,0 +1,35 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - serviceaccount.yaml
+  - ./nginx-unprivileged
+  - ingress.yaml
+
+# Facilitate kustomization name updating
+#
+configurations:
+  - kustomizeconfig.yaml
+
+commonLabels:
+  app: infrastructure-documentation
+  app.kubernetes.io/name: infrastructure-documentation
+
+# Patch nginx base; simplify deployment name (json6902 patch instead of strategic merge)
+#
+patches:
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: infrastructure-documentation
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: infrastructure-documentation
+      - op: add
+        path: /spec/template/spec/serviceAccountName
+        value: infrastructure-documentation-serviceaccount
+      - op: replace
+        path: /metadata/name
+        value: deployment
