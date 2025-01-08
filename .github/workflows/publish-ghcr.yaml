@@ -17,44 +17,46 @@ jobs:
       id-token: write # to enable use of OIDC for npm provenance
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "lts/*"
-      - run: npm init -y
-      - run: npm install --save-dev semantic-release @semantic-release/exec 
-      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
-        run: npm audit signatures
-      - name: semantic release config
-        run: |
-              echo "Configuring local \".releaserc\" file..."
-              echo '{
-                "branches": [
-                  "main"
-                ],
-                "plugins": [
-                  "@semantic-release/commit-analyzer",
-                  "@semantic-release/release-notes-generator",
-                  [
-                    "@semantic-release/exec",
-                    {
-                      "verifyReleaseCmd": "echo ${nextRelease.version} > NEXT_VERSION"
-                    }
-                  ],
-                  "@semantic-release/github"
-                ]
-              }' \
-                > .releaserc
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: "lts/*"
+      # - run: npm init -y
+      # - run: npm install --save-dev semantic-release @semantic-release/exec 
+      # - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+      #   run: npm audit signatures
+      # - name: semantic release config
+      #   run: |
+      #         echo "Configuring local \".releaserc\" file..."
+      #         echo '{
+      #           "branches": [
+      #             "main"
+      #           ],
+      #           "plugins": [
+      #             "@semantic-release/commit-analyzer",
+      #             "@semantic-release/release-notes-generator",
+      #             [
+      #               "@semantic-release/exec",
+      #               {
+      #                 "verifyReleaseCmd": "echo ${nextRelease.version} > NEXT_VERSION"
+      #               }
+      #             ],
+      #             "@semantic-release/github"
+      #           ]
+      #         }' \
+      #           > .releaserc
 
-              echo "  Done."
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
-        run: npx semantic-release 
-      - name: Get the next version
-        id: get_version
-        run: echo $(cat NEXT_VERSION)
+      #         echo "  Done."
+      # - name: Release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
+      #   run: npx semantic-release 
+      # - name: Get the next version
+      #   id: get_version
+      #   run: echo $(cat NEXT_VERSION)
       - name: Build and push the image
         run: |
           echo "${{ secrets.GA_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker build . --tag ghcr.io/bcit-ltc/infrastructure-documentation:$(cat NEXT_VERSION)
-          docker push ghcr.io/bcit-ltc/infrastructure-documentation:$(cat NEXT_VERSION)
+          docker build . --tag ghcr.io/bcit-ltc/infrastructure-documentation:test
+          docker push ghcr.io/bcit-ltc/infrastructure-documentation:test
+    # docker build . --tag ghcr.io/bcit-ltc/infrastructure-documentation:$(cat NEXT_VERSION)
+    # docker push ghcr.io/bcit-ltc/infrastructure-documentation:$(cat NEXT_VERSION)
