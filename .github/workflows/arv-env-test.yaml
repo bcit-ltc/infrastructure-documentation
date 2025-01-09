@@ -1,19 +1,26 @@
-name: Environment Based Action
+name: Conditional Branch Handling
 
-on:
-  push:
-    branches:
-      - 404-dev
+on: [push]
 
 jobs:
-  deploy:
+  determine-branch:
     runs-on: ubuntu-latest
-
-    env:
-      ENVIRONMENT: ${{ github.event.inputs.environment }}
-
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      - name: Env Name Test
-        if: ${{ env.ENVIRONMENT == 'arv-test' }}
-        run: echo "test successfull"
+      - name: Determine Branch Name
+        id: branch-name
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Set Variable Name
+        id: set-variable
+        run: |
+          if [[ "${{ env.BRANCH_NAME }}" == "main" ]]; then
+            echo "VAR_NAME=latest" >> $GITHUB_ENV
+          elif [[ "${{ env.BRANCH_NAME }}" =~ ^[0-9]+ ]]; then
+            echo "VAR_NAME=${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
+          fi
+
+      - name: Output Variable Name
+        run: echo "Variable Name is ${{ env.VAR_NAME }}"
