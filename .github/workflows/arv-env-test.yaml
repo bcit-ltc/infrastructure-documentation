@@ -18,6 +18,7 @@ jobs:
             echo "env_name=dev" >> $GITHUB_ENV
           else
             echo "env_name=staging" >> $GITHUB_ENV
+          fi
 
       - name: Echo Environment Name
         run: echo "Env Name is $env_name"
