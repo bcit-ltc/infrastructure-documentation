@@ -24,3 +24,13 @@ jobs:
 
       - name: Output Variable Name
         run: echo "Variable Name is ${{ env.VAR_NAME }}"
+      
+      - name: Env test
+        env:
+          env-name: |-
+                        ${{
+                          github.ref_name == 'main' && 'production'
+                        || github.ref_name == '404-dev'    && 'dev'
+                        ||                                'staging'
+                        }}
+        run: echo "Env Name is $env-name"
