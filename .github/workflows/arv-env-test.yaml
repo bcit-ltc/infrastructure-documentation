@@ -27,10 +27,5 @@ jobs:
       
       - name: Env test
         env:
-          env-name: |-
-                        ${{
-                          github.ref_name == 'main' && 'production'
-                        || github.ref_name == '404-dev'    && 'dev'
-                        ||                                'staging'
-                        }}
+          env-name: ${{ github.ref_name == 'main' && 'production' || github.ref_name == '404-dev' && 'dev' || 'staging' }}
         run: echo "Env Name is $env-name"
