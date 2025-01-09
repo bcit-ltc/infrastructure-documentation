@@ -3,7 +3,7 @@ name: Environment Based Action
 on:
   push:
     branches:
-      - 404-test
+      - 404-dev
 
 jobs:
   deploy:
