@@ -23,4 +23,4 @@ jobs:
         run: echo "Env Name is $env_name"
 
       - name: Use Environment Name
-        run: echo "Using environment: $env_name"
+        run: echo "Using environment $env_name"
