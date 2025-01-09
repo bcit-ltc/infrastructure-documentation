@@ -68,9 +68,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GA_TOKEN }}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: user/infrastructure-documentation:latest
+      - name: Build and push the image
+        run: |
+          docker build . --tag ghcr.io/bcit-ltc/infrastructure-documentation:test
+          docker push ghcr.io/bcit-ltc/infrastructure-documentation:test
