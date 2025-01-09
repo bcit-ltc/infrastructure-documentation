@@ -61,6 +61,28 @@ jobs:
     # docker build . --tag ghcr.io/bcit-ltc/infrastructure-documentation:$(cat NEXT_VERSION)
     # docker push ghcr.io/bcit-ltc/infrastructure-documentation:$(cat NEXT_VERSION)
 
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          semantic_version: 16
+          # you can set branches for semantic-release above v16.
+          branches: |
+            [
+              '+([0-9])?(.{+([0-9]),x}).x',
+              'main',
+              'next',
+              'next-major',
+              {
+                name: 'beta',
+                prerelease: true
+              },
+              {
+                name: 'alpha',
+                prerelease: true
+              }
+            ]
+        env:
+          GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
       -
         name: Login to GitHub Container Registry
         uses: docker/login-action@v3
