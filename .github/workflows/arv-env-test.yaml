@@ -1,0 +1,33 @@
+name: Environment Based Action
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to Production
+        if: ${{ env.ENVIRONMENT == 'production' }}
+        run: echo "Deploying to production environment..."
+
+      - name: Deploy to Staging
+        if: ${{ env.ENVIRONMENT == 'staging' }}
+        run: echo "Deploying to staging environment..."
