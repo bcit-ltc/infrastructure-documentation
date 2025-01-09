@@ -9,23 +9,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Determine Branch Name
-        id: branch-name
-        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-
-      - name: Set Variable Name
-        id: set-variable
+      - name: Set Environment Name
+        id: set_env
         run: |
-          if [[ "${{ env.BRANCH_NAME }}" == "main" ]]; then
-            echo "VAR_NAME=latest" >> $GITHUB_ENV
-          elif [[ "${{ env.BRANCH_NAME }}" =~ ^[0-9]+ ]]; then
-            echo "VAR_NAME=${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
-          fi
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "env_name=production" >> $GITHUB_ENV
+          elif [ "${{ github.ref_name }}" == "404-dev" ]; then
+            echo "env_name=dev" >> $GITHUB_ENV
+          else
+            echo "env_name=staging" >> $GITHUB_ENV
 
-      - name: Output Variable Name
-        run: echo "Variable Name is ${{ env.VAR_NAME }}"
-      
-      - name: Env test
-        env:
-          env-name: ${{ github.ref_name == 'main' && 'production' || github.ref_name == '404-dev' && 'dev' || 'staging' }}
-        run: echo "Env Name is $env-name"
+      - name: Echo Environment Name
+        run: echo "Env Name is $env_name"
+
+      - name: Use Environment Name
+        run: echo "Using environment: $env_name"
