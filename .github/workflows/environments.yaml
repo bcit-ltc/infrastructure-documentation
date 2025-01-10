@@ -15,9 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set the version
-        run: echo "9.9.9 >> $VERSION_NUM"
+        id: set-version
+        run: echo "::set-output name=version::9.9.9"
       - name: print the version
-        run: echo "The next version is $VERSION_NUM"
+        run: echo "The next version is ${{ steps.set-version.outputs.version }}"
 
   latest-build:
     name: Build
