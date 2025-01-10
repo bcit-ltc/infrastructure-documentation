@@ -17,18 +17,32 @@ jobs:
         id: set_env
         run: |
           COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          TIMESTAMP=$(date +'%Y-%m-%d-%H%M')
+          CURRENT_VERSION="1.0.0"
+          
           if [ "${{ github.ref_name }}" == "main" ]; then
             if [[ "$COMMIT_MESSAGE" =~ ^(fix\s*:\s*|feat\s*:\s*|major\s*:\s*) ]]; then
-              echo "env_name=stable" >> $GITHUB_ENV
+              NEW_VERSION="${CURRENT_VERSION}-${TIMESTAMP}--${SHORT_SHA}"
+              ENV_NAME="stable"
             else
-              echo "env_name=latest" >> $GITHUB_ENV
+              NEW_VERSION="${CURRENT_VERSION}-${TIMESTAMP}--${SHORT_SHA}"
+              ENV_NAME="latest"
             fi
           elif [[ "${{ github.ref_name }}" =~ ^[0-9]+-.*$ ]]; then
-            echo "env_name=review" >> $GITHUB_ENV
+            NEW_VERSION="${CURRENT_VERSION}-${TIMESTAMP}--${SHORT_SHA}"
+            ENV_NAME="review"
           fi
+          
+          echo "app_version=${NEW_VERSION}" >> $GITHUB_ENV
+          echo "env_name=${ENV_NAME}" >> $GITHUB_ENV
 
-      - name: Echo Environment Name
-        run: echo "Env Name is $env_name"
+      - name: Echo Results 1
+        run: |
+          echo "Env Name is $env_name"
+          echo "App Version is $app_version"
 
-      - name: Use Environment Name
-        run: echo "Using environment $env_name"
+      - name: Echo Results 2
+        run: |
+          echo "Env Name is $env_name"
+          echo "App Version is $app_version"
