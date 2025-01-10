@@ -1,6 +1,10 @@
 name: Conditional Branch Handling
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+      - '[0-9]+-*'
 
 jobs:
   determine-branch:
@@ -12,12 +16,15 @@ jobs:
       - name: Set Environment Name
         id: set_env
         run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
           if [ "${{ github.ref_name }}" == "main" ]; then
-            echo "env_name=production" >> $GITHUB_ENV
-          elif [ "${{ github.ref_name }}" == "404-dev" ]; then
-            echo "env_name=dev" >> $GITHUB_ENV
-          else
-            echo "env_name=staging" >> $GITHUB_ENV
+            if [[ "$COMMIT_MESSAGE" =~ ^(fix\s*:\s*|feat\s*:\s*|major\s*:\s*) ]]; then
+              echo "env_name=stable" >> $GITHUB_ENV
+            else
+              echo "env_name=latest" >> $GITHUB_ENV
+            fi
+          elif [[ "${{ github.ref_name }}" =~ ^[0-9]+-.*$ ]]; then
+            echo "env_name=review" >> $GITHUB_ENV
           fi
 
       - name: Echo Environment Name
