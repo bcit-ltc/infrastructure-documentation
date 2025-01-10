@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set the version
-        run: echo "9.9.9" >> $VERSION_NUM
+        run: echo "9.9.9 >> $VERSION_NUM"
       - name: print the version
         run: echo "The next version is $VERSION_NUM"
 
