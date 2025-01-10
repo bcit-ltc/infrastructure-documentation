@@ -37,7 +37,7 @@ jobs:
         run: echo "The environment is ${{ steps.set-environment.outputs.ENVIRONMENT }}"
 
 
-  build-environment:
+  build-for-environment:
     name: Build
     needs: [gather-info, determine-environment]
     runs-on: ubuntu-latest
