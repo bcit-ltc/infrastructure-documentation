@@ -1,7 +1,11 @@
-name: Conditional Branch Handling
+name: Conditional Branch Handling (Strict Pull Request)
 
 on:
   push:
+    branches:
+      - main
+      - '[0-9]+-*'
+  pull_request:
     branches:
       - main
       - '[0-9]+-*'
@@ -23,14 +27,14 @@ jobs:
           
           if [ "${{ github.ref_name }}" == "main" ]; then
             if [[ "$COMMIT_MESSAGE" =~ ^(fix\s*:\s*|feat\s*:\s*|major\s*:\s*) ]]; then
-              NEW_VERSION="${CURRENT_VERSION}-${TIMESTAMP}--${SHORT_SHA}"
+              NEW_VERSION="${CURRENT_VERSION}--${TIMESTAMP}--${SHORT_SHA}"
               ENV_NAME="stable"
             else
-              NEW_VERSION="${CURRENT_VERSION}-${TIMESTAMP}--${SHORT_SHA}"
+              NEW_VERSION="${CURRENT_VERSION}--${TIMESTAMP}--${SHORT_SHA}"
               ENV_NAME="latest"
             fi
           elif [[ "${{ github.ref_name }}" =~ ^[0-9]+-.*$ ]]; then
-            NEW_VERSION="${CURRENT_VERSION}-${TIMESTAMP}--${SHORT_SHA}"
+            NEW_VERSION="${CURRENT_VERSION}--${TIMESTAMP}--${SHORT_SHA}"
             ENV_NAME="review"
           fi
           
