@@ -14,9 +14,6 @@ jobs:
       version: $VERSION_NUM
     steps:
       - uses: actions/checkout@v4
-      - name: Get the next version
-        id: get_version
-        run: echo "1.0.0" > NEXT_VERSION
       - name: Set the version
         run: echo "9.9.9" >> $VERSION_NUM
       - name: print the version
