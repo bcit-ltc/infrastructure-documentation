@@ -11,14 +11,14 @@ jobs:
     name: Gather info
     runs-on: ubuntu-latest
     outputs:
-      version: $VERSION_NUM
+      version: ${{ steps.set-version.outputs.VERSION_NUM }}
     steps:
       - uses: actions/checkout@v4
       - name: Set the version
         id: set-version
-        run: echo "version=9.9.9" >> $GITHUB_ENV
+        run: echo "VERSION_NUM=$version" >> $GITHUB_OUTPUT
       - name: print the version
-        run: echo "The next version is ${{ steps.set-version.outputs.version }}"
+        run: echo "The version is ${{ steps.set-version.outputs.version }}"
 
   latest-build:
     name: Build
