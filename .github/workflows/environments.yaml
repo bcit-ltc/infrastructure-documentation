@@ -1,0 +1,32 @@
+name: Docker Image CI for GHCR
+
+on:
+  push:
+
+permissions:
+  contents: read # for checkout
+
+jobs:
+  gather-info:
+    name: Gather info
+    runs-on: ubuntu-latest
+    outputs:
+      version: $VERSION_NUM
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get the next version
+        id: get_version
+        run: echo "1.0.0" > NEXT_VERSION
+      - name: Set the version
+        run: echo "9.9.9" >> $VERSION_NUM
+      - name: print the version
+        run: echo "The next version is $VERSION_NUM"
+
+  latest-build:
+    name: Build
+    needs: [gather-info]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print
+        run: echo "The next version is ${{ needs.gather-info.outputs.version }}"
