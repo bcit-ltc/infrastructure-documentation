@@ -1,0 +1,51 @@
+name: Docker Image CI for GHCR
+
+on:
+  push:
+
+permissions:
+  contents: read # for checkout
+
+jobs:
+  gather-info:
+    name: Gather info
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set-version.outputs.VERSION_NUM }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set the version
+        id: set-version
+        run: echo "VERSION_NUM=1.1" >> $GITHUB_OUTPUT
+      - name: print the version
+        run: echo "The version is ${{ steps.set-version.outputs.VERSION_NUM }}"
+  
+
+        ## This is the step that determines the environment
+        ## conditionally chooses latest, stable or review based on branch and commit
+  determine-environment:
+    name: Determine Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set the environment
+        id: set-environment
+        run: echo "ENVIRONMENT=latest" >> $GITHUB_OUTPUT
+      - name: print the environment
+        run: echo "The environment is ${{ steps.set-environment.outputs.ENVIRONMENT }}"
+
+
+  build-for-environment:
+    name: Build
+    needs: [gather-info, determine-environment]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.determine-environment.outputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print build environment
+        run: echo "This is the ${{ needs.determine-environment.outputs.environment }} environment"
+      - name: Print gathered version
+        run: echo "The version is ${{ needs.gather-info.outputs.version }}"
+
