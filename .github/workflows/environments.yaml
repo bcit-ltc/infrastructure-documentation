@@ -54,7 +54,8 @@ jobs:
         run: npx semantic-release 
       - name: Set the version
         id: set-version
-        run: echo $(cat NEXT_VERSION) >> $GITHUB_OUTPUT
+        run: |
+          echo outputContent=$(cat NEXT_VERSION) >> $GITHUB_OUTPUT
       - name: verify the version
         run: |
           if [ -z "${{ steps.set-version.outputs.VERSION_NUM }}" ]; then
