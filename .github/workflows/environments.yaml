@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.set-version.outputs.VERSION_NUM }}
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,12 +35,14 @@ jobs:
             ],
             "plugins": [
               "@semantic-release/commit-analyzer",
+              "@semantic-release/release-notes-generator",
               [
                 "@semantic-release/exec",
                 {
                   "verifyReleaseCmd": "echo ${nextRelease.version} > NEXT_VERSION"
                 }
-              ]
+              ],
+              "@semantic-release/github"
             ]
           }' \
             > .releaserc
