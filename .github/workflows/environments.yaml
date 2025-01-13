@@ -34,7 +34,7 @@ jobs:
               [
                 "@semantic-release/exec",
                 {
-                  "verifyReleaseCmd": "${nextRelease.version} > NEXT_VERSION"
+                  "verifyReleaseCmd": "echo ${nextRelease.version} > NEXT_VERSION"
                 }
               ],
               "@semantic-release/github"
