@@ -7,19 +7,55 @@ permissions:
   contents: read # for checkout
 
 jobs:
-  gather-info:
+  determine-version:
     name: Gather info
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.set-version.outputs.VERSION_NUM }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - run: npm init -y
+      - run: npm install --save-dev semantic-release @semantic-release/exec 
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
+      - name: semantic release config
+        run: |
+          echo "Configuring local \".releaserc\" file..."
+          echo '{
+            "branches": [
+              "main"
+            ],
+            "plugins": [
+              "@semantic-release/commit-analyzer",
+              "@semantic-release/release-notes-generator",
+              [
+                "@semantic-release/exec",
+                {
+                  "verifyReleaseCmd": "${nextRelease.version} > NEXT_VERSION"
+                }
+              ],
+              "@semantic-release/github"
+            ]
+          }' \
+            > .releaserc
+
+          echo "  Done."
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
+        run: npx semantic-release 
       - name: Set the version
         id: set-version
-        run: echo "VERSION_NUM=1.1" >> $GITHUB_OUTPUT
-      - name: print the version
-        run: echo "The version is ${{ steps.set-version.outputs.VERSION_NUM }}"
-  
+        run: echo $(NEXT_VERSION) >> $GITHUB_OUTPUT
+      - name: verify the version
+        run: |
+          if [ -z "${{ steps.set-version.outputs.VERSION_NUM }}" ]; then
+            echo "No version found, cancelling job."
+            exit 1
+          fi
 
         ## This is the step that determines the environment
         ## conditionally chooses latest, stable or review based on branch and commit
@@ -39,7 +75,7 @@ jobs:
 
   build-for-environment:
     name: Build
-    needs: [gather-info, determine-environment]
+    needs: [determine-version, determine-environment]
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
     steps:
@@ -47,5 +83,5 @@ jobs:
       - name: Print build environment
         run: echo "This is the ${{ needs.determine-environment.outputs.environment }} environment"
       - name: Print gathered version
-        run: echo "The version is ${{ needs.gather-info.outputs.version }}"
+        run: echo "The version is ${{ needs.determine-version.outputs.version }}"
 
