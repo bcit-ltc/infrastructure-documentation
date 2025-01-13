@@ -55,7 +55,7 @@ jobs:
       - name: Set the version
         id: set-version
         run: |
-          echo outputContent=$(cat NEXT_VERSION) >> $GITHUB_OUTPUT
+          echo VERSION_NUM=$(cat NEXT_VERSION) >> $GITHUB_OUTPUT
       - name: verify the version
         run: |
           if [ -z "${{ steps.set-version.outputs.VERSION_NUM }}" ]; then
