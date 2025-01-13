@@ -57,6 +57,7 @@ jobs:
             exit 1
           fi
 
+          
         ## This is the step that determines the environment
         ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
