@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   determine-version:
-    name: Gather info
+    name: Determine Version
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.set-version.outputs.VERSION_NUM }}
@@ -61,6 +61,7 @@ jobs:
         ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
     name: Determine Environment
+    needs: [determine-version]
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
