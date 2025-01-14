@@ -113,21 +113,24 @@ jobs:
       - name: Create Tag format based on environment
         run: |
           if [ "${{ needs.determine-environment.outputs.environment }}" == "latest" ]; then
-            echo "latest" > TAG
+            TAG="latest"
           elif [ "${{ needs.determine-environment.outputs.environment }}" == "stable" ]; then
-            echo "stable" > TAG
+            TAG="stable"
           else
-            echo "review-${{ needs.determine-version.outputs.version }}" > TAG
+            TAG="review-${{ needs.determine-version.outputs.version }}"
           fi
+          echo "TAG=$TAG" >> $GITHUB_ENV
       
       # create string with format {semverTag}-{date}--{gitShortSha}.{timeStamp}
       - name: Create Tag
         run: |
-          echo "$(cat TAG)-$(date +'%Y%m%d')--$(git rev-parse --short HEAD).$(date +'%s')" > TAG
-
-      # - name: Login to GitHub Container Registry
-      #   uses: docker/login-action@v3
-      #   with:
+          TAG=$(echo "${TAG}-$(date +'%Y%m%d')--$(git rev-parse --short HEAD).$(date +'%s')")
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo $TAG
+  
+        # - name: Login to GitHub Container Registry
+        #   uses: docker/login-action@v3
+        #   with:
       #       registry: ghcr.io
       #       username: ${{ github.actor }}
       #       password: ${{ secrets.GA_TOKEN }}
