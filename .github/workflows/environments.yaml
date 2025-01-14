@@ -91,7 +91,7 @@ jobs:
         id: get-chosen-version
         run: |
           if [ -z "${{ needs.determine-next-version.outputs.version }}" ]; then
-            echo "CHOSEN_VERSION=$(cat TAG) >> $GITHUB_OUTPUT
+            echo "CHOSEN_VERSION=$(cat TAG) >> $GITHUB_OUTPUT"
           fi
   ## This is the step that determines the environment
   ## conditionally chooses latest, stable or review based on branch and commit
