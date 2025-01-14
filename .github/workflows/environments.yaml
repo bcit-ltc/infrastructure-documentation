@@ -93,7 +93,7 @@ jobs:
   determine-environment:
     name: Determine Environment
     needs: [determine-next-version]
-    if: ${{ needs.determine-version.outputs.version != '' }}
+    if: ${{ needs.determine-next-version.outputs.version != '' }}
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
@@ -119,8 +119,8 @@ jobs:
 
   build-for-environment:
     name: Build
-    needs: [determine-version, determine-environment]
-    if: ${{ needs.determine-version.outputs.version != '' }}
+    needs: [determine-next-version, determine-environment]
+    if: ${{ needs.determine-next-version.outputs.version != '' }}
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
     steps:
