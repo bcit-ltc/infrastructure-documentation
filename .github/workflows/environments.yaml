@@ -98,7 +98,6 @@ jobs:
   determine-environment:
     name: Determine Environment
     needs: [choose-current-version-if-next-empty]
-    if: ${{ needs.determine-next-version.outputs.version != '' || needs.choose-current-version-if-next-empty.outputs.version != '' }}
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
@@ -125,7 +124,7 @@ jobs:
   build-for-environment:
     name: Build
     needs: [choose-current-version-if-next-empty, determine-environment]
-    if: ${{ needs.determine-next-version.outputs.version != '' || needs.choose-current-version-if-next-empty.outputs.version != '' }}
+    if: ${{ needs.determine-environment.outputs.environment != '' }}
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
     steps:
