@@ -94,6 +94,7 @@ jobs:
             echo "CHOSEN_VERSION=$(cat TAG)" >> $GITHUB_OUTPUT
           else
             echo "CHOSEN_VERSION=${{ needs.determine-next-version.outputs.version }}" >> $GITHUB_OUTPUT
+          fi
   ## This is the step that determines the environment
   ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
