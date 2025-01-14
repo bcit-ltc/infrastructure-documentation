@@ -82,17 +82,18 @@ jobs:
         run: git fetch --tags
 
       - name: Get latest tag
-        run: echo "$(git describe --tags `git rev-list --tags --max-count=1`)" >> TAG
+        run: echo "$(git describe --tags `git rev-list --tags --max-count=1`)" > TAG
 
       - name: Print latest tag
         run: echo "The latest tag is $(cat TAG)"
-      
+
       - name: If next version is empty choose latest tag
         id: get-chosen-version
         run: |
           if [ -z "${{ needs.determine-next-version.outputs.version }}" ]; then
-            echo "CHOSEN_VERSION=$(cat TAG) >> $GITHUB_OUTPUT"
-          fi
+            echo "CHOSEN_VERSION=$(cat TAG)" >> $GITHUB_OUTPUT
+          else
+            echo "CHOSEN_VERSION=${{ needs.determine-next-version.outputs.version }}" >> $GITHUB_OUTPUT
   ## This is the step that determines the environment
   ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
