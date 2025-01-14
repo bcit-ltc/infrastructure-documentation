@@ -63,7 +63,7 @@ jobs:
         run: |
           if [ -z "${{ steps.set-version.outputs.VERSION_NUM }}" ]; then
             echo "No version found, cancelling job."
-            exit 1
+            exit 0
           else
             echo "Version found: ${{ steps.set-version.outputs.VERSION_NUM }}"
           fi
