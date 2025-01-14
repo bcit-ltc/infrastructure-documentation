@@ -2,6 +2,9 @@ name: Docker Image CI for GHCR
 
 on:
   push:
+    branches:
+      - main
+      - '[0-9]+-*'
 
 permissions:
   contents: read # for checkout
@@ -31,7 +34,7 @@ jobs:
           echo "Configuring local \".releaserc\" file..."
           echo '{
             "branches": [
-              "main"
+              "main",
             ],
             "plugins": [
               "@semantic-release/commit-analyzer",
@@ -60,15 +63,18 @@ jobs:
         run: |
           if [ -z "${{ steps.set-version.outputs.VERSION_NUM }}" ]; then
             echo "No version found, cancelling job."
-            exit 1
+            exit 0
+          else
+            echo "Version found: ${{ steps.set-version.outputs.VERSION_NUM }}"
           fi
 
           
-        ## This is the step that determines the environment
-        ## conditionally chooses latest, stable or review based on branch and commit
+  ## This is the step that determines the environment
+  ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
     name: Determine Environment
     needs: [determine-version]
+    if: ${{ needs.determine-version.outputs.version != '' }}
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
@@ -76,14 +82,26 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set the environment
         id: set-environment
-        run: echo "ENVIRONMENT=latest" >> $GITHUB_OUTPUT
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            if [[ "$COMMIT_MESSAGE" =~ ^(fix\s*:\s*|feat\s*:\s*|major\s*:\s*) ]]; then
+              ENV_NAME="stable"
+            else
+              ENV_NAME="latest"
+            fi
+          elif [[ "${{ github.ref_name }}" =~ ^[0-9]+-.*$ ]]; then
+            ENV_NAME="review"
+          fi
+          
+          echo ENVIRONMENT=$ENV_NAME >> $GITHUB_OUTPUT
+
       - name: print the environment
         run: echo "The environment is ${{ steps.set-environment.outputs.ENVIRONMENT }}"
-
 
   build-for-environment:
     name: Build
     needs: [determine-version, determine-environment]
+    if: ${{ needs.determine-version.outputs.version != '' }}
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
     steps:
@@ -92,4 +110,29 @@ jobs:
         run: echo "This is the ${{ needs.determine-environment.outputs.environment }} environment"
       - name: Print gathered version
         run: echo "The version is ${{ needs.determine-version.outputs.version }}"
+      - name: Create Tag format based on environment
+        run: |
+          if [ "${{ needs.determine-environment.outputs.environment }}" == "latest" ]; then
+            echo "latest" > TAG
+          elif [ "${{ needs.determine-environment.outputs.environment }}" == "stable" ]; then
+            echo "stable" > TAG
+          else
+            echo "review-${{ needs.determine-version.outputs.version }}" > TAG
+          fi
+      
+      # create string with format {semverTag}-{date}--{gitShortSha}.{timeStamp}
+      - name: Create Tag
+        run: |
+          echo "$(cat TAG)-$(date +'%Y%m%d')--$(git rev-parse --short HEAD).$(date +'%s')" > TAG
 
+
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v3
+      #   with:
+      #       registry: ghcr.io
+      #       username: ${{ github.actor }}
+      #       password: ${{ secrets.GA_TOKEN }}
+      # - name: Build and push the image
+      #   run: |
+      #       docker build . --tag ghcr.io/bcit-ltc/explore:$(cat NEXT_VERSION)
+      #       docker push ghcr.io/bcit-ltc/explore:$(cat NEXT_VERSION)
