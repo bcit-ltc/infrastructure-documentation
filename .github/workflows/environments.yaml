@@ -92,7 +92,7 @@ jobs:
   ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
     name: Determine Environment
-    needs: [determine-version]
+    needs: [determine-next-version]
     if: ${{ needs.determine-version.outputs.version != '' }}
     runs-on: ubuntu-latest
     outputs:
