@@ -1,10 +1,6 @@
 name: Docker Image CI for GHCR
 
 on:
-  push:
-    branches:
-      - main
-      - '[0-9]+-*'
   pull_request:
     branches:
       - main
@@ -17,6 +13,7 @@ jobs:
   determine-version:
     name: Determine Version
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
     outputs:
       version: ${{ steps.set-version.outputs.VERSION_NUM }}
     permissions:
