@@ -13,7 +13,6 @@ jobs:
   determine-version:
     name: Determine Version
     runs-on: ubuntu-latest
-    # if: github.event_name == 'pull_request' && github.base_ref == 'main'
     outputs:
       version: ${{ steps.set-version.outputs.VERSION_NUM }}
     permissions:
@@ -36,7 +35,6 @@ jobs:
           echo '{
             "branches": [
               "main",
-              {"name": "[0-9]+-*", "prerelease": true}
             ],
             "plugins": [
               "@semantic-release/commit-analyzer",
@@ -76,6 +74,7 @@ jobs:
   determine-environment:
     name: Determine Environment
     needs: [determine-version]
+    if: ${{ needs.determine-version.outputs.version != '' }}
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
@@ -102,6 +101,7 @@ jobs:
   build-for-environment:
     name: Build
     needs: [determine-version, determine-environment]
+    if: ${{ needs.determine-version.outputs.version != '' }}
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
     steps:
