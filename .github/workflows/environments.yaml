@@ -38,7 +38,8 @@ jobs:
           echo "Configuring local \".releaserc\" file..."
           echo '{
             "branches": [
-              "main"
+              "main",
+              {"name": "[0-9]+-*", "prerelease": true}
             ],
             "plugins": [
               "@semantic-release/commit-analyzer",
