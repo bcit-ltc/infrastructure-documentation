@@ -18,17 +18,16 @@ jobs:
     #   version: ${{ steps.set-version.outputs.VERSION_NUM }}
     steps:
       - uses: actions/checkout@v4
-      - name: print previous version
-        run: |
-          - name: Fetch all tags
-            run: git fetch --tags
 
-          - name: Get latest tag
-            id: get-latest-tag
-            run: echo "LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
+      - name: Fetch all tags
+        run: git fetch --tags
 
-          - name: Print latest tag
-            run: echo "The latest tag is ${{ steps.get-latest-tag.outputs.LATEST_TAG }}"
+      - name: Get latest tag
+        id: get-latest-tag
+        run: echo "LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
+
+      - name: Print latest tag
+        run: echo "The latest tag is ${{ steps.get-latest-tag.outputs.LATEST_TAG }}"
   determine-next-version:
     name: Determine Next Version
     runs-on: ubuntu-latest
