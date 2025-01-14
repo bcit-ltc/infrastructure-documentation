@@ -2,6 +2,13 @@ name: Docker Image CI for GHCR
 
 on:
   push:
+    branches:
+      - main
+      - '[0-9]+-*'
+  pull_request:
+    branches:
+      - main
+      - '[0-9]+-*'
 
 permissions:
   contents: read # for checkout
@@ -61,11 +68,13 @@ jobs:
           if [ -z "${{ steps.set-version.outputs.VERSION_NUM }}" ]; then
             echo "No version found, cancelling job."
             exit 1
+          else
+            echo "Version found: ${{ steps.set-version.outputs.VERSION_NUM }}"
           fi
 
           
-        ## This is the step that determines the environment
-        ## conditionally chooses latest, stable or review based on branch and commit
+  ## This is the step that determines the environment
+  ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
     name: Determine Environment
     needs: [determine-version]
