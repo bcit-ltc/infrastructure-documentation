@@ -155,11 +155,12 @@ jobs:
           
       # set APP_VERSION
       - name: Set APP_VERSION
+        if: ${{ needs.determine-environment.outputs.environment == 'stable' }}
         env:
             GH_TOKEN: ${{ secrets.GA_TOKEN }}
         run: |
-          gh secret set APP_VERSION -b "${{ needs.choose-current-version-if-next-empty.outputs.version }}"
-          echo "APP_VERSION=${{ needs.choose-current-version-if-next-empty.outputs.version }}"
+          gh secret set APP_VERSION -b "${TAG}"
+          echo "APP_VERSION=${TAG}"
           
 
       - name: Login to GitHub Container Registry
