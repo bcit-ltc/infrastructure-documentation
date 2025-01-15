@@ -107,11 +107,14 @@ jobs:
       environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
     steps:
       - uses: actions/checkout@v4
+      - name: Get commit message
+        id: get-commit-message
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
       - name: Set the environment
         id: set-environment
         run: |
           if [ "${{ github.ref_name }}" == "main" ]; then
-            if [[ "$COMMIT_MESSAGE" =~ ^(fix\s*:\s*|feat\s*:\s*|major\s*:\s*) ]]; then
+            if [[ "${{ env.COMMIT_MESSAGE }}" =~ ^(fix\s*:\s*|feat\s*:\s*|major\s*:\s*) ]]; then
               ENV_NAME="stable"
             else
               ENV_NAME="latest"
@@ -119,7 +122,6 @@ jobs:
           elif [[ "${{ github.ref_name }}" =~ ^[0-9]+-.*$ ]]; then
             ENV_NAME="review"
           fi
-          
           echo ENVIRONMENT=$ENV_NAME >> $GITHUB_OUTPUT
 
       - name: print the environment
