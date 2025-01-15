@@ -158,6 +158,7 @@ jobs:
           echo "${{ secrets.GH_TOKEN }}" > ~/.gh_token
           gh auth login --with-token < ~/.gh_token
           rm ~/.gh_token
+          unset GH_TOKEN
         env:
           GH_TOKEN: ${{ secrets.GA_TOKEN }}
 
