@@ -151,15 +151,25 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GA_TOKEN }}
+
       - name: Build and push the image
         run: |
-            docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
-            docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
+          docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
+          docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
+          if [ "${{ needs.determine-environment.outputs.environment }}" == "stable" ]; then
+            docker tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG ghcr.io/bcit-ltc/${{ github.event.repository.name }}:stable
+            docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:stable
+            docker tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG ghcr.io/bcit-ltc/${{ github.event.repository.name }}:latest
+            docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:latest
+          elif [ "${{ needs.determine-environment.outputs.environment }}" == "latest" ]; then
+            docker tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG ghcr.io/bcit-ltc/${{ github.event.repository.name }}:latest
+            docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:latest
+          fi
 
       - name: Set 'stable' APP_VERSION
         if: ${{ needs.determine-environment.outputs.environment == 'stable' }}
         env:
             GH_TOKEN: ${{ secrets.GA_TOKEN }}
         run: |
-          gh secret set APP_VERSION -b "${TAG}"
-          echo "APP_VERSION=${TAG}"
+          gh secret set APP_VERSION -b "${{ needs.choose-current-version-if-next-empty.outputs.version }}"
+          echo "APP_VERSION=${{ needs.choose-current-version-if-next-empty.outputs.version }}"
