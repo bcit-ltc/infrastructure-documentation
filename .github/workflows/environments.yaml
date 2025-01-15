@@ -158,8 +158,8 @@ jobs:
         env:
             GH_TOKEN: ${{ secrets.GA_TOKEN }}
         run: |
-          gh secret set APP_VERSION -b "${{ steps.set-next-version.outputs.VERSION_NUM }}"
-          echo "APP_VERSION=${{ secrets.APP_VERSION }}"
+          gh secret set APP_VERSION -b "${{ needs.choose-current-version-if-next-empty.outputs.version }}"
+          echo "APP_VERSION=${{ needs.choose-current-version-if-next-empty.outputs.version }}"
           
 
       - name: Login to GitHub Container Registry
