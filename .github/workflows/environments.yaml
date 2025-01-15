@@ -143,7 +143,7 @@ jobs:
       # create string with format {semverTag}-{date}--{gitShortSha}.{timeStamp}
       - name: Create Tag
         run: |
-          TAG=$(echo "${TAG}-$(date +'%Y-%m-%d')--$(git rev-parse --short HEAD).$(date +'%s')")
+          TAG=$(echo "${needs.choose-current-version-if-next-empty.outputs.version}-$(date +'%Y-%m-%d')--$(git rev-parse --short HEAD).$(date +'%s')")
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo $TAG
 
