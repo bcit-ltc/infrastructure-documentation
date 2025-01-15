@@ -96,8 +96,6 @@ jobs:
           else
             echo "CHOSEN_VERSION=${{ needs.determine-next-version.outputs.version }}" >> $GITHUB_OUTPUT
           fi
-      - name: Save chosen version to TAG
-        run: echo "TAG=${{ steps.get-chosen-version.outputs.CHOSEN_VERSION }}" >> $GITHUB_ENV
           
   ## This is the step that determines the environment
   ## conditionally chooses latest, stable or review based on branch and commit
@@ -143,7 +141,7 @@ jobs:
       # create string with format {semverTag}-{date}--{gitShortSha}.{timeStamp}
       - name: Create Tag
         run: |
-          TAG=$(echo "${needs.choose-current-version-if-next-empty.outputs.version}-$(date +'%Y-%m-%d')--$(git rev-parse --short HEAD).$(date +'%s')")
+          TAG=$(echo "${{ needs.choose-current-version-if-next-empty.outputs.version }}-$(date +'%Y-%m-%d')--$(git rev-parse --short HEAD).$(date +'%s')")
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo $TAG
 
