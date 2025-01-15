@@ -135,33 +135,13 @@ jobs:
         run: echo "This is the ${{ needs.determine-environment.outputs.environment }} environment"
       - name: Print gathered version
         run: echo "The version is ${{ needs.choose-current-version-if-next-empty.outputs.version }}"
-      - name: Create Tag format based on environment
-        run: |
-          if [ "${{ needs.determine-environment.outputs.environment }}" == "latest" ]; then
-            TAG="latest"
-          elif [ "${{ needs.determine-environment.outputs.environment }}" == "stable" ]; then
-            TAG="stable"
-          else
-            TAG="review-${{ needs.determine-version.outputs.version }}"
-          fi
-          echo "TAG=$TAG" >> $GITHUB_ENV
       
       # create string with format {semverTag}-{date}--{gitShortSha}.{timeStamp}
       - name: Create Tag
         run: |
-          TAG=$(echo "${TAG}-$(date +'%Y%m%d')--$(git rev-parse --short HEAD).$(date +'%s')")
+          TAG=$(echo "${TAG}-$(date +'%Y-%m-%d')--$(git rev-parse --short HEAD).$(date +'%s')")
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo $TAG
-          
-      # set APP_VERSION
-      - name: Set APP_VERSION
-        if: ${{ needs.determine-environment.outputs.environment == 'stable' }}
-        env:
-            GH_TOKEN: ${{ secrets.GA_TOKEN }}
-        run: |
-          gh secret set APP_VERSION -b "${TAG}"
-          echo "APP_VERSION=${TAG}"
-          
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -173,3 +153,11 @@ jobs:
         run: |
             docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
             docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
+
+      - name: Set 'stable' APP_VERSION
+        if: ${{ needs.determine-environment.outputs.environment == 'stable' }}
+        env:
+            GH_TOKEN: ${{ secrets.GA_TOKEN }}
+        run: |
+          gh secret set APP_VERSION -b "${TAG}"
+          echo "APP_VERSION=${TAG}"
