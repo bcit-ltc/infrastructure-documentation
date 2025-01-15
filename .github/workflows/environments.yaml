@@ -10,11 +10,12 @@ permissions:
   contents: read # for checkout
 
 jobs:
-  determine-version:
-    name: Determine Version
+        
+  determine-next-version:
+    name: Determine Next Version
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.set-version.outputs.VERSION_NUM }}
+      version: ${{ steps.set-next-version.outputs.VERSION_NUM }}
     permissions:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
@@ -56,25 +57,49 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
         run: npx semantic-release 
       - name: Set the version
-        id: set-version
+        id: set-next-version
         run: |
           echo VERSION_NUM=$(cat NEXT_VERSION) >> $GITHUB_OUTPUT
       - name: verify the version
         run: |
-          if [ -z "${{ steps.set-version.outputs.VERSION_NUM }}" ]; then
+          if [ -z "${{ steps.set-next-version.outputs.VERSION_NUM }}" ]; then
             echo "No version found, cancelling job."
             exit 0
           else
-            echo "Version found: ${{ steps.set-version.outputs.VERSION_NUM }}"
+            echo "Version found: ${{ steps.set-next-version.outputs.VERSION_NUM }}"     
           fi
 
-          
+  choose-current-version-if-next-empty:
+    name: Choose Current Version if Next Empty
+    needs: [determine-next-version]
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-chosen-version.outputs.CHOSEN_VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Get latest tag
+        run: echo "$(git describe --tags `git rev-list --tags --max-count=1`)" > TAG
+
+      - name: Print latest tag
+        run: echo "The latest tag is $(cat TAG)"
+
+      - name: If next version is empty choose latest tag
+        id: get-chosen-version
+        run: |
+          if [ -z "${{ needs.determine-next-version.outputs.version }}" ]; then
+            echo "CHOSEN_VERSION=$(cat TAG)" >> $GITHUB_OUTPUT
+          else
+            echo "CHOSEN_VERSION=${{ needs.determine-next-version.outputs.version }}" >> $GITHUB_OUTPUT
+          fi
   ## This is the step that determines the environment
   ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
     name: Determine Environment
-    needs: [determine-version]
-    if: ${{ needs.determine-version.outputs.version != '' }}
+    needs: [choose-current-version-if-next-empty]
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
@@ -100,8 +125,8 @@ jobs:
 
   build-for-environment:
     name: Build
-    needs: [determine-version, determine-environment]
-    if: ${{ needs.determine-version.outputs.version != '' }}
+    needs: [choose-current-version-if-next-empty, determine-environment]
+    if: ${{ needs.determine-environment.outputs.environment != '' }}
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
     steps:
@@ -109,7 +134,7 @@ jobs:
       - name: Print build environment
         run: echo "This is the ${{ needs.determine-environment.outputs.environment }} environment"
       - name: Print gathered version
-        run: echo "The version is ${{ needs.determine-version.outputs.version }}"
+        run: echo "The version is ${{ needs.choose-current-version-if-next-empty.outputs.version }}"
       - name: Create Tag format based on environment
         run: |
           if [ "${{ needs.determine-environment.outputs.environment }}" == "latest" ]; then
@@ -127,7 +152,17 @@ jobs:
           TAG=$(echo "${TAG}-$(date +'%Y%m%d')--$(git rev-parse --short HEAD).$(date +'%s')")
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo $TAG
-  
+          
+      # set APP_VERSION
+      - name: Set APP_VERSION
+        if: ${{ needs.determine-environment.outputs.environment == 'stable' }}
+        env:
+            GH_TOKEN: ${{ secrets.GA_TOKEN }}
+        run: |
+          gh secret set APP_VERSION -b "${TAG}"
+          echo "APP_VERSION=${TAG}"
+          
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
