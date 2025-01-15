@@ -152,7 +152,22 @@ jobs:
           TAG=$(echo "${TAG}-$(date +'%Y%m%d')--$(git rev-parse --short HEAD).$(date +'%s')")
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo $TAG
-  
+          
+      - name: Set up GitHub CLI
+        run: |
+          echo "${{ secrets.GH_TOKEN }}" > ~/.gh_token
+          gh auth login --with-token < ~/.gh_token
+          rm ~/.gh_token
+        env:
+          GH_TOKEN: ${{ secrets.GA_TOKEN }}
+
+      # set APP_VERSION
+      - name: Set APP_VERSION
+        run: |
+          gh secret set APP_VERSION -b "${{ steps.set-next-version.outputs.VERSION_NUM }}"
+          echo "APP_VERSION=${{ secrets.APP_VERSION }}"
+          
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
