@@ -128,13 +128,13 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo $TAG
   
-        # - name: Login to GitHub Container Registry
-        #   uses: docker/login-action@v3
-        #   with:
-      #       registry: ghcr.io
-      #       username: ${{ github.actor }}
-      #       password: ${{ secrets.GA_TOKEN }}
-      # - name: Build and push the image
-      #   run: |
-      #       docker build . --tag ghcr.io/bcit-ltc/explore:$(cat NEXT_VERSION)
-      #       docker push ghcr.io/bcit-ltc/explore:$(cat NEXT_VERSION)
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GA_TOKEN }}
+      - name: Build and push the image
+        run: |
+            docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
+            docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
