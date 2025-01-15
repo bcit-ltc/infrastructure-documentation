@@ -95,6 +95,9 @@ jobs:
           else
             echo "CHOSEN_VERSION=${{ needs.determine-next-version.outputs.version }}" >> $GITHUB_OUTPUT
           fi
+      - name: Save chosen version to TAG
+        run: echo "TAG=${{ steps.get-chosen-version.outputs.CHOSEN_VERSION }}" >> $GITHUB_ENV
+          
   ## This is the step that determines the environment
   ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
