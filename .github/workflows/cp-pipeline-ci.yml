@@ -11,7 +11,7 @@ permissions:
 
 jobs:
         
-  determine-next-version:
+  semantic-release:
     name: Determine Next Version
     runs-on: ubuntu-latest
     outputs:
@@ -69,9 +69,9 @@ jobs:
             echo "Version found: ${{ steps.set-next-version.outputs.VERSION_NUM }}"     
           fi
 
-  choose-current-version-if-next-empty:
+  previous-version:
     name: Choose Current Version if Next Empty
-    needs: [determine-next-version]
+    needs: [semantic-release]
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-chosen-version.outputs.CHOSEN_VERSION }}
@@ -90,17 +90,17 @@ jobs:
       - name: If next version is empty choose latest tag
         id: get-chosen-version
         run: |
-          if [ -z "${{ needs.determine-next-version.outputs.version }}" ]; then
+          if [ -z "${{ needs.semantic-release.outputs.version }}" ]; then
             echo "CHOSEN_VERSION=$(cat TAG)" >> $GITHUB_OUTPUT
           else
-            echo "CHOSEN_VERSION=${{ needs.determine-next-version.outputs.version }}" >> $GITHUB_OUTPUT
+            echo "CHOSEN_VERSION=${{ needs.semantic-release.outputs.version }}" >> $GITHUB_OUTPUT
           fi
           
   ## This is the step that determines the environment
   ## conditionally chooses latest, stable or review based on branch and commit
   determine-environment:
     name: Determine Environment
-    needs: [choose-current-version-if-next-empty]
+    needs: [semantic-release, previous-version]
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.set-environment.outputs.ENVIRONMENT }}
@@ -128,7 +128,7 @@ jobs:
 
   build-for-environment:
     name: Build
-    needs: [choose-current-version-if-next-empty, determine-environment]
+    needs: [previous-version, determine-environment]
     if: ${{ needs.determine-environment.outputs.environment != '' }}
     runs-on: ubuntu-latest
     environment: ${{ needs.determine-environment.outputs.environment }}
@@ -137,12 +137,12 @@ jobs:
       - name: Print build environment
         run: echo "This is the ${{ needs.determine-environment.outputs.environment }} environment"
       - name: Print gathered version
-        run: echo "The version is ${{ needs.choose-current-version-if-next-empty.outputs.version }}"
+        run: echo "The version is ${{ needs.previous-version.outputs.version }}"
       
       # create string with format {semverTag}-{date}--{gitShortSha}.{timeStamp}
       - name: Create Tag
         run: |
-          TAG=$(echo "${{ needs.choose-current-version-if-next-empty.outputs.version }}-$(date +'%Y-%m-%d')--$(git rev-parse --short HEAD).$(date +'%s')")
+          TAG=$(echo "${{ needs.previous-version.outputs.version }}-$(date +'%Y-%m-%d')--$(git rev-parse --short HEAD).$(date +'%s')")
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo $TAG
 
@@ -162,8 +162,8 @@ jobs:
           elif [ "${{ needs.determine-environment.outputs.environment }}" == "stable" ]; then
             docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
             docker tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG ghcr.io/bcit-ltc/${{ github.event.repository.name }}:latest
-            docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:${{ needs.choose-current-version-if-next-empty.outputs.version }}
-            docker tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:${{ needs.choose-current-version-if-next-empty.outputs.version }} ghcr.io/bcit-ltc/${{ github.event.repository.name }}:stable
+            docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:${{ needs.previous-version.outputs.version }}
+            docker tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:${{ needs.previous-version.outputs.version }} ghcr.io/bcit-ltc/${{ github.event.repository.name }}:stable
           elif [ "${{ needs.determine-environment.outputs.environment }}" == "review" ]; then
             # the tag should be 'review--{branchName}--{commitSha}', not $TAG
             docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:review--${{ github.ref_name }}--$(git rev-parse --short HEAD)
@@ -177,7 +177,7 @@ jobs:
           elif [ "${{ needs.determine-environment.outputs.environment }}" == "stable" ]; then
             docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:$TAG
             docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:latest
-            docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:${{ needs.choose-current-version-if-next-empty.outputs.version }}
+            docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:${{ needs.previous-version.outputs.version }}
             docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:stable
           elif [ "${{ needs.determine-environment.outputs.environment }}" == "review" ]; then
             docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:review--${{ github.ref_name }}--$(git rev-parse --short HEAD)
@@ -188,5 +188,5 @@ jobs:
         env:
             GH_TOKEN: ${{ secrets.GA_TOKEN }}
         run: |
-          gh secret set APP_VERSION -b "${{ needs.choose-current-version-if-next-empty.outputs.version }}"
-          echo "APP_VERSION=${{ needs.choose-current-version-if-next-empty.outputs.version }}"
+          gh secret set APP_VERSION -b "${{ needs.previous-version.outputs.version }}"
+          echo "APP_VERSION=${{ needs.previous-version.outputs.version }}"
