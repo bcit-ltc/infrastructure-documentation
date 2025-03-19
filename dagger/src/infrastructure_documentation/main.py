@@ -19,8 +19,8 @@ class InfrastructureDocumentation:
         """Build the application container"""
         build = (
             self.build_env(source)
-            .with_exec(["mkdocs", "build", "--site-dir", "/test"])
-            .directory("./docs")
+            .with_exec(["mkdocs", "build", "--site-dir", "./output"])
+            .directory("./output")
         )
         return (
             dag.container()
