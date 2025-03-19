@@ -34,7 +34,7 @@ class InfrastructureDocumentation:
         """Return the result of running unit tests"""
         return await (
             self.build_env(source)
-            # .with_exec(["npm", "run", "test:unit", "run"])
+            .with_exec(["mkdocs", "get-deps"])
             .stdout()
         )
 
