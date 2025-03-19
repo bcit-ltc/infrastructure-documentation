@@ -1,3 +1,5 @@
+import random
+
 import dagger
 from dagger import dag, function, object_type
 
@@ -5,18 +7,46 @@ from dagger import dag, function, object_type
 @object_type
 class InfrastructureDocumentation:
     @function
-    def container_echo(self, string_arg: str) -> dagger.Container:
-        """Returns a container that echoes whatever string argument is provided"""
-        return dag.container().from_("alpine:latest").with_exec(["echo", string_arg])
+    async def publish(self, source: dagger.Directory) -> str:
+        """Publish the application container after building and testing it on-the-fly"""
+        await self.test(source)
+        return await self.build(source).publish(
+            f"ttl.sh/infrastructure-documentation-{random.randrange(10**8)}"
+        )
 
     @function
-    async def grep_dir(self, directory_arg: dagger.Directory, pattern: str) -> str:
-        """Returns lines that match a pattern in the files of the provided Directory"""
-        return await (
+    def build(self, source: dagger.Directory) -> dagger.Container:
+        """Build the application container"""
+        build = (
+            self.build_env(source)
+            .with_exec(["mkdocs", "build", "--site-dir", "/test"])
+            .directory("./docs")
+        )
+        return (
             dag.container()
-            .from_("alpine:latest")
-            .with_mounted_directory("/mnt", directory_arg)
-            .with_workdir("/mnt")
-            .with_exec(["grep", "-R", pattern, "."])
+            .from_("nginx:1.25-alpine")
+            .with_directory("/usr/share/nginx/html", build)
+            .with_exposed_port(80)
+        )
+    
+    @function
+    async def test(self, source: dagger.Directory) -> str:
+        """Return the result of running unit tests"""
+        return await (
+            self.build_env(source)
+            # .with_exec(["npm", "run", "test:unit", "run"])
             .stdout()
+        )
+
+    @function
+    def build_env(self, source: dagger.Directory) -> dagger.Container:
+        """Build a ready-to-use development environment"""
+        node_cache = dag.cache_volume("node")
+        return (
+            dag.container()
+            .from_("squidfunk/mkdocs-material")
+            .with_directory("/docs", source)
+            # .with_mounted_cache("/root/.npm", node_cache)
+            .with_workdir("/docs")
+            .with_exec(["pip", "install", "Pygments", "pymdown-extensions", "mkdocs-git-revision-date-localized-plugin"])
         )
