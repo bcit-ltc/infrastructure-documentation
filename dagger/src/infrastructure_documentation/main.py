@@ -112,7 +112,63 @@ class InfrastructureDocumentation:
         )
 
     @function
-    def install_dep(self, source: dagger.Directory) -> dagger.Container:
+    async def runsemver(
+        self,
+        src: Annotated[
+            dagger.Directory,
+            DefaultPath("./")
+        ],
+    ) -> dagger.Container:
+        """Run Semver """
+
+        build = (
+            self.buildsemver(src)
+            .directory(src)
+            .with_file("/app/.releaserc", dag.file().with_content("""
+            {
+                "branches": [
+                    "main"
+                ],
+                "tagFormat": "${version}",
+                "plugins": [
+                    "@semantic-release/commit-analyzer",
+                    "@semantic-release/release-notes-generator",
+                    [
+                        "@semantic-release/exec",
+                        {
+                            "verifyReleaseCmd": "echo ${nextRelease.version} > NEXT_VERSION"
+                        }
+                    ],
+                    "@semantic-release/github"
+                ]
+            }
+            """))
+            .with_exec(["npx", "semantic-release"])
+        )
+        return await build
+
+    @function
+    async def buildsemver(
+        self,
+        src: Annotated[
+            dagger.Directory,
+            DefaultPath("./")
+        ],
+    ) -> dagger.Container:
+        """Build a semver container"""
+        node_cache = dag.cache_volume("node")
+        return (
+            dag.container()
+            .from_("node:alpine3.21")
+            .with_directory("/app", src)
+            .with_workdir("/app")
+            .with_exec(["npm", "init", "-y"])
+            .with_exec(["npm", "install", "semantic-release", "@semantic-release/exec"])
+            .with_exec(["npm", "audit", "signatures"])
+            )
+    
+    @function
+    def installdependencies(self, source: dagger.Directory) -> dagger.Container:
         """Build a ready-to-use development environment"""
         node_cache = dag.cache_volume("node")
         return (
