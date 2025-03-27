@@ -54,51 +54,22 @@ class InfrastructureDocumentation:
     #     )
 
 
-    # @function
-    # async def runsemver(
-    #     self,
-    #     src: Annotated[
-    #         dagger.Directory,
-    #         DefaultPath("./")
-    #     ],
-    #     releaserc: Annotated[
-    #         dagger.File,
-    #         DefaultPath("./.releaserc")
-    #     ],
-    # ) -> dagger.Container:
-    #     """Run Semver """
-    #     build = await (
-    #         self.buildsemver(src)
-    #     )
-    #     return await(
-    #         build
-    #         .with_file("/app/.releaserc", releaserc)
-    #         .with_exec(["npx", "semantic-release"])
-    #     )
+    @function
+    async def semanticrelease(self, source: Annotated[dagger.Directory, DefaultPath("./")]) -> str:
+        """Run the semantic-release tool"""
+        
+        # Use the semantic-release container and copy files from dependencies_container
+        semantic_release_container = await (
+            dag.container()
+            .from_("ghcr.io/bcit-ltc/semantic-release:latest")  # Use prebuilt semantic-release container
+            # Run semantic-release
+            .working_dir("/app")
+            .directory("/app", "./")
+            .with_exec(["ls", "-la"])
+            .with_exec(["npx", "semantic-release"])
+        )
+        return await semantic_release_container.stdout()
 
-    # @function
-    # async def buildsemver(
-    #     self,
-    #     src: Annotated[
-    #         dagger.Directory,
-    #         DefaultPath("./")
-    #     ],
-    # ) -> dagger.Container:
-    #     """Build a semver container"""
-    #     node_cache = dag.cache_volume("node")
-    #     return await(
-    #         dag.container()
-    #         .from_("node:alpine3.21")
-    #         .with_directory("/app", src)
-    #         .with_workdir("/app")
-    #         .with_exec(["apk", "add", "--no-cache", "git", "openssh"])
-    #         .with_exec(["npm", "init", "-y"])
-    #         .with_exec(["npm", "install", "--save-dev", "semantic-release", "@semantic-release/exec"])
-    #         .with_exec(["npm", "audit", "signatures"])
-    #         .with_exec(["ls", "-la"])
-    #         # .with_exec(["npx", "semantic-release"])
-    #         )
-    
     # perform unit testing
     @function
     def unittesting(self,     
