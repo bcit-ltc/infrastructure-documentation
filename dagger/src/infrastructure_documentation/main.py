@@ -63,7 +63,7 @@ class InfrastructureDocumentation:
             dag.container()
             .from_("ghcr.io/bcit-ltc/semantic-release:latest")  # Use prebuilt semantic-release container
             # Run semantic-release
-            .working_dir("/app")
+            .with_workdir("/app")
             .directory("/app", "./")
             .with_exec(["ls", "-la"])
             .with_exec(["npx", "semantic-release"])
