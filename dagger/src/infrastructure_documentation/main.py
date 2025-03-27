@@ -55,11 +55,11 @@ class InfrastructureDocumentation:
 
 
     @function
-    async def semanticrelease(self, source: Annotated[dagger.Directory, DefaultPath("./")]) -> str:
+    def semanticrelease(self, source: Annotated[dagger.Directory, DefaultPath("./")]) -> str:
         """Run the semantic-release tool"""
         
         # Use the semantic-release container and copy files from dependencies_container
-        semantic_release_container = await (
+        semantic_release_container = (
             dag.container()
             .from_("ghcr.io/bcit-ltc/semantic-release:latest")  # Use prebuilt semantic-release container
             # Run semantic-release
@@ -68,7 +68,7 @@ class InfrastructureDocumentation:
             .with_exec(["ls", "-la"])
             .with_exec(["npx", "semantic-release"])
         )
-        return await semantic_release_container.stdout()
+        return semantic_release_container.stdout()
 
     # perform unit testing
     @function
