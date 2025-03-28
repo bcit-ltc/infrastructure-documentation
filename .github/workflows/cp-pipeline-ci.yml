@@ -17,6 +17,7 @@ jobs:
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm provenance
+      packages: write # to be able to publish a GitHub package
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,12 +26,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GA_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Dagger
         uses: dagger/dagger-for-github@8.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-          call: semanticrelease --GITHUB_TOKEN=${{ secrets.GA_TOKEN }}
+          call: semanticrelease --GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           # args: semanticrelease
