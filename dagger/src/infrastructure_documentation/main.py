@@ -79,6 +79,7 @@ class InfrastructureDocumentation:
             .with_exec(["cp", "/usr/src/app/.releaserc", "./releaserc"])
             .with_exec(["ls", "-la"])
             .with_exec(["npx", "semantic-release"])
+            .with_exec(["echo", "$(cat NEXT_VERSION)"])
             .stdout()
         )
 
