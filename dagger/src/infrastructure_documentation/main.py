@@ -75,7 +75,7 @@ class InfrastructureDocumentation:
             .from_("ghcr.io/bcit-ltc/semantic-release:latest")  # Use prebuilt semantic-release container
             # Run semantic-release
             .with_workdir("/app")
-            .directory(source)
+            .directory("./")
             .with_exec(["ls", "-la"])
             .with_exec(["npx", "semantic-release"])
             .stdout()
