@@ -55,7 +55,10 @@ class InfrastructureDocumentation:
 
 
     @function
-    async def semanticrelease(self, source: Annotated[dagger.Directory, DefaultPath("./")], GITHUB_TOKEN: str) -> str:
+    async def semanticrelease(self, 
+                              source: Annotated[dagger.Directory, DefaultPath("./")], 
+                              token: Annotated[dagger.Secret | None, Doc("GitHub Action token")]
+                              ) -> str:
         """Run the semantic-release tool"""
         
         # # Use the semantic-release container and copy files from dependencies_container
@@ -75,11 +78,11 @@ class InfrastructureDocumentation:
             .from_("ghcr.io/bcit-ltc/semantic-release:latest")  # Use prebuilt semantic-release container
             .with_workdir("/app")
             .with_directory("/app", source)
-            .with_env_variable("GITHUB_TOKEN", GITHUB_TOKEN)
+            .with_secret_variable("GITHUB_TOKEN", token)
             .with_exec(["cp", "/usr/src/app/.releaserc", "/app/.releaserc"])
             .with_exec(["cat", "/app/.releaserc"])
             .with_exec(["ls", "-la"])
-            .with_exec(["npx", "semantic-release", "--branches", "20-daggerize-application", "--dry-run"])
+            .with_exec(["npx", "semantic-release", "--branches", "20-daggerize-application", "--dry-run", "--debug"])
             .with_exec(["echo", "$(cat NEXT_VERSION)"])
             .stdout()
         )
