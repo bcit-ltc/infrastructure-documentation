@@ -72,7 +72,7 @@ class InfrastructureDocumentation:
     
         return await (
             dag.container()
-            .from_("ghcr.io/bcit-ltc/semantic-release:latest")  # Use prebuilt semantic-release container
+            .from_("ghcr.io/bcit-ltc/semantic-release:gitlab-original")  # Use prebuilt semantic-release container
             # Run semantic-release
             .with_workdir("/app")
             .with_directory("/app", source)
