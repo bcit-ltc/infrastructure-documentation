@@ -78,6 +78,7 @@ class InfrastructureDocumentation:
             .with_directory("/app", source)
             .with_env_variable("GITHUB_TOKEN", GITHUB_TOKEN)
             .with_exec(["cp", "/usr/src/app/.releaserc", "./releaserc"])
+            .with_exec(["cat", "./releaserc"])
             .with_exec(["npm", "init", "-y"])
             .with_exec(["ls", "-la"])
             .with_exec(["npx", "semantic-release", "--branches", "20-daggerize-application", "--dry-run"])
