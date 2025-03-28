@@ -78,7 +78,7 @@ class InfrastructureDocumentation:
             .with_directory("/app", source)
             .with_exec(["cp", "/usr/src/app/.releaserc", "./releaserc"])
             .with_exec(["ls", "-la"])
-            .with_exec(["npx", "semantic-release"])
+            .with_exec(["npx", "semantic-release", "--branches", "20-daggerize-application", "--dry-run"])
             .with_exec(["echo", "$(cat NEXT_VERSION)"])
             .stdout()
         )
