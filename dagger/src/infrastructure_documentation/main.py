@@ -72,13 +72,12 @@ class InfrastructureDocumentation:
     
         return await (
             dag.container()
-            .from_("ghcr.io/bcit-ltc/semantic-release:gitlab-original")  # Use prebuilt semantic-release container
-            # Run semantic-release
+            .from_("ghcr.io/bcit-ltc/semantic-release:latest")  # Use prebuilt semantic-release container
             .with_workdir("/app")
             .with_directory("/app", source)
             .with_env_variable("GITHUB_TOKEN", GITHUB_TOKEN)
-            # .with_exec(["cp", "/usr/src/app/.releaserc", "./releaserc"])
-            # .with_exec(["cat", "./releaserc"])
+            .with_exec(["cp", "/usr/src/app/.releaserc", "./releaserc"])
+            .with_exec(["cat", "./releaserc"])
             .with_exec(["ls", "-la"])
             .with_exec(["npx", "semantic-release", "--branches", "20-daggerize-application", "--dry-run"])
             .with_exec(["echo", "$(cat NEXT_VERSION)"])
