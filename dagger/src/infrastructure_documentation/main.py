@@ -76,6 +76,7 @@ class InfrastructureDocumentation:
             # Run semantic-release
             .with_workdir("/app")
             .with_directory("/app", source)
+            .with_exec(["cp", "/usr/src/app/.releaserc", "./releaserc"])
             .with_exec(["ls", "-la"])
             .with_exec(["npx", "semantic-release"])
             .stdout()
