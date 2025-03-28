@@ -25,11 +25,11 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GA_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Dagger
         uses: dagger/dagger-for-github@8.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           args: semanticrelease
