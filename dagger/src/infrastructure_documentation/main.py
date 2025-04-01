@@ -14,12 +14,13 @@ class InfrastructureDocumentation:
     @function
     async def publish(self, 
             source: Annotated[dagger.Directory, DefaultPath("./")], 
+            branch: Annotated[str, Doc("GitHub branch name")],
             token: Annotated[dagger.Secret | None, Doc("GitHub Action token")]
             ) -> str:
         """Publish the application container after building and testing it on-the-fly"""
         
         image = await self.build(source, token)
-        version = await self.semanticrelease(source, token)
+        version = await self.semanticrelease(source, branch, token)
 
         # temporary hardcoded parameters here
         registry = "ghcr.io/bcit-ltc/infrastructure-documentation"
@@ -70,7 +71,8 @@ class InfrastructureDocumentation:
 
     @function
     async def semanticrelease(self, 
-                              source: Annotated[dagger.Directory, DefaultPath("./")], 
+                              source: Annotated[dagger.Directory, DefaultPath("./")],
+                              branch: Annotated[str, Doc("GitHub branch name")],
                               token: Annotated[dagger.Secret | None, Doc("GitHub Action token")]
                               ) -> str:
         """Run the semantic-release tool"""
