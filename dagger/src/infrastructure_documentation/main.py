@@ -19,11 +19,21 @@ class InfrastructureDocumentation:
         """Publish the application container after building and testing it on-the-fly"""
         
         image = await self.build(source, token)
+        version = await self.semanticrelease(source, token)
+
+        registry = "ghcr.io/bcit-ltc/infrastructure-documentation"
+        username = "bcit-ltc"
+
+        # Call Dagger Function to build the application image
+        image.with_secret_variable("GITHUB_TOKEN", token) \
+            .with_registry_auth(registry, username, token)
         
-        return await self.semanticrelease(source, token)
-        # return await image.publish(
-        #     f"infrastructure-documentation-{random.randrange(10**8)}"
-        # )
+        return await image.publish(
+            # f"infrastructure-documentation-{random.randrange(10**8)}"
+            f"{registry}:{version}"
+        )
+    
+    # await image.publish(f"{registry}:{tag}")
     
     # using a Dockerfile to build and return a container
     @function
