@@ -15,6 +15,7 @@ class InfrastructureDocumentation:
     async def publish(self, 
             source: Annotated[dagger.Directory, DefaultPath("./")], 
             branch: Annotated[str, Doc("GitHub branch name")],
+            username: Annotated[str, Doc("GitHub username")],
             token: Annotated[dagger.Secret | None, Doc("GitHub Action token")]
             ) -> str:
         """Publish the application container after building and testing it on-the-fly"""
@@ -24,17 +25,16 @@ class InfrastructureDocumentation:
 
         # temporary hardcoded parameters here
         registry = "ghcr.io/bcit-ltc/infrastructure-documentation"
-        username = "bcit-ltc"
 
         # Call Dagger Function to build the application image
         image.with_secret_variable("GITHUB_TOKEN", token) \
             .with_registry_auth(registry, username, token)
         
-        return "this is a test"
-        # return await image.publish(
-        #     # f"infrastructure-documentation-{random.randrange(10**8)}"
-        #     f"{registry}:9.9.9"
-        # )
+        # return "this is a test"
+        return await image.publish(
+            # f"infrastructure-documentation-{random.randrange(10**8)}"
+            f"{registry}:{version}"
+        )
     
     # await image.publish(f"{registry}:{tag}")
     
