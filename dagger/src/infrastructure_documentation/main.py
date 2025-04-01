@@ -24,12 +24,12 @@ class InfrastructureDocumentation:
     def build(self,
             source: Annotated[dagger.Directory, DefaultPath("./")], 
             token: Annotated[dagger.Secret | None, Doc("GitHub Action token")]
-            ) -> tuple[dagger.Container, str]:
+            ) -> dagger.Container:
         """Build and image from existing Dockerfile"""
         self.unittesting(source)
         new_version = self.semanticrelease(source, token)
         ref = source.docker_build()
-        return ref, new_version
+        return ref
 
     
     # @function
