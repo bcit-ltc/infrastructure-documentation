@@ -33,7 +33,7 @@ class InfrastructureDocumentation:
         # return "this is a test"
         return await image.publish(
             # f"infrastructure-documentation-{random.randrange(10**8)}"
-            f"{registry}:{version}"
+            f"{registry}:9.9.9"
         )
     
     # await image.publish(f"{registry}:{tag}")
