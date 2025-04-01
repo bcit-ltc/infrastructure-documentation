@@ -21,19 +21,16 @@ class InfrastructureDocumentation:
     
     # using a Dockerfile to build and return a container
     @function
-    def build(
-        self,
-        src: Annotated[
-            dagger.Directory,
-            DefaultPath("./")
-        ],
-    ) -> dagger.Container:
+    def build(self,
+            source: Annotated[dagger.Directory, DefaultPath("./")], 
+            token: Annotated[dagger.Secret | None, Doc("GitHub Action token")]
+            ) -> tuple[dagger.Container, str]:
         """Build and image from existing Dockerfile"""
-        self.unittesting(src)
-        ref = src.docker_build()
-        return (
-            ref
-        )
+        self.unittesting(source)
+        new_version = self.semanticrelease(source, token)
+        ref = source.docker_build()
+        return ref, new_version
+
     
     # @function
     # def dev(self, source: Annotated[dagger.Directory, DefaultPath("./")]) -> dagger.Container:

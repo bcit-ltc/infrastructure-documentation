@@ -42,5 +42,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-          call: semanticrelease --token=env://GITHUB_TOKEN
+          call: build --token=env://GITHUB_TOKEN
           # args: semanticrelease
