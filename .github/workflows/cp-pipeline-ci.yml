@@ -27,11 +27,16 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run Dagger
-        uses: dagger/dagger-for-github@8.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-          call: semanticrelease --token=env://GITHUB_TOKEN
+      - name: Build and push the image
+        run: |
+          docker build . --tag ghcr.io/bcit-ltc/${{ github.event.repository.name }}:testit
+          docker push ghcr.io/bcit-ltc/${{ github.event.repository.name }}:testit
+
+      # - name: Run Dagger
+      #   uses: dagger/dagger-for-github@8.0.0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+      #     call: semanticrelease --token=env://GITHUB_TOKEN
           # args: semanticrelease
