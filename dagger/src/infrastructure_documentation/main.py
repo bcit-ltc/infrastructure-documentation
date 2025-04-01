@@ -8,16 +8,23 @@ from dagger import Doc, DefaultPath, dag, function, object_type
 
 @object_type
 class InfrastructureDocumentation:
+    """Infrastructure documentation class"""
+    semanticrelease_version: str
+
     @function
-    async def publish(self, source: dagger.Directory) -> str:
+    async def publish(self, 
+            source: Annotated[dagger.Directory, DefaultPath("./")], 
+            token: Annotated[dagger.Secret | None, Doc("GitHub Action token")]
+            ) -> str:
         """Publish the application container after building and testing it on-the-fly"""
         
-        image = await self.dockerbuild(source)
-        ete_result = await self.ete_testing(image)
+        image = await self.build(source, token)
+        semanticrelease_version = await self.semanticrelease(source, token)
         
-        return await image.publish(
-            f"infrastructure-documentation-{random.randrange(10**8)}"
-        )
+        return semanticrelease_version
+        # return await image.publish(
+        #     f"infrastructure-documentation-{random.randrange(10**8)}"
+        # )
     
     # using a Dockerfile to build and return a container
     @function
@@ -27,7 +34,6 @@ class InfrastructureDocumentation:
             ) -> dagger.Container:
         """Build and image from existing Dockerfile"""
         self.unittesting(source)
-        new_version = self.semanticrelease(source, token)
         ref = source.docker_build()
         return ref
 
