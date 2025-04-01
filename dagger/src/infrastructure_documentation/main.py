@@ -9,7 +9,8 @@ from dagger import Doc, DefaultPath, dag, function, object_type
 @object_type
 class InfrastructureDocumentation:
     """Infrastructure documentation class"""
-    semanticrelease_version: str
+    semanticrelease_version = "0.0.0"
+    """Version of the semantic release"""
 
     @function
     async def publish(self, 
