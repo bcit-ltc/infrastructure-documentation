@@ -10,7 +10,6 @@ from dagger import Doc, DefaultPath, dag, function, object_type
 class InfrastructureDocumentation:
     """Infrastructure documentation class"""
     semanticrelease_version = "0.0.0"
-    """Version of the semantic release"""
 
     @function
     async def publish(self, 
@@ -20,9 +19,9 @@ class InfrastructureDocumentation:
         """Publish the application container after building and testing it on-the-fly"""
         
         image = await self.build(source, token)
-        semanticrelease_version = await self.semanticrelease(source, token)
+        await self.semanticrelease(source, token)
         
-        return semanticrelease_version
+        return self.semanticrelease_version
         # return await image.publish(
         #     f"infrastructure-documentation-{random.randrange(10**8)}"
         # )
@@ -76,20 +75,19 @@ class InfrastructureDocumentation:
         #     .with_exec(["npx", "semantic-release"])
         # )
         # return await semantic_release_container.stdout()
-    
-        return await (
-            dag.container()
-            .from_("ghcr.io/bcit-ltc/semantic-release:latest")  # Use prebuilt semantic-release container
-            .with_workdir("/app")
-            .with_directory("/app", source)
-            .with_secret_variable("GITHUB_TOKEN", token)
-            .with_exec(["cp", "/usr/src/app/.releaserc", "/app/.releaserc"])
-            .with_exec(["cat", "/app/.releaserc"])
-            .with_exec(["npx", "semantic-release", "--branches", "20-daggerize-application", "--debug"])
-            .with_exec(["ls", "-la"])
-            .with_exec(["cat", "NEXT_VERSION"])
+        self.semanticrelease_version = dag.container() \
+            .from_("ghcr.io/bcit-ltc/semantic-release:latest") \
+            .with_workdir("/app") \
+            .with_directory("/app", source) \
+            .with_secret_variable("GITHUB_TOKEN", token) \
+            .with_exec(["cp", "/usr/src/app/.releaserc", "/app/.releaserc"]) \
+            .with_exec(["cat", "/app/.releaserc"]) \
+            .with_exec(["npx", "semantic-release", "--branches", "20-daggerize-application", "--debug"]) \
+            .with_exec(["ls", "-la"]) \
+            .with_exec(["cat", "NEXT_VERSION"]) \
             .stdout()
-        )
+        # 
+        return await self.semanticrelease_version
 
 
     # perform unit testing
