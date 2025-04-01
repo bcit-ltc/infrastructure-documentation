@@ -21,6 +21,7 @@ class InfrastructureDocumentation:
         image = await self.build(source, token)
         version = await self.semanticrelease(source, token)
 
+        # temporary hardcoded parameters here
         registry = "ghcr.io/bcit-ltc/infrastructure-documentation"
         username = "bcit-ltc"
 
@@ -28,10 +29,11 @@ class InfrastructureDocumentation:
         image.with_secret_variable("GITHUB_TOKEN", token) \
             .with_registry_auth(registry, username, token)
         
-        return await image.publish(
-            # f"infrastructure-documentation-{random.randrange(10**8)}"
-            f"{registry}:9.9.9"
-        )
+        return "this is a test"
+        # return await image.publish(
+        #     # f"infrastructure-documentation-{random.randrange(10**8)}"
+        #     f"{registry}:9.9.9"
+        # )
     
     # await image.publish(f"{registry}:{tag}")
     
