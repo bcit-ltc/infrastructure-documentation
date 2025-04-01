@@ -21,7 +21,7 @@ class InfrastructureDocumentation:
         image = await self.build(source, token)
         await self.semanticrelease(source, token)
         
-        return self.semanticrelease_version
+        return await self.semanticrelease_version
         # return await image.publish(
         #     f"infrastructure-documentation-{random.randrange(10**8)}"
         # )
