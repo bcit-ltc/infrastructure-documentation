@@ -19,7 +19,7 @@ class InfrastructureDocumentation:
         """Publish the application container after building and testing it on-the-fly"""
         
         image = await self.build(source, token)
-        await self.semanticrelease(source, token)
+        self.semanticrelease(source, token)
         
         return await self.semanticrelease_version
         # return await image.publish(
