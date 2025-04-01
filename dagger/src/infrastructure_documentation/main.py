@@ -95,7 +95,7 @@ class InfrastructureDocumentation:
             .with_secret_variable("GITHUB_TOKEN", token) \
             .with_exec(["cp", "/usr/src/app/.releaserc", "/app/.releaserc"]) \
             .with_exec(["cat", "/app/.releaserc"]) \
-            .with_exec(["npx", "semantic-release", "--branches", "20-daggerize-application", "--debug"]) \
+            .with_exec(["npx", "semantic-release", "--branches", branch, "--debug"]) \
             .with_exec(["ls", "-la"]) \
             .with_exec(["cat", "NEXT_VERSION"]) \
             .stdout()
