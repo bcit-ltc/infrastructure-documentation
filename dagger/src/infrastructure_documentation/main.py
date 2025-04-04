@@ -3,18 +3,52 @@ import random
 from typing import Annotated
 
 import dagger
-from dagger import Doc, DefaultPath, dag, function, object_type
+from dagger import Doc, DefaultPath, dag, function, object_type, GitInfo
+
+from .semanticrelease import SemanticRelease
 
 
 @object_type
 class InfrastructureDocumentation:
     """Infrastructure documentation class"""
-    semanticrelease_version = "0.0.0"
 
+    @function
+    async def example(self,
+                      git_directory: Annotated[dagger.Directory, DefaultPath("./")] 
+                      ) -> str:
+        return await (
+            dag.git_info(git_directory)
+            .ref()
+        )
+
+    @function
+    def testit(self,
+                git_directory: Annotated[dagger.Directory, DefaultPath("./")] 
+                ) -> str:
+        
+        
+        release = SemanticRelease(
+            # github_token="your_github_token",
+            # repository_url="your_repository_url",
+            # source="your_source",
+            # branch="main",
+            # username="your_username"
+        )
+
+        # await dir(p.version)
+        
+        # return (
+        #     p.version()
+        #     .with_exec(["ls", "-la"])
+        #     .with_exec(["cat", "/app/hello.txt"])
+        #     .stdout()
+        # )
+    
     @function
     async def publish(self, 
             source: Annotated[dagger.Directory, DefaultPath("./")], 
             branch: Annotated[str, Doc("GitHub branch name")],
+            username: Annotated[str, Doc("GitHub username")],
             token: Annotated[dagger.Secret | None, Doc("GitHub Action token")]
             ) -> str:
         """Publish the application container after building and testing it on-the-fly"""
@@ -24,17 +58,16 @@ class InfrastructureDocumentation:
 
         # temporary hardcoded parameters here
         registry = "ghcr.io/bcit-ltc/infrastructure-documentation"
-        username = "bcit-ltc"
 
         # Call Dagger Function to build the application image
         image.with_secret_variable("GITHUB_TOKEN", token) \
             .with_registry_auth(registry, username, token)
         
-        return "this is a test"
-        # return await image.publish(
-        #     # f"infrastructure-documentation-{random.randrange(10**8)}"
-        #     f"{registry}:9.9.9"
-        # )
+        # return "this is a test"
+        return await image.publish(
+            # f"infrastructure-documentation-{random.randrange(10**8)}"
+            f"{registry}:9.9.9"
+        )
     
     # await image.publish(f"{registry}:{tag}")
     
@@ -95,7 +128,7 @@ class InfrastructureDocumentation:
             .with_secret_variable("GITHUB_TOKEN", token) \
             .with_exec(["cp", "/usr/src/app/.releaserc", "/app/.releaserc"]) \
             .with_exec(["cat", "/app/.releaserc"]) \
-            .with_exec(["npx", "semantic-release", "--branches", branch, "--debug"]) \
+            .with_exec(["npx", "semantic-release", "--branches", branch]) \
             .with_exec(["ls", "-la"]) \
             .with_exec(["cat", "NEXT_VERSION"]) \
             .stdout()

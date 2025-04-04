@@ -1,0 +1,16 @@
+{'branches': 
+[None], 
+'repositoryUrl': None, 
+'dryRun': False, 
+'ci': False, 
+'debug': True, 
+'plugins': 
+['@semantic-release/commit-analyzer', 
+'@semantic-release/release-notes-generator', 
+'@semantic-release/exec',
+        {'verifyReleaseCmd': 'echo ${nextRelease.version
+            } > NEXT_VERSION'
+        }
+    ], 'tagFormat': '${version
+    }'
+}

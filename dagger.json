@@ -1,8 +1,15 @@
 {
   "name": "infrastructure-documentation",
-  "engineVersion": "v0.17",
+  "engineVersion": "v0.18.1",
   "sdk": {
     "source": "python"
   },
+  "dependencies": [
+    {
+      "name": "git-info",
+      "source": "github.com/vbehar/daggerverse/git-info@v0.12.0",
+      "pin": "3455f9156ec289c76002547243ec2dc6330d30a2"
+    }
+  ],
   "source": "dagger"
 }
