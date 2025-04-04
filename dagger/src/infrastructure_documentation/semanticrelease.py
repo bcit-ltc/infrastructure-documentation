@@ -21,16 +21,12 @@ class SemanticRelease:
         source: Optional[str] = None,
         branch: Optional[str] = None,
         username: Optional[str] = None,
-        # exec_output_file: Optional[str] = "NEXT_VERSION"
     ):
         self.mode = ReleaseMode.CI if github_token else ReleaseMode.LOCAL
 
         if self.mode == ReleaseMode.CI:
             if not all([repository_url, source, branch, username]):
                 raise ValueError("CI mode requires: repository_url, source, branch, username")
-        # else:
-        #     if not releaserc:
-        #         raise ValueError("LOCAL mode requires: releaserc.")
 
         self.github_token = github_token
         self.source = source
@@ -46,7 +42,7 @@ class SemanticRelease:
         self.releaserc.set("dryRun", False)
         self.releaserc.set("ci", True if self.mode == ReleaseMode.CI else False)
         self.releaserc.set("debug", True)
-        self.releaserc.set("tagFormat", "${version}")
+        self.releaserc.set("tagFormat", "${{version}}")
 
         # print(self.releaserc.to_dict())  # Debugging line
         print(json.dumps(self.releaserc.to_dict(), indent=2))  # Debugging line

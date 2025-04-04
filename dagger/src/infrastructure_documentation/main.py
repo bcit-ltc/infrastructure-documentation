@@ -28,11 +28,11 @@ class InfrastructureDocumentation:
         
         
         release = SemanticRelease(
-            github_token="your_github_token",
-            repository_url="your_repository_url",
-            source="your_source",
-            branch="main",
-            username="your_username"
+            # github_token="your_github_token",
+            # repository_url="your_repository_url",
+            # source="your_source",
+            # branch="main",
+            # username="your_username"
         )
 
         # await dir(p.version)
