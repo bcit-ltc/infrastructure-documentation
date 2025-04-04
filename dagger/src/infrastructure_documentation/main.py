@@ -3,14 +3,47 @@ import random
 from typing import Annotated
 
 import dagger
-from dagger import Doc, DefaultPath, dag, function, object_type
+from dagger import Doc, DefaultPath, dag, function, object_type, GitInfo
+
+from .semanticrelease import SemanticRelease
 
 
 @object_type
 class InfrastructureDocumentation:
     """Infrastructure documentation class"""
-    semanticrelease_version = "0.0.0"
 
+    @function
+    async def example(self,
+                      git_directory: Annotated[dagger.Directory, DefaultPath("./")] 
+                      ) -> str:
+        return await (
+            dag.git_info(git_directory)
+            .ref()
+        )
+
+    @function
+    def testit(self,
+                git_directory: Annotated[dagger.Directory, DefaultPath("./")] 
+                ) -> str:
+        
+        
+        release = SemanticRelease(
+            github_token="your_github_token",
+            repository_url="your_repository_url",
+            source="your_source",
+            branch="main",
+            username="your_username"
+        )
+
+        # await dir(p.version)
+        
+        # return (
+        #     p.version()
+        #     .with_exec(["ls", "-la"])
+        #     .with_exec(["cat", "/app/hello.txt"])
+        #     .stdout()
+        # )
+    
     @function
     async def publish(self, 
             source: Annotated[dagger.Directory, DefaultPath("./")], 
