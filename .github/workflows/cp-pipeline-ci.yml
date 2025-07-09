@@ -23,7 +23,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          module: github.com/BCIT-LTC/daggerverse/pipeline-manager
+          module: github.com/BCIT-LTC/daggerverse/pipeline-manager@28-move-chart-updater-to-pipeline-manager
           call: >-
             run 
             --source=. 
