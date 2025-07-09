@@ -28,7 +28,7 @@ jobs:
             run 
             --source=. 
             --github_token=env://GITHUB_TOKEN  
-            --helm_repo_pat=${{ secrets.HELM_REPO_PAT }}
+            --helm_repo_pat=env://HELM_REPO_PAT
             --username=${{ github.actor }} 
             --branch=${{ github.ref_name }} 
             --commit_hash=$(echo $GITHUB_SHA | cut -c1-7) 
@@ -36,5 +36,4 @@ jobs:
             --repository_url=$(echo $GITHUB_SERVER_URL/$GITHUB_REPOSITORY)
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           version: "latest"
-          
           
