@@ -22,6 +22,7 @@ jobs:
         uses: dagger/dagger-for-github@8.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
         with:
           module: github.com/BCIT-LTC/daggerverse/pipeline-manager@28-move-chart-updater-to-pipeline-manager
           call: >-
