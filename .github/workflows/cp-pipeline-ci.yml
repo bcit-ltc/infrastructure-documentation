@@ -44,3 +44,4 @@ jobs:
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           call: publish --token=env://GITHUB_TOKEN --branch=${{ github.ref_name }}
           # args: semanticrelease
+          
