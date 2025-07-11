@@ -9,4 +9,3 @@ jobs:
   pipeline-ci-orchestrator:
     name: Execute Pipeline CI
     uses: bcit-ltc/.github/.github/workflows/cp-pipeline-ci-reusable.yml@main
-
