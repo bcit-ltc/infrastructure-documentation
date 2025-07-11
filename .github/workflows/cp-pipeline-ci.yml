@@ -10,7 +10,5 @@ jobs:
     name: Execute Pipeline CI
     uses: bcit-ltc/.github/.github/workflows/cp-pipeline-ci-reusable.yml@main
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
       DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-      
