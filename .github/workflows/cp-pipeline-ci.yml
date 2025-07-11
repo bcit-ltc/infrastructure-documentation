@@ -1,4 +1,4 @@
-name: Call Pipeline Manager
+name: Pipeline CI Orchestrator
 
 on:
   push:
@@ -6,5 +6,6 @@ on:
       - "*"
 
 jobs:
-  call-pipeline-manager:
+  pipeline-ci-orchestrator:
+    name: Execute Pipeline CI
     uses: bcit-ltc/.github/.github/workflows/cp-pipeline-ci-reusable.yml@main
