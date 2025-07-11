@@ -1,41 +1,15 @@
-name: Pipeline Manager
+name: Pipeline CI Orchestrator
 
 on:
   push:
     branches:
       - "*"
 
-permissions:
-  contents: write # to be able to publish a GitHub release
-  issues: write # to be able to comment on released issues
-  pull-requests: write # to be able to comment on released pull requests
-  packages: write # Required for pushing images  
-
 jobs:
-  pipeline-manager:
-    name: Pipeline Manager
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Run Dagger for pipeline-manager
-        uses: dagger/dagger-for-github@8.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
-        with:
-          module: github.com/BCIT-LTC/daggerverse/pipeline-manager@main
-          call: >-
-            run 
-            --source=. 
-            --github_token=env://GITHUB_TOKEN  
-            --helm_repo_pat=env://HELM_REPO_PAT
-            --username=${{ github.actor }} 
-            --branch=${{ github.ref_name }} 
-            --commit_hash=$(echo $GITHUB_SHA | cut -c1-7) 
-            --registry_path=ghcr.io/${{ github.repository }}
-            --repository_url=${{ github.server_url }}/${{ github.repository }}
-          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-          version: "latest"
-          
-          
+  pipeline-ci-orchestrator:
+    name: Execute Pipeline CI
+    uses: bcit-ltc/.github/.github/workflows/cp-pipeline-ci-reusable.yml@main
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
+      DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
