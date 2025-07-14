@@ -36,7 +36,7 @@ jobs:
             --source=. 
             --username=${{ github.actor }} 
             --github_token=env://GITHUB_TOKEN  
-            --appname=${{ github.event.repository.name }}
+            --app_name=${{ github.event.repository.name }}
             --branch=${{ github.ref_name }} 
             --commit_hash=$(echo $GITHUB_SHA | cut -c1-7) 
             --registry_path=ghcr.io/$(echo "${{ github.repository }}") 
