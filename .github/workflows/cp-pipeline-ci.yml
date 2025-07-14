@@ -12,3 +12,4 @@ jobs:
     secrets:
       HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
       DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+      
