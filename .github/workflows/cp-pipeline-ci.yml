@@ -8,7 +8,6 @@ on:
 jobs:
   create-codespace:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -29,7 +28,8 @@ jobs:
           echo "$response" > codespace_response.json
           codespace_id=$(jq -r '.id' codespace_response.json)
           echo "Created Codespace ID: $codespace_id"
-          echo "::set-output name=codespace_id::$codespace_id"
+          # write to GITHUB_OUTPUT instead of set-output
+          echo "codespace_id=$codespace_id" >> $GITHUB_OUTPUT
 
       - name: Verify Codespace Status
         run: |
