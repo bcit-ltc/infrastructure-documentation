@@ -5,18 +5,23 @@ on:
     branches:
       - "*"
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
-  create-and-verify-codespace:
+  devcontainer-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up GitHub CLI
-        uses: cli/gh-action@v2
+      - name: Setup GitHub CLI
+        uses: sersoft-gmbh/setup-gh-cli-action@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          version: stable
+          github-token: ${{ secrets.GITHUB_TOKEN }}  # required if you hit rate limits
 
       - name: Create Codespace
         run: |
@@ -28,10 +33,10 @@ jobs:
             --timeout 180 \
             --wait
 
-      - name: List Codespaces & Status
+      - name: Verify Codespace Status
         run: |
           gh codespace list \
-            --json name,state,createdAt,connectionType \
+            --json name,state,createdAt \
             --jq '.[] | select(.name=="test-devcontainer")'
       
 # jobs:
