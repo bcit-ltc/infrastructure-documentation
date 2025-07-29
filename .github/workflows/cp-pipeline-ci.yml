@@ -13,34 +13,21 @@ jobs:
       REPO: ${{ github.repository }}        # owner/name
       REF: ${{ github.event.inputs.ref }}    # branch/tag
     steps:
-      - name: Install jq
+      - name: Install jq and GitHub CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq
+          sudo apt-get install -y jq gh
+
+      - name: Authenticate GitHub CLI
+        run: |
+          echo "${{ secrets.CODESPACES_PAT }}" | gh auth login --with-token
 
       - name: Create Codespace in $REPO
         id: create
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
-
-          # Fire the API call
-          resp=$(curl -s -w "\n%{http_code}" \
-            -X POST \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${REPO}/codespaces" \
-            -d '{
-              "ref": "'"${REF}"'",
-              "devcontainer_path": ".devcontainer",
-              "display_name": "dynamic-codespace"
-            }')
-
-          # Split out status and body
-          http_code=$(echo "$resp" | tail -n1)
-          body=$(echo "$resp" | sed '$d')
-
-          echo "HTTP status: $http_code"
-          echo "$body" | jq .
+          cs_id=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer" --display-name "dynamic-codespace" --json id -q .id)
+          echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
 
           if [ "$http_code" -ne 201 ]; then
             echo "::error ::Failed to create codespace (HTTP $http_code)"
