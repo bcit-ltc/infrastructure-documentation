@@ -6,12 +6,41 @@ on:
       - "*"
 
 jobs:
-  pipeline-ci-orchestrator:
-    name: Execute Pipeline CI
-    uses: bcit-ltc/.github/.github/workflows/cp-pipeline-ci-reusable.yml@main
-    secrets:
-      HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
-      DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+  create-and-verify-codespace:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up GitHub CLI
+        uses: cli/gh-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Codespace
+        run: |
+          gh codespace create \
+            --repo ${{ github.repository }} \
+            --branch ${{ github.ref_name }} \
+            --devcontainer-path .devcontainer \
+            --name test-devcontainer \
+            --timeout 180 \
+            --wait
+
+      - name: List Codespaces & Status
+        run: |
+          gh codespace list \
+            --json name,state,createdAt,connectionType \
+            --jq '.[] | select(.name=="test-devcontainer")'
+      
+# jobs:
+#   pipeline-ci-orchestrator:
+#     name: Execute Pipeline CI
+#     uses: bcit-ltc/.github/.github/workflows/cp-pipeline-ci-reusable.yml@main
+#     secrets:
+#       HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
+#       DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
 
 # permissions:
