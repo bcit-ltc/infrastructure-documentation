@@ -5,38 +5,41 @@ on:
     branches:
       - "*"
 
-permissions:
-  contents: write
-  actions: write
-
 jobs:
-  devcontainer-test:
+  create-codespace:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup GitHub CLI
-        uses: sersoft-gmbh/setup-gh-cli-action@v2
-        with:
-          version: stable
-          github-token: ${{ secrets.GITHUB_TOKEN }}  # required if you hit rate limits
-
-      - name: Create Codespace
+      - name: Install jq
         run: |
-          gh codespace create \
-            -R ${{ github.repository }} \
-            -b ${{ github.ref_name }} \
-            --devcontainer-path .devcontainer \
-            -d test-devcontainer \
-            --status
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Create Codespace via REST API
+        id: create_codespace
+        run: |
+          response=$(curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/user/codespaces \
+            -d "{\"repository\":\"${{ github.repository }}\",\"ref\":\"${{ github.ref_name }}\",\"devcontainer_path\":\".devcontainer\",\"display_name\":\"test-devcontainer\"}")
+          echo "$response" > codespace_response.json
+          codespace_id=$(jq -r '.id' codespace_response.json)
+          echo "Created Codespace ID: $codespace_id"
+          echo "::set-output name=codespace_id::$codespace_id"
 
       - name: Verify Codespace Status
         run: |
-          gh codespace list \
-            --json displayName,state,createdAt \
-            --jq '.[] | select(.displayName=="test-devcontainer")'
+          codespace_id="${{ steps.create_codespace.outputs.codespace_id }}"
+          status_response=$(curl -s -X GET \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/user/codespaces/$codespace_id)
+          state=$(echo "$status_response" | jq -r '.state')
+          echo "Codespace $codespace_id is in '$state' state"
       
 # jobs:
 #   pipeline-ci-orchestrator:
