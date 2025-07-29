@@ -20,26 +20,57 @@ jobs:
       - name: Create Codespace via REST API
         id: create_codespace
         run: |
-          response=$(curl -s -X POST \
+          echo "Creating codespace for repo: $GITHUB_REPOSITORY, ref: $GITHUB_REF_NAME"
+
+          # Make the API call, capture body+status in one var
+          http_resp=$(curl -s -w "\n%{http_code}" \
+            -X POST \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/user/codespaces \
-            -d "{\"repository\":\"${{ github.repository }}\",\"ref\":\"${{ github.ref_name }}\",\"devcontainer_path\":\".devcontainer\",\"display_name\":\"test-devcontainer\"}")
-          echo "$response" > codespace_response.json
-          codespace_id=$(jq -r '.id' codespace_response.json)
+            -d '{
+              "repository": "'"${{ github.repository }}"'",
+              "ref": "'"${{ github.ref_name }}"'",
+              "devcontainer_path": ".devcontainer",
+              "display_name": "test-devcontainer"
+            }')
+
+          # Split body + code
+          http_code=$(echo "$http_resp" | tail -n1)
+          body=$(echo "$http_resp" | sed '$d')
+
+          echo "HTTP Status: $http_code"
+          echo "Response Body:"
+          echo "$body" | jq .
+
+          # Expect 201 Created
+          if [ "$http_code" -ne 201 ]; then
+            echo "::error ::Failed to create Codespace (HTTP $http_code)"
+            exit 1
+          fi
+
+          # Extract the ID
+          codespace_id=$(echo "$body" | jq -r '.id')
+          if [ -z "$codespace_id" ] || [ "$codespace_id" = "null" ]; then
+            echo "::error ::API succeeded but .id is null"
+            exit 1
+          fi
+
           echo "Created Codespace ID: $codespace_id"
-          # write to GITHUB_OUTPUT instead of set-output
+          # Export for next steps
           echo "codespace_id=$codespace_id" >> $GITHUB_OUTPUT
 
       - name: Verify Codespace Status
         run: |
-          codespace_id="${{ steps.create_codespace.outputs.codespace_id }}"
-          status_response=$(curl -s -X GET \
+          cs_id="${{ steps.create_codespace.outputs.codespace_id }}"
+          echo "Checking status for Codespace ID: $cs_id"
+
+          status_resp=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/user/codespaces/$codespace_id)
-          state=$(echo "$status_response" | jq -r '.state')
-          echo "Codespace $codespace_id is in '$state' state"
+            https://api.github.com/user/codespaces/$cs_id)
+
+          echo "$status_resp" | jq '{id: .id, name: .display_name, state: .state}'
       
 # jobs:
 #   pipeline-ci-orchestrator:
