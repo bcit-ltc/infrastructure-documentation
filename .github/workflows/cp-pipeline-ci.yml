@@ -26,16 +26,9 @@ jobs:
         id: create
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
-          cs_id=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer" --display-name "dynamic-codespace" --json id -q .id)
+          gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer" --display-name "dynamic-codespace"
+          cs_id=$(gh codespace list --repo "$REPO" --branch "$REF" --limit 1 | awk 'NR==2 {print $1}')
           echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
-
-          if [ "$http_code" -ne 201 ]; then
-            echo "::error ::Failed to create codespace (HTTP $http_code)"
-            exit 1
-          fi
-
-          id=$(echo "$body" | jq -r '.id')
-          echo "codespace_id=$id" >> $GITHUB_OUTPUT
 
       - name: Verify Codespace Status
         run: |
