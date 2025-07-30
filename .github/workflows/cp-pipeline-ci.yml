@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REPO: ${{ github.repository }}
-      REF: ${{ github.event.inputs.ref }}
+      REF: ${{ github.ref_name }}
     steps:
       - name: Install jq and GitHub CLI
         run: |
