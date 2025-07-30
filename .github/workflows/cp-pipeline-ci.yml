@@ -10,8 +10,8 @@ jobs:
   create-codespace:
     runs-on: ubuntu-latest
     env:
-      REPO: ${{ github.repository }}        # owner/name
-      REF: ${{ github.event.inputs.ref }}    # branch/tag
+      REPO: ${{ github.repository }}
+      REF: ${{ github.event.inputs.ref }}
     steps:
       - name: Install jq and GitHub CLI
         run: |
@@ -26,8 +26,8 @@ jobs:
         id: create
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
-          gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "dynamic-codespace" --machine standardLinux32gb
-          cs_id=$(gh codespace list --repo "$REPO" --limit 1 | awk 'NR==2 {print $1}')
+          gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb
+          cs_id=$(gh codespace list --repo "$REPO" --json id,branch --jq ".[] | select(.branch == \"$REF\") | .id" | head -n 1)
           echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
 
       - name: Verify Codespace Status
