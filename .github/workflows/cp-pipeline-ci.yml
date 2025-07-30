@@ -29,17 +29,16 @@ jobs:
           newest_cs=$(gh codespace list --repo "$REPO" --json name,gitStatus,createdAt --jq ".[] | select(.gitStatus.branch == \"$REF\") | {name, createdAt}" | jq -s 'sort_by(.createdAt) | last | .name')
           if [ -n "$newest_cs" ] && [ "$newest_cs" != "null" ]; then
             cs_id=$(echo $newest_cs | tr -d '"')
-            echo "Using newest codespace for branch $REF: $cs_id"
-            echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
-          else
-            output=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb)
-            cs_id=$(echo "$output" | grep -Eo "$REF-[a-z0-9]+")
-            if [ -z "$cs_id" ]; then
-              echo "::error ::Codespace name not found in output for branch $REF"
-              exit 1
-            fi
-            echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
+            echo "Deleting existing codespace for branch $REF: $cs_id"
+            gh codespace delete --repo "$REPO" --codespace "$cs_id" --confirm
           fi
+          output=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb)
+          cs_id=$(echo "$output" | grep -Eo "$REF-[a-z0-9]+")
+          if [ -z "$cs_id" ]; then
+            echo "::error ::Codespace name not found in output for branch $REF"
+            exit 1
+          fi
+          echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
 
       - name: Verify Codespace Status
         run: |
