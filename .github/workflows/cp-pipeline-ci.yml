@@ -29,8 +29,8 @@ jobs:
           newest_cs=$(gh codespace list --repo "$REPO" --json name,gitStatus,createdAt --jq ".[] | select(.gitStatus.branch == \"$REF\") | {name, createdAt}" | jq -s 'sort_by(.createdAt) | last | .name')
           if [ -n "$newest_cs" ] && [ "$newest_cs" != "null" ]; then
             cs_id=$(echo $newest_cs | tr -d '"')
-            echo "Deleting existing codespace for branch $REF: $cs_id"
-            gh codespace delete --repo "$REPO" --codespace "$cs_id" --confirm
+            echo "Attempting to delete codespace for branch $REF: $cs_id"
+            gh codespace delete --repo "$REPO" --codespace "$cs_id" --confirm || echo "Failed to delete codespace $cs_id"
           fi
           output=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb)
           cs_id=$(echo "$output" | grep -Eo "$REF-[a-z0-9]+")
