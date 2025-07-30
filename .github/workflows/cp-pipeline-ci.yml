@@ -26,11 +26,10 @@ jobs:
         id: create
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
-          gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb
-          sleep 10
-          cs_id=$(gh codespace list --repo "$REPO" --json name,gitStatus --jq ".[] | select(.gitStatus.branch == \"$REF\") | .name" | head -n 1)
+          output=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb)
+          cs_id=$(echo "$output" | grep -Eo "$REF-[a-z0-9]+")
           if [ -z "$cs_id" ]; then
-            echo "::error ::Codespace ID not found for branch $REF"
+            echo "::error ::Codespace name not found in output for branch $REF"
             exit 1
           fi
           echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
