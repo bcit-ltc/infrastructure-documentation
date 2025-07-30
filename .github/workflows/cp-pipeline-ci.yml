@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
           gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb
-          cs_id=$(gh codespace list --repo "$REPO" --json name,branch --jq ".[] | select(.branch == \"$REF\") | .name" | head -n 1)
+          cs_id=$(gh codespace list --repo "$REPO" --json name,gitStatus --jq ".[] | select(.gitStatus.branch == \"$REF\") | .name" | head -n 1)
           echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
 
       - name: Verify Codespace Status
