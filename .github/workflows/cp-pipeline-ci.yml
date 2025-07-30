@@ -26,7 +26,7 @@ jobs:
         id: create
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
-          gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer" --display-name "dynamic-codespace"
+          gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer" --display-name "dynamic-codespace" --machine standardLinux
           cs_id=$(gh codespace list --repo "$REPO" --branch "$REF" --limit 1 | awk 'NR==2 {print $1}')
           echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
 
