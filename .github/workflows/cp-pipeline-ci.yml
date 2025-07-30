@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
           gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb
-          cs_id=$(gh codespace list --repo "$REPO" --json id,branch --jq ".[] | select(.branch == \"$REF\") | .id" | head -n 1)
+          cs_id=$(gh codespace list --repo "$REPO" --json name,branch --jq ".[] | select(.branch == \"$REF\") | .name" | head -n 1)
           echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
 
       - name: Verify Codespace Status
@@ -37,8 +37,8 @@ jobs:
           curl -s \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${REPO}/codespaces/$cs_id" \
-          | jq '{id: .id, state: .state, machine: .machine}' 
+            "https://api.github.com/user/codespaces/$cs_id" \
+          | jq '{name: .name, state: .state, machine: .machineName, displayName: .displayName}'
       
 # jobs:
 #   pipeline-ci-orchestrator:
