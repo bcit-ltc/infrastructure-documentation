@@ -33,7 +33,7 @@ jobs:
           if [ -n "$newest_cs" ] && [ "$newest_cs" != "null" ]; then
             cs_name=$(echo $newest_cs | tr -d '"')
             echo "Attempting to delete codespace for branch $REF: $cs_name"
-            gh codespace delete --repo "$REPO" --codespace "$cs_name" --force || echo "Failed to delete codespace $cs_name"
+            gh codespace delete --codespace "$cs_name" --force || echo "Failed to delete codespace $cs_name"
           fi
           output=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb)
           cs_name=$(echo "$output" | grep -Eo "$REF-[a-z0-9]+")
