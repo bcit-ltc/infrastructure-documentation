@@ -54,6 +54,7 @@ jobs:
           | jq '{name: .name, state: .state, machine: .machineName, displayName: .displayName}'
       
 
+          
 # jobs:
 #   pipeline-ci-orchestrator:
 #     name: Execute Pipeline CI
