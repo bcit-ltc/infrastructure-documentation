@@ -26,6 +26,8 @@ jobs:
         id: create
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
+          echo "Raw codespace list output:"
+          gh codespace list --repo "$REPO" --json name,gitStatus,createdAt
           newest_cs=$(gh codespace list --repo "$REPO" --json name,gitStatus,createdAt --jq ".[] | select(.gitStatus.branch == \"$REF\") | {name, createdAt}" | jq -s 'sort_by(.createdAt) | last | .name')
           echo "Newest codespace for branch $REF: $newest_cs"
           if [ -n "$newest_cs" ] && [ "$newest_cs" != "null" ]; then
@@ -51,7 +53,7 @@ jobs:
             "https://api.github.com/user/codespaces/$cs_id" \
           | jq '{name: .name, state: .state, machine: .machineName, displayName: .displayName}'
       
-          
+
 # jobs:
 #   pipeline-ci-orchestrator:
 #     name: Execute Pipeline CI
