@@ -28,29 +28,29 @@ jobs:
           echo "Creating codespace for repo: $REPO at ref: $REF"
           echo "Raw codespace list output:"
           gh codespace list --repo "$REPO" --json name,gitStatus,createdAt
-          newest_cs=$(gh codespace list --repo "$REPO" --json name,gitStatus,createdAt --jq ".[] | select(.gitStatus.branch == \"$REF\") | {name, createdAt}" | jq -s 'sort_by(.createdAt) | last | .name')
+          newest_cs=$(gh codespace list --repo "$REPO" --json name,gitStatus,createdAt --jq ".[] | select(.gitStatus.ref == \"$REF\") | {name, createdAt}" | jq -s 'sort_by(.createdAt) | last | .name')
           echo "Newest codespace for branch $REF: $newest_cs"
           if [ -n "$newest_cs" ] && [ "$newest_cs" != "null" ]; then
-            cs_id=$(echo $newest_cs | tr -d '"')
-            echo "Attempting to delete codespace for branch $REF: $cs_id"
-            gh codespace delete --repo "$REPO" --codespace "$cs_id" --confirm || echo "Failed to delete codespace $cs_id"
+            cs_name=$(echo $newest_cs | tr -d '"')
+            echo "Attempting to delete codespace for branch $REF: $cs_name"
+            gh codespace delete --repo "$REPO" --codespace "$cs_name" --confirm || echo "Failed to delete codespace $cs_name"
           fi
           output=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb)
-          cs_id=$(echo "$output" | grep -Eo "$REF-[a-z0-9]+")
-          if [ -z "$cs_id" ]; then
+          cs_name=$(echo "$output" | grep -Eo "$REF-[a-z0-9]+")
+          if [ -z "$cs_name" ]; then
             echo "::error ::Codespace name not found in output for branch $REF"
             exit 1
           fi
-          echo "codespace_id=$cs_id" >> $GITHUB_OUTPUT
+          echo "codespace_name=$cs_name" >> $GITHUB_OUTPUT
 
       - name: Verify Codespace Status
         run: |
-          cs_id="${{ steps.create.outputs.codespace_id }}"
-          echo "Checking status for $cs_id in $REPO"
+          cs_name="${{ steps.create.outputs.codespace_name }}"
+          echo "Checking status for $cs_name in $REPO"
           curl -s \
             -H "Authorization: Bearer ${{ secrets.CODESPACES_PAT }}" \
             -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/user/codespaces/$cs_id" \
+            "https://api.github.com/user/codespaces/$cs_name" \
           | jq '{name: .name, state: .state, machine: .machineName, displayName: .displayName}'
       
 
