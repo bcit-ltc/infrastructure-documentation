@@ -27,6 +27,7 @@ jobs:
         run: |
           echo "Creating codespace for repo: $REPO at ref: $REF"
           newest_cs=$(gh codespace list --repo "$REPO" --json name,gitStatus,createdAt --jq ".[] | select(.gitStatus.branch == \"$REF\") | {name, createdAt}" | jq -s 'sort_by(.createdAt) | last | .name')
+          echo "Newest codespace for branch $REF: $newest_cs"
           if [ -n "$newest_cs" ] && [ "$newest_cs" != "null" ]; then
             cs_id=$(echo $newest_cs | tr -d '"')
             echo "Attempting to delete codespace for branch $REF: $cs_id"
