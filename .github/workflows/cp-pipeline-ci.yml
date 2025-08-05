@@ -35,7 +35,7 @@ jobs:
             echo "Attempting to delete codespace for branch $REF: $cs_name"
             gh codespace delete --codespace "$cs_name" --force
           fi
-          output=$(gh codespace create --repo "$REPO" --branch "$REF" --devcontainer-path ".devcontainer/devcontainer.json" --display-name "$REF" --machine standardLinux32gb)
+          output=$(gh codespace create --repo "$REPO" --branch "$REF" --display-name "$REF" --machine standardLinux32gb)
           cs_name=$(echo "$output" | grep -Eo "$REF-[a-z0-9]+")
           if [ -z "$cs_name" ]; then
             echo "::error ::Codespace name not found in output for branch $REF"
