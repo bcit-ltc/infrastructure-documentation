@@ -20,7 +20,7 @@ jobs:
 
       - name: Authenticate GitHub CLI
         run: |
-          echo "${{ secrets.CODESPACES_PAT }}" | gh auth login --with-token
+          echo "${{ secrets.CODESPACES_PAT2 }}" | gh auth login --with-token
 
       - name: Create Codespace in $REPO
         id: create
@@ -48,7 +48,7 @@ jobs:
           cs_name="${{ steps.create.outputs.codespace_name }}"
           echo "Checking status for $cs_name in $REPO"
           curl -s \
-            -H "Authorization: Bearer ${{ secrets.CODESPACES_PAT }}" \
+            -H "Authorization: Bearer ${{ secrets.CODESPACES_PAT2 }}" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/user/codespaces/$cs_name" \
           | jq '{name: .name, state: .state, machine: .machineName, displayName: .displayName}'
