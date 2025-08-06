@@ -1,6 +1,13 @@
 {
 	"name": "Kubernetes-in-Codespaces",
-	"dockerFile": "Dockerfile",
+
+	"build": {
+		// Sets the run context to one level up instead of the .devcontainer folder.
+		"context": "..",
+		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+		"dockerfile": "Dockerfile"
+	},
+
 	// do not change these if you want Docker in Docker support
 	"runArgs": [
 		"--init",
@@ -10,8 +17,16 @@
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
 	],
 	"overrideCommand": false,
+
 	// some base images require a specific user name
 	"remoteUser": "vscode",
+	"containerUser": "vscode",
+
+	"updateRemoteUserUID": true,
+	"containerEnv": {
+	"HOME": "/home/vscode"
+	},
+
 	// Set container specific settings
 	"customizations": {
 		"vscode": {
@@ -24,25 +39,32 @@
 			"extensions": [
 				"ms-azuretools.vscode-docker",
 				"ms-kubernetes-tools.vscode-kubernetes-tools",
-				"davidanson.vscode-markdownlint",
-				"gruntfuggly.todo-tree"
+				"davidanson.vscode-markdownlint"
 			]
 		}
 	},
+
 	// Ensure that the host machine has enough resources to build and test Kubernetes
 	"hostRequirements": {
 		"cpus": 4
 	},
+
 	// forward ports for the app
 	"forwardPorts": [
 		8000,
 		8080
 	],
-	"waitFor": "postCreateCommand",
-	// Use 'onCreateCommand' to run commands as part of container creation.
-	"onCreateCommand": "/bin/bash -c .devcontainer/on-create.sh",
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "/bin/bash -c .devcontainer/post-create.sh",
-	// Use 'postStartCommand' to run commands after the container starts.
-	"postStartCommand": "/bin/bash -c .devcontainer/set-branch-env.sh && /bin/bash -c .devcontainer/post-start.sh"
+	// add labels
+	"portsAttributes": {
+		"8080": {
+			"label": "web"
+		}
+	}
+	// "waitFor": "postCreateCommand",
+	// // Use 'onCreateCommand' to run commands as part of container creation.
+	// "onCreateCommand": "/bin/bash -c .devcontainer/on-create.sh",
+	// // Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "/bin/bash -c .devcontainer/post-create.sh",
+	// // Use 'postStartCommand' to run commands after the container starts.
+	// "postStartCommand": "/bin/bash -c .devcontainer/post-start.sh"
 }
