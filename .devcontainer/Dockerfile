@@ -10,3 +10,7 @@ RUN mv ./kubectl /usr/local/bin/kubectl
 
 RUN curl -L https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64 -o /usr/local/bin/kind && \
     chmod +x /usr/local/bin/kind
+RUN apk add --no-cache bash
+RUN apk add --no-cache git
+RUN apk add --no-cache make
+RUN curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
