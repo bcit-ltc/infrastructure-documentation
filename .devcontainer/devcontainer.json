@@ -1,18 +1,18 @@
 {
   "name": "devcontainer1",
-  "image": "mcr.microsoft.com/devcontainers/base:bullseye",
-  "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "version": "latest",
-      "moby": true,
-      "enableNonRootDocker": false
-    }
-  },
-  // do not change these if you want Docker in Docker support
-  "runArgs": [
-    "--init",
-    "--privileged"
-  ],
+  "image": "ghcr.io/k3d-io/k3d:5-dind",
+  // "features": {
+  //   "ghcr.io/devcontainers/features/docker-in-docker:2": {
+  //     "version": "latest",
+  //     "moby": true,
+  //     "enableNonRootDocker": false
+  //   }
+  // },
+  // // do not change these if you want Docker in Docker support
+  // "runArgs": [
+  //   "--init",
+  //   "--privileged"
+  // ],
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
@@ -21,16 +21,16 @@
     "cpus": 4
   },
   // forward ports for the app
-  "forwardPorts": [
-    8000,
-    8080
-  ],
-  // add labels
-  "portsAttributes": {
-    "8080": {
-      "label": "web"
-    }
-  },
+  // "forwardPorts": [
+  //   8000,
+  //   8080
+  // ],
+  // // add labels
+  // "portsAttributes": {
+  //   "8080": {
+  //     "label": "web"
+  //   }
+  // },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -40,7 +40,7 @@
         "github.vscode-github-actions"
       ],
       "settings": {
-        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.defaultProfile.linux": "bash",
         "files.trimTrailingWhitespace": true,
         "files.trimFinalNewlines": true,
         "files.insertFinalNewline": true
