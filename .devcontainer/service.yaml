@@ -8,5 +8,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80 # External port
-      targetPort: 80 # Container port
+      targetPort: 8080 # Container port
   type: LoadBalancer
