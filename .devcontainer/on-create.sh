@@ -26,9 +26,9 @@ echo "=== on-create start ==="
 # } >> "$HOME/.zshrc"
 
 # create local registry
-docker network create k3d
-k3d registry create registry.localhost --port 5000
-docker network connect k3d k3d-registry.localhost
+# docker network create k3d
+# k3d registry create registry.localhost --port 5000
+# docker network connect k3d k3d-registry.localhost
 
 # update the base docker images
 # docker pull mcr.microsoft.com/dotnet/aspnet:6.0-alpine
@@ -59,7 +59,7 @@ docker network connect k3d k3d-registry.localhost
 
 # Deploy k3d cluster
 echo "=== Creating k3d cluster with registry ==="
-k3d cluster create mycluster --registry-use k3d-registry.localhost:5000
+k3d cluster create mycluster --registry-use registry.localhost:5000
 
 # only run apt upgrade on pre-build
 if [ "$CODESPACE_NAME" = "null" ]

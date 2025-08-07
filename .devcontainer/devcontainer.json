@@ -54,11 +54,11 @@
   "otherPortsAttributes": {
     "onAutoForward": "silent"
   },
-  // "remoteUser": "root",
+  "remoteUser": "root",
   // Copy over welcome message and install pyyaml
   "onCreateCommand": "bash .devcontainer/on-create.sh",
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "/bin/bash -c .devcontainer/post-create.sh",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   // Use 'postStartCommand' to run commands after the container starts.
-  "postStartCommand": "/bin/bash -c .devcontainer/post-start.sh"
+  "postStartCommand": "bash .devcontainer/post-start.sh"
 }
