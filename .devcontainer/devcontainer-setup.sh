@@ -28,6 +28,7 @@ cd -
 echo "=== Deploying app with Helm ==="
 helm upgrade --install myapp /tmp/helm-charts/apps/infrastructure-documentation \
   --set image.repository=k3d-localregistry.localhost:5000/myapp \
-  --set image.tag=latest
+  --set image.tag=latest \
+  --set service.type=LoadBalancer
 
 echo "=== Setup complete ==="
