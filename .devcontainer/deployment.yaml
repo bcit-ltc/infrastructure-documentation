@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: k3d-localregistry.localhost:5000/infrastructure-documentation:latest
+          image: k3d-localregistry.localhost:5000/myapp:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
