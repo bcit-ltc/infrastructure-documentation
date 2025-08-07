@@ -19,4 +19,4 @@ docker build -t k3d-myregistry.localhost:5000/myapp:latest .
 echo "=== Pushing image to local registry ==="
 docker push k3d-myregistry.localhost:5000/myapp:latest
 
-echo "=== Setup
+echo "=== Setup complete ==="
