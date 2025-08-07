@@ -1,6 +1,7 @@
 {
   "name": "devcontainer1",
-  "image": "ghcr.io/k3d-io/k3d:5-dind",
+	"dockerFile": "Dockerfile",
+  // "image": "ghcr.io/k3d-io/k3d:5-dind",
   // "features": {
   //   "ghcr.io/devcontainers/features/docker-in-docker:2": {
   //     "version": "latest",
@@ -21,16 +22,16 @@
     "cpus": 4
   },
   // forward ports for the app
-  // "forwardPorts": [
-  //   8000,
-  //   8080
-  // ],
-  // // add labels
-  // "portsAttributes": {
-  //   "8080": {
-  //     "label": "web"
-  //   }
-  // },
+  "forwardPorts": [
+    8080,
+    8443
+  ],
+  // add labels
+  "portsAttributes": {
+    "8080": {
+      "label": "web"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -46,5 +47,17 @@
         "files.insertFinalNewline": true
       }
     }
-  }
+  },
+	// "workspaceFolder": "/go/src/k8s.io/kubernetes",
+	// "workspaceMount": "source=${localWorkspaceFolder},target=/go/src/k8s.io/kubernetes,type=bind,consistency=cached",
+
+	// Copy over welcome message and install pyyaml
+	"onCreateCommand": "bash .devcontainer/on-create.sh",
+
+	// for Kubernetes testing, suppress extraneous forwarding messages
+	"otherPortsAttributes": {
+		"onAutoForward": "silent"
+	},
+
+	"remoteUser": "root"
 }

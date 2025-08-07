@@ -1,9 +1,8 @@
 #!/bin/bash
-
-# this runs as part of pre-build
+set -e
 
 echo "on-create start"
-echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create start" >> "$HOME/status"
+# echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create start" >> "$HOME/status"
 
 # # clone repos
 # git clone https://github.com/cse-labs/imdb-app /workspaces/imdb-app
@@ -13,10 +12,10 @@ echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create start" >> "$HOME/status"
 # dotnet restore /workspaces/webvalidate/src/webvalidate.sln
 # dotnet restore /workspaces/imdb-app/src/imdb.csproj
 
-export REPO_BASE=$PWD
+# export REPO_BASE=$PWD
 # export PATH="$PATH:$REPO_BASE/cli"
 
-mkdir -p "$HOME/.ssh"
+# mkdir -p "$HOME/.ssh"
 
 # {
 #     # add cli to path
@@ -58,8 +57,9 @@ docker network connect k3d k3d-registry.localhost
 # sed -i "s/RUN dotnet test//g" /workspaces/webvalidate/Dockerfile
 # kic build webv
 
-# echo "deploying k3d cluster"
-# kic cluster deploy
+# Deploy k3d cluster
+echo "=== Creating k3d cluster with registry and port 8080 mapping (if not exists) ==="
+k3d cluster create mycluster --registry-use k3d-registry.localhost:5500
 
 # only run apt upgrade on pre-build
 if [ "$CODESPACE_NAME" = "null" ]
@@ -71,4 +71,4 @@ then
 fi
 
 echo "on-create complete"
-echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create complete" >> "$HOME/status"
+# echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create complete" >> "$HOME/status"

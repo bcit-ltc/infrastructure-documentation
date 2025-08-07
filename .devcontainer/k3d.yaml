@@ -10,17 +10,31 @@ kubeAPI:
 #     nodeFilters:
 #       - server[0]
 ports:
-  - port: 8000:8000
+  - port: 0.0.0.0:8080:80
     nodeFilters:
-      - server[0]
+      - loadbalancer
+  - port: 0.0.0.0:8443:443
+    nodeFilters:
+      - loadbalancer
 options:
   k3d:
     wait: true
     timeout: "60s"
+    disableLoadbalancer: false
   k3s:
     extraServerArgs:
       - --tls-san=127.0.0.1
+      - --no-deploy=metrics-server
     extraAgentArgs: []
   kubeconfig:
     updateDefaultKubeconfig: true
     switchCurrentContext: true
+  runtime:
+    labels:
+      - label: foo=bar
+        nodeFilters:
+          - loadbalancer
+env:
+  - envVar: bar=baz
+    nodeFilters:
+      - all
