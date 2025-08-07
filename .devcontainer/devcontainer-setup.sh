@@ -22,4 +22,9 @@ docker build -t k3d-localregistry.localhost:5000/${REPO_NAME}:latest .
 echo "=== Pushing image to local registry ==="
 docker push k3d-localregistry.localhost:5000/${REPO_NAME}:latest
 
-echo "=== Setup complete ===
+echo "=== Deploying app to k3d cluster ==="
+kubectl apply -f .devcontainer/deployment.yaml || { echo "Failed to apply deployment"; exit 1; }
+echo "=== Exposing app service ==="
+kubectl apply -f .devcontainer/service.yaml || { echo "Failed to apply service"; exit 1; }
+
+echo "=== Setup complete ==="
