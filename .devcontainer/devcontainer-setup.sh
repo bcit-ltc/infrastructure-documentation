@@ -1,9 +1,6 @@
 #!/bin/sh
 set -e
 
-# Use the repo (current directory) name as the image name
-# APP_NAME=$(basename "$PWD")
-
 echo "=== Checking k3d installation ==="
 k3d --version || { echo "k3d not found!"; exit 1; }
 
@@ -22,12 +19,15 @@ docker build -t k3d-localregistry.localhost:5000/myapp:latest .
 echo "=== Pushing image to local registry ==="
 docker push k3d-localregistry.localhost:5000/myapp:latest
 
-echo "=== Creating nginx configmap ==="
-kubectl create configmap myapp-nginx-config --from-file=.devcontainer/nginx.conf --dry-run=client -o yaml | kubectl apply -f -
+echo "=== Cloning only the infrastructure-documentation Helm chart ==="
+git clone --filter=blob:none --sparse https://github.com/bcit-ltc/helm-charts.git /tmp/helm-charts
+cd /tmp/helm-charts
+git sparse-checkout set apps/infrastructure-documentation
+cd -
 
-echo "=== Deploying app to k3d cluster ==="
-kubectl apply -f .devcontainer/deployment.yaml || { echo "Failed to apply deployment"; exit 1; }
-echo "=== Exposing app service ==="
-kubectl apply -f .devcontainer/service.yaml || { echo "Failed to apply service"; exit 1; }
+echo "=== Deploying app with Helm ==="
+helm upgrade --install myapp /tmp/helm-charts/apps/infrastructure-documentation \
+  --set image.repository=k3d-localregistry.localhost:5000/myapp \
+  --set image.tag=latest
 
 echo "=== Setup complete ==="
