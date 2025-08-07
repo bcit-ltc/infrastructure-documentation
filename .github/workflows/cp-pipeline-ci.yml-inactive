@@ -6,38 +6,38 @@ on:
       - "*"
 
 jobs:
-  # pipeline-ci-orchestrator:
-  #   name: Execute Pipeline CI
-  #   uses: bcit-ltc/.github/.github/workflows/cp-pipeline-ci-reusable.yml@main
-  #   secrets:
-  #     HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
-  #     DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+  pipeline-ci-orchestrator:
+    name: Execute Pipeline CI
+    uses: bcit-ltc/.github/.github/workflows/cp-pipeline-ci-reusable.yml@main
+#   #   secrets:
+#   #     HELM_REPO_PAT: ${{ secrets.HELM_REPO_PAT }}
+#   #     DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
-  k3d-single-cluster-demo:
-    name: Single cluster on default network with imported registry
-    runs-on: ubuntu-20.04
+#   k3d-single-cluster-demo:
+#     name: Single cluster on default network with imported registry
+#     runs-on: ubuntu-20.04
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: AbsaOSS/k3d-action@v2
-        name: "Create single k3d Cluster with imported Registry"
-        with:
-          cluster-name: test-cluster-1
-          args: >-
-            --config=.devcontainer/k3d.yaml
-            --no-lb
-            --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
-      - name: "Docker repo demo"
-        run: |
-          docker build . -t myproj/demo:v1.0.0
-          k3d image import myproj/demo:v1.0.0 -c test-cluster-1 --verbose
-          kubectl apply -f pod.yaml
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: AbsaOSS/k3d-action@v2
+#         name: "Create single k3d Cluster with imported Registry"
+#         with:
+#           cluster-name: test-cluster-1
+#           args: >-
+#             --config=.devcontainer/k3d.yaml
+#             --no-lb
+#             --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
+#       - name: "Docker repo demo"
+#         run: |
+#           docker build . -t myproj/demo:v1.0.0
+#           k3d image import myproj/demo:v1.0.0 -c test-cluster-1 --verbose
+#           kubectl apply -f pod.yaml
 
 # permissions:
 #   contents: write # to be able to publish a GitHub release
 #   issues: write # to be able to comment on released issues
 #   pull-requests: write # to be able to comment on released pull requests
-#   packages: write # Required for pushing images  
+#   packages: write # Required for pushing images
 
 # jobs:
 #   pipeline-manager:
@@ -68,4 +68,3 @@ jobs:
 #             --repository_url=${{ github.server_url }}/${{ github.repository }}
 #           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 #           version: "latest"
-          
