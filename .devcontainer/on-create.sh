@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "on-create start"
+echo "=== on-create start ==="
 # echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create start" >> "$HOME/status"
 
 # # clone repos
@@ -27,7 +27,7 @@ echo "on-create start"
 
 # create local registry
 docker network create k3d
-k3d registry create registry.localhost --port 5500
+k3d registry create registry.localhost --port 5000
 docker network connect k3d k3d-registry.localhost
 
 # update the base docker images
@@ -58,8 +58,8 @@ docker network connect k3d k3d-registry.localhost
 # kic build webv
 
 # Deploy k3d cluster
-echo "=== Creating k3d cluster with registry and port 8080 mapping (if not exists) ==="
-k3d cluster create mycluster --registry-use k3d-registry.localhost:5500
+echo "=== Creating k3d cluster with registry ==="
+k3d cluster create mycluster --registry-use k3d-registry.localhost:5000
 
 # only run apt upgrade on pre-build
 if [ "$CODESPACE_NAME" = "null" ]
@@ -70,5 +70,5 @@ then
     sudo apt-get clean -y
 fi
 
-echo "on-create complete"
+echo "=== on-create complete ==="
 # echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create complete" >> "$HOME/status"
