@@ -1,24 +1,22 @@
 apiVersion: k3d.io/v1alpha5
 kind: Simple
 metadata:
-  name: review-cluster
+  name: review
 servers: 1
 agents: 1
 network: k3d
 kubeAPI:
   hostIP: "0.0.0.0"
   hostPort: "6443"
-# registries:
-#   create: true
-#   registry:
-#     - name: registry.localhost
-#       host: "0.0.0.0"
-#       port: "5000"
-#       config: |
-#         mirrors:
-#           "registry.localhost":
-#             endpoint:
-#               - http://registry.localhost:5000
+registries:
+  create:
+    name: localhost
+    hostPort: "5000"
+  config: |
+    mirrors:
+      "localhost":
+        endpoint:
+          - http://localhost:5000
 # volumes:
 #   - volume: /prometheus:/prometheus
 #     nodeFilters:

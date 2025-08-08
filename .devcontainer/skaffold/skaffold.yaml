@@ -1,0 +1,19 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: review
+build:
+  artifacts:
+  - image: app
+  local:
+    useBuildkit: true
+deploy:
+  helm:
+    releases:
+      - name: review
+        chartPath: .devcontainer/app-chart/infrastructure-documentation
+        setValueTemplates:
+          image.repository: app
+          image.tag: latest
+        setValues:
+          image.pullPolicy: "IfNotPresent"

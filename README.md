@@ -24,3 +24,7 @@ To remove pods stuck in `Terminating`, run the following:
 
     kubectl get pods --all-namespaces | grep Terminating | while read namespace pod rest; do kubectl delete pod $pod -n $namespace --force; done
 
+## Testing
+
+    curl http://localhost:5000/v2/_catalog
+    skaffold dev -f .devcontainer/skaffold/skaffold.yaml

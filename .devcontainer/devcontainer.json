@@ -1,14 +1,6 @@
 {
-  "name": "devcontainer1",
+  "name": "review",
   "dockerFile": "Dockerfile",
-  // "image": "ghcr.io/k3d-io/k3d:5-dind",
-  // "features": {
-  //   "ghcr.io/devcontainers/features/docker-in-docker:2": {
-  //     "version": "latest",
-  //     "moby": true,
-  //     "enableNonRootDocker": false
-  //   }
-  // },
   // // do not change these if you want Docker in Docker support
   // "runArgs": [
   //   "--init",
@@ -26,12 +18,6 @@
     8080,
     8443
   ],
-  // add labels
-  "portsAttributes": {
-    "8080": {
-      "label": "web"
-    }
-  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -50,10 +36,6 @@
   },
   // "workspaceFolder": "/go/src/k8s.io/kubernetes",
   // "workspaceMount": "source=${localWorkspaceFolder},target=/go/src/k8s.io/kubernetes,type=bind,consistency=cached",
-  // for Kubernetes testing, suppress extraneous forwarding messages
-  "otherPortsAttributes": {
-    "onAutoForward": "silent"
-  },
   "remoteUser": "root",
   // Copy over welcome message and install pyyaml
   "onCreateCommand": "bash .devcontainer/on-create.sh",

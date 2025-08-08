@@ -1,75 +1,20 @@
 #!/bin/bash
-set -e
 
-echo "=== on-create start ==="
-# echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create start" >> "$HOME/status"
+echo "=== $(date +'%Y-%m-%d %H:%M:%S') on-create start ===" | tee -a "$HOME/status"
 
-# # clone repos
-# git clone https://github.com/cse-labs/imdb-app /workspaces/imdb-app
-# git clone https://github.com/microsoft/webvalidate /workspaces/webvalidate
-
-# # restore the repos
-# dotnet restore /workspaces/webvalidate/src/webvalidate.sln
-# dotnet restore /workspaces/imdb-app/src/imdb.csproj
-
-# export REPO_BASE=$PWD
-# export PATH="$PATH:$REPO_BASE/cli"
-
-# mkdir -p "$HOME/.ssh"
-
-# {
-#     # add cli to path
-#     echo "export PATH=\$PATH:$REPO_BASE/cli"
-
-#     echo "export REPO_BASE=$REPO_BASE"
-#     echo "compinit"
-# } >> "$HOME/.zshrc"
-
-# create local registry
-# docker network create k3d
-# k3d registry create registry.localhost --port 5000
-# docker network connect k3d k3d-registry.localhost
-
-# update the base docker images
-# docker pull mcr.microsoft.com/dotnet/aspnet:6.0-alpine
-# docker pull mcr.microsoft.com/dotnet/sdk:6.0
-# docker pull ghcr.io/cse-labs/webv-red:latest
-
-# echo "dowloading kic CLI"
-# cd cli || exit
-# tag="0.4.3"
-# wget -O kic.tar.gz "https://github.com/retaildevcrews/akdc/releases/download/$tag/kic-$tag-linux-amd64.tar.gz"
-# tar -xvzf kic.tar.gz
-# rm kic.tar.gz
-# cd "$OLDPWD" || exit
-
-# echo "generating completions"
-# kic completion zsh > "$HOME/.oh-my-zsh/completions/_kic"
-# kubectl completion zsh > "$HOME/.oh-my-zsh/completions/_kubectl"
-
-# echo "creating k3d cluster"
-# kic cluster rebuild
-
-# echo "bilding IMDb"
-# kic build imdb
-
-# echo "building WebValidate"
-# sed -i "s/RUN dotnet test//g" /workspaces/webvalidate/Dockerfile
-# kic build webv
-
-# Deploy k3d cluster
-echo "=== Creating k3d cluster with registry ==="
-# k3d cluster create --registry-create registry.localhost:5000
-k3d cluster create --config .devcontainer/k3d.yaml --registry-create registry.localhost:5000
+# Set container hostname and environment variable to first 20 chars of branch name
+echo "$(date +'%Y-%m-%d %H:%M:%S') === set container hostname ===" | tee -a "$HOME/status"
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo main) && SHORT_BRANCH=${BRANCH:0:20}
+echo "Setting hostname and environment variable to: $SHORT_BRANCH" | tee -a "$HOME/status"
+sudo hostnamectl set-hostname "$SHORT_BRANCH"
+echo "export BRANCH_SHORT=\"$SHORT_BRANCH\"" | sudo tee /etc/profile.d/branch.sh > /dev/null
 
 # only run apt upgrade on pre-build
 if [ "$CODESPACE_NAME" = "null" ]
 then
-    sudo apt-get update
-    sudo apt-get upgrade -y
-    sudo apt-get autoremove -y
-    sudo apt-get clean -y
+    apk update
+    apk upgrade
+    apk cache purge
 fi
 
-echo "=== on-create complete ==="
-# echo "$(date +'%Y-%m-%d %H:%M:%S')    on-create complete" >> "$HOME/status"
+echo "=== $(date +'%Y-%m-%d %H:%M:%S') on-create complete ===" | tee -a "$HOME/status"
