@@ -25,7 +25,7 @@ docker push k3d-localregistry.localhost:5000/myapp:latest
 echo "=== Deploying app with Helm ==="
 helm upgrade --install myapp oci://ghcr.io/bcit-ltc/oci/infrastructure-documentation \
   --reuse-values \
-  --set image.repository=k3d-localregistry.localhost:5000/myapp \
+  --set image.repository=registry.localhost:5000/myapp \
   --set image.tag=latest
 
 #   --set service.type=LoadBalancer \
