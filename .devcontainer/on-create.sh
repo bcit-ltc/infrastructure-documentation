@@ -59,7 +59,8 @@ echo "=== on-create start ==="
 
 # Deploy k3d cluster
 echo "=== Creating k3d cluster with registry ==="
-k3d cluster create mycluster --registry-use registry.localhost:5000
+# k3d cluster create --registry-create registry.localhost:5000
+k3d cluster create --config .devcontainer/k3d.yaml --registry-create registry.localhost:5000
 
 # only run apt upgrade on pre-build
 if [ "$CODESPACE_NAME" = "null" ]
