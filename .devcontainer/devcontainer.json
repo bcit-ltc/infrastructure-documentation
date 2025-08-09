@@ -15,9 +15,14 @@
   },
   // forward ports for the app
   "forwardPorts": [
-    8080,
     8443
   ],
+  // add labels
+  "portsAttributes": {
+    "8443": {
+      "label": "kubernetes-dashboard"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [

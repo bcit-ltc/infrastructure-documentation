@@ -3,17 +3,25 @@ kind: Config
 metadata:
   name: review
 build:
+  insecureRegistries:
+    - registry.localhost
   artifacts:
-  - image: app
+    - image: app-review
   local:
     useBuildkit: true
 deploy:
   helm:
     releases:
-      - name: review
-        chartPath: .devcontainer/app-chart/infrastructure-documentation
+      - name: app-review
+        chartPath: /workspaces/infrastructure-documentation/infrastructure-documentation
+        # chartPath: "{{.CODESPACE_VSCODE_FOLDER}}" # TODO
+        namespace: app-review
+        createNamespace: true
+        # setValues:
+        #   image.registry: host.k3d.internal:5000
+          # image.repository: app-review
+          # image.pullPolicy: "IfNotPresent"
         setValueTemplates:
-          image.repository: app
-          image.tag: latest
-        setValues:
-          image.pullPolicy: "IfNotPresent"
+          image.registry: "{{.IMAGE_DOMAIN_app_review}}"
+          image.repository: "{{.IMAGE_REPO_NO_DOMAIN_app_review}}"
+          image.tag: "{{.IMAGE_TAG_app_review}}"

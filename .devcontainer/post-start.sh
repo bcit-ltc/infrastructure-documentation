@@ -2,17 +2,22 @@
 
 # this runs each time the container starts
 
-echo "=== $(date +'%Y-%m-%d %H:%M:%S') post-start start ===" | tee -a "$HOME/status"
-
-# Mount k3d/kubernetes-dashboard for automatic deployment
+echo "=== post-start start ===" | tee -a "$HOME/status"
 
 # Deploy k3d cluster
-echo "=== $(date +'%Y-%m-%d %H:%M:%S') Creating k3d cluster with config ===" | tee -a "$HOME/status"
+echo "=== Creating k3d cluster with config ===" | tee -a "$HOME/status"
 k3d cluster create --config .devcontainer/k3d/k3d.yaml
 
 # Confirm k3d cluster details
 kubectl cluster-info | tee -a "$HOME/status"
-echo "=== $(date +'%Y-%m-%d %H:%M:%S') k3d cluster is ready ===" | tee -a "$HOME/status"
+echo "=== k3d cluster is ready ===" | tee -a "$HOME/status"
+
+# Store the admin-user token for kubernetes-dashboard
+echo "=== storing kubernetes-dashboard admin-user token ===" | tee -a "$HOME/status"
+echo "$(kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d)" > "$HOME/dashboard-token.txt"
+
+# Port-forward the kubernetes-dashboard service
+# kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443 &
 
 # echo "=== Building app Docker image ==="
 # docker build -t k3d-localregistry.localhost:5000/myapp:latest .
@@ -41,7 +46,7 @@ echo "=== $(date +'%Y-%m-%d %H:%M:%S') k3d cluster is ready ===" | tee -a "$HOME
 #   --set service.type=LoadBalancer \
 #   --set containerPort=8080
 
-echo "=== $(date +'%Y-%m-%d %H:%M:%S') post-start complete ===" | tee -a "$HOME/status"
+echo "=== post-start complete ===" | tee -a "$HOME/status"
 
 # Return to workspace
 cd $CODESPACE_VSCODE_FOLDER

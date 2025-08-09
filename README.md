@@ -26,5 +26,19 @@ To remove pods stuck in `Terminating`, run the following:
 
 ## Testing
 
-    curl http://localhost:5000/v2/_catalog
-    skaffold dev -f .devcontainer/skaffold/skaffold.yaml
+    curl http://registry.local:5000/v2/_catalog
+    skaffold dev -f .devcontainer/skaffold/skaffold.yaml --default-repo registry.localhost:5000    kubectl -n kubernetes-dashboard create token kubernetes-dashboard-web
+    kubectl get events
+    kubectl port-forward pods/nginx 8080:80
+    kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+    kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d
+
+          # {{- with .Values.resources }}
+          # resources:
+          #   {{- toYaml . | nindent 12 }}
+          # {{- end }}
+
+    kubectl patch svc nginx --type='json' -p='[{"op": "replace", "path": "/spec/ports/0/port", "value":"8080"}]'
+    skaffold config set kind-disable-load true
+    skaffold config set default-repo localhost:5000
+    skaffold config set insecure-registries http://localhost:5000
