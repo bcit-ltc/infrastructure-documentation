@@ -7,6 +7,15 @@ build:
     - registry.localhost
   artifacts:
     - image: app
+      # hooks:
+      #   before:
+      #     - command: ["sh", "-c", "kd.sh"]
+      #       os: [darwin, linux]
+          # - command: ["cmd.exe", "/C", "hook.bat"]
+          #   os: [windows]
+      sync:
+        infer:
+        - 'docs/'
   local:
     useBuildkit: true
 deploy:

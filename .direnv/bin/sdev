@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-exec skaffold dev -f .devcontainer/skaffold/skaffold.yaml "$@"
