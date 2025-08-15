@@ -24,17 +24,17 @@
   "forwardPorts": [8443, 8000, 8080],
   "portsAttributes": { "8443": { "label": "kubernetes-dashboard" } },
 
-  // "customizations": {
-  //   "vscode": {
-  //     "extensions": [],
-  //     "settings": {
-  //       "terminal.integrated.defaultProfile.linux": "bash",
-  //       "files.trimTrailingWhitespace": true,
-  //       "files.trimFinalNewlines": true,
-  //       "files.insertFinalNewline": true
-  //     }
-  //   }
-  // },
+  "customizations": {
+    "vscode": {
+      "extensions": [],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "files.trimTrailingWhitespace": true,
+        "files.trimFinalNewlines": true,
+        "files.insertFinalNewline": true
+      }
+    }
+  },
 
   "remoteUser": "root"
   // "onCreateCommand": "bash .devcontainer/on-create.sh",

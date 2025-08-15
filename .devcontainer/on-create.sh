@@ -12,12 +12,18 @@ echo "=== on-create start ===" | tee -a "$HOME/status"
 # Add local k3d registry to /etc/hosts
 echo "127.0.0.1     registry.localhost" | sudo tee -a /etc/hosts > /dev/null
 
+# # Enable shell completion for k3d
+# k3d completion bash > /etc/bash_completion.d/k3d
+# source <(k3d completion bash)
+
+echo "alias l='ls -hAlF'" >> ~/.bashrc
+
 # only run apt upgrade on pre-build
 if [ "$CODESPACE_NAME" = "null" ]
 then
-    apk update
-    apk upgrade
-    apk cache purge
+    apt update
+    apt -y upgrade
+    apt autoremove
 fi
 
 echo "=== on-create complete ===" | tee -a "$HOME/status"

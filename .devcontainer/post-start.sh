@@ -19,6 +19,23 @@ echo "$(kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".dat
 # Port-forward the kubernetes-dashboard service
 # kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443 &
 
+# Create `dashboard.sh` to print dashboard admin user token and proxy dashboard
+# cat << 'EOF' > /usr/local/bin/dashboard
+# #!/bin/bash
+
+# # Retrieve token
+# DASHBOARD_TOKEN=$(kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d)
+
+# # Display token and port-forward dashboard
+# echo -e "\n\nDashboard Token: $DASHBOARD_TOKEN\n\n"
+
+# kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+# EOF
+
+# chmod +x /usr/local/bin/dashboard
+
+# echo "alias dashboard='/usr/local/bin/dashboard'" >> ~/.bashrc
+
 # echo "=== Building app Docker image ==="
 # docker build -t k3d-localregistry.localhost:5000/myapp:latest .
 
