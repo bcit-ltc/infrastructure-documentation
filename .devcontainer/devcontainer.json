@@ -3,9 +3,6 @@
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
   "features": {
-    "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-  },
     "ghcr.io/devcontainers/features/nix": {
       "packages": [
         "kustomize",
@@ -17,7 +14,8 @@
         "kubectl",
         "k3d"
       ]
-    }
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
