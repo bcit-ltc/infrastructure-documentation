@@ -26,7 +26,7 @@ hostAliases: # /etc/hosts style entries to be injected into /etc/hosts in the no
     hostnames:
       - registry.localhost
 volumes:
-  - volume: /workspaces/infrastructure-documentation/.devcontainer/k3d/kubernetes-dashboard/kubernetes-dashboard.yaml:/var/lib/rancher/k3s/server/manifests/kubernetes-dashboard.yaml
+  - volume: ${WORKSPACE_ROOT}/.devcontainer/k3d/kubernetes-dashboard/kubernetes-dashboard.yaml:/var/lib/rancher/k3s/server/manifests/kubernetes-dashboard.yaml
     nodeFilters:
       - server:0
 ports:
@@ -36,3 +36,9 @@ ports:
   - port: 0.0.0.0:8443:443
     nodeFilters:
       - loadbalancer
+options:
+  k3s: # options passed on to K3s itself
+    extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
+      - arg: "--disable=metrics-server"
+        nodeFilters:
+          - server:*
