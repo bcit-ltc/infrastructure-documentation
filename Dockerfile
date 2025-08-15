@@ -1,8 +1,8 @@
 ## Build
 #
-FROM squidfunk/mkdocs-material as build
+FROM squidfunk/mkdocs-material AS build
 
-WORKDIR /docs
+WORKDIR /app
 
 RUN set -ex \
     && pip install \
@@ -11,7 +11,7 @@ RUN set -ex \
         mkdocs-git-revision-date-localized-plugin \
     ;
 
-COPY . ./
+COPY . /app
 
 RUN set -ex \
     && mkdocs build --site-dir /public
@@ -19,8 +19,11 @@ RUN set -ex \
 
 ## Release
 #
-FROM nginxinc/nginx-unprivileged:1.24
+FROM nginxinc/nginx-unprivileged:alpine3.22-perl
 
-LABEL maintainer courseproduction@bcit.ca
+LABEL maintainer=courseproduction@bcit.ca
+
+# Upgrade all packages to minimize vulnerabilities
+# RUN apk update && apk upgrade
 
 COPY --from=build /public /usr/share/nginx/html/

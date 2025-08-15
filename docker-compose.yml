@@ -1,5 +1,4 @@
-version: "3"
-
+name: infrastructure-documentation
 services:
   app:
     image: infrastructure-documentation
@@ -9,6 +8,6 @@ services:
       - DEBUG=true
       - CI=false
     volumes:
-    - ./:/docs
+    - .:/app
     ports:
-      - 8000:8000
+      - "8000:8000"

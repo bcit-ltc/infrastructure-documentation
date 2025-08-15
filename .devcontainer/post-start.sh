@@ -48,5 +48,8 @@ echo "$(kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".dat
 
 echo "=== post-start complete ===" | tee -a "$HOME/status"
 
-# Return to workspace
-cd $CODESPACE_VSCODE_FOLDER
+# # Hook direnv into bash shell
+# direnv allow && eval "$(direnv hook bash)"
+
+# # Return to workspace
+# cd $CODESPACE_VSCODE_FOLDER

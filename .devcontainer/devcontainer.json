@@ -1,51 +1,45 @@
 {
   "name": "review",
-  "dockerFile": "Dockerfile",
-  // // do not change these if you want Docker in Docker support
-  // "runArgs": [
-  //   "--init",
-  //   "--privileged"
-  // ],
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+
+  "features": {
+    "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+    "ghcr.io/devcontainers/features/nix": {
+      "packages": [
+        "kustomize",
+        "kubernetes-helm",
+        "skaffold",
+        "kubeval",
+        "kubeconform",
+        "docker",
+        "kubectl",
+        "k3d"
+      ]
+    }
+  },
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
-  // Ensure that the host machine has enough resources to build and test Kubernetes
-  "hostRequirements": {
-    "cpus": 4
-  },
-  // forward ports for the app
-  "forwardPorts": [
-    8443
-  ],
-  // add labels
-  "portsAttributes": {
-    "8443": {
-      "label": "kubernetes-dashboard"
-    }
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-azuretools.vscode-docker",
-        "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "davidanson.vscode-markdownlint",
-        "github.vscode-github-actions"
-      ],
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash",
-        "files.trimTrailingWhitespace": true,
-        "files.trimFinalNewlines": true,
-        "files.insertFinalNewline": true
-      }
-    }
-  },
-  // "workspaceFolder": "/go/src/k8s.io/kubernetes",
-  // "workspaceMount": "source=${localWorkspaceFolder},target=/go/src/k8s.io/kubernetes,type=bind,consistency=cached",
-  "remoteUser": "root",
-  // Copy over welcome message and install pyyaml
-  "onCreateCommand": "bash .devcontainer/on-create.sh",
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "bash .devcontainer/post-create.sh",
-  // Use 'postStartCommand' to run commands after the container starts.
-  "postStartCommand": "bash .devcontainer/post-start.sh"
+  "hostRequirements": { "cpus": 4 },
+  "forwardPorts": [8443, 8000, 8080],
+  "portsAttributes": { "8443": { "label": "kubernetes-dashboard" } },
+
+  // "customizations": {
+  //   "vscode": {
+  //     "extensions": [],
+  //     "settings": {
+  //       "terminal.integrated.defaultProfile.linux": "bash",
+  //       "files.trimTrailingWhitespace": true,
+  //       "files.trimFinalNewlines": true,
+  //       "files.insertFinalNewline": true
+  //     }
+  //   }
+  // },
+
+  "remoteUser": "root"
+  // "onCreateCommand": "bash .devcontainer/on-create.sh",
+  // "postCreateCommand": "bash .devcontainer/post-create.sh",
+  // "postStartCommand":  "bash .devcontainer/post-start.sh"
 }
