@@ -25,10 +25,10 @@ hostAliases: # /etc/hosts style entries to be injected into /etc/hosts in the no
   - ip: 172.18.0.1
     hostnames:
       - registry.localhost
-volumes:
-  - volume: ${WORKSPACE_ROOT}/.devcontainer/k3d/kubernetes-dashboard/kubernetes-dashboard.yaml:/var/lib/rancher/k3s/server/manifests/kubernetes-dashboard.yaml
-    nodeFilters:
-      - server:0
+# volumes:
+#   - volume: ${WORKSPACE_ROOT}/.devcontainer/k3d/kubernetes-dashboard/kubernetes-dashboard.yaml:/var/lib/rancher/k3s/server/manifests/kubernetes-dashboard.yaml
+#     nodeFilters:
+#       - server:0
 ports:
   - port: 0.0.0.0:8080:80
     nodeFilters:

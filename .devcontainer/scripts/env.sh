@@ -21,6 +21,9 @@ fi
 : "${PRINTED_FLAG:=$APP_STATE_DIR/.printed_dashboard_token}"
 
 # k3d config path anchored to the same root
-: "${K3D_CFG_PATH:=$WORKSPACE_ROOT/.devcontainer/k3d/k3d.yaml}"
+: "${K3D_CFG_PATH:=$WORKSPACE_ROOT/.devcontainer/k3d}"
+
+# org
+: "${ORG_NAME:=bcit-ltc}"
 
 export WORKSPACE_ROOT APP_ID APP_STATE_DIR TOKEN_PATH PRINTED_FLAG K3D_CFG_PATH
