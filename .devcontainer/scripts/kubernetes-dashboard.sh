@@ -11,6 +11,8 @@ if helm repo list | grep -q '^kubernetes-dashboard'; then
 else
   helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard
 fi
+
+# Ensure latest version
 helm repo update
 
 # Only upgrade/install the helm chart if it is not already deployed
@@ -22,6 +24,8 @@ else
 fi
 
 # Create admin user and service account
+# - this could be charts that are automatically deployed via k3d, but csrf
+#   and RBAC deployment errors need solving first
 cat <<'EOF' | kubectl create -f -
 apiVersion: v1
 kind: ServiceAccount
@@ -52,7 +56,7 @@ metadata:
 type: kubernetes.io/service-account-token
 EOF
 
-# Poll until the admin-user secret exists
+# Store admin-user token; poll until secret exists
 MAX_ATTEMPTS=10
 ATTEMPT=1
 until kubectl get secret admin-user -n kubernetes-dashboard >/dev/null 2>&1; do

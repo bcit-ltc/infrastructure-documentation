@@ -2,7 +2,6 @@
 FROM squidfunk/mkdocs-material AS build
 WORKDIR /app
 
-# exact same packages; just avoid cache
 RUN set -ex \
     && pip install --no-cache-dir \
         Pygments \

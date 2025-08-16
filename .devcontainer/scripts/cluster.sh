@@ -5,6 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 . "$SCRIPT_DIR/env.sh"
 
+# Create k3d cluster and verify connection
 echo "🚀 Creating k3d cluster..."
 k3d cluster create --config "$K3D_CFG_PATH/k3d.yaml"
 

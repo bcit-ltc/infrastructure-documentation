@@ -10,6 +10,8 @@ if [ -d ".devcontainer/app-chart" ]; then
   echo "⚠️ Directory .devcontainer/app-chart already exists. Skipping chart pull and move."
 else
   echo "📡 Retrieving and unpacking app helm chart..."
+
+  # Assuming public access
   helm pull oci://ghcr.io/$ORG_NAME/oci/$APP_ID --untar --destination .devcontainer
   mv ".devcontainer/$APP_ID" ".devcontainer/app-chart"
 fi
