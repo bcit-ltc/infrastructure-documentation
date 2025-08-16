@@ -11,4 +11,7 @@ k3d cluster create --config "$K3D_CFG_PATH/k3d.yaml"
 echo "📡 Fetching cluster info..."
 kubectl cluster-info | tee -a "$HOME/status"
 
+echo "📦 Cluster nodes:"
+kubectl get nodes
+
 echo -e "\n✅ Cluster setup complete.\n"

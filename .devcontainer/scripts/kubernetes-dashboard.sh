@@ -7,14 +7,19 @@ SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
 # Deploy kubernetes dashboard
 if helm repo list | grep -q '^kubernetes-dashboard'; then
-  echo "Helm repo 'kubernetes-dashboard' already exists, skipping add."
+  echo "⚠️ Helm repo 'kubernetes-dashboard' already exists, skipping add."
 else
   helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard
 fi
 helm repo update
 
-helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard \
-  --namespace kubernetes-dashboard --create-namespace
+# Only upgrade/install the helm chart if it is not already deployed
+if helm list -n kubernetes-dashboard | grep -q '^kubernetes-dashboard\b'; then
+  echo "⚠️ Helm release 'kubernetes-dashboard' already exists in namespace 'kubernetes-dashboard', skipping upgrade/install."
+else
+  helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard \
+    --namespace kubernetes-dashboard --create-namespace
+fi
 
 # Create admin user and service account
 cat <<'EOF' | kubectl create -f -

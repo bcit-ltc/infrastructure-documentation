@@ -6,6 +6,7 @@ log() { printf '[on-create] %s\n' "$*" | tee -a "$HOME/status"; }
 log "start"
 
 # Add local k3d registry to /etc/hosts (system scope)
+echo "Adding local k3d registry to /etc/hosts..."
 echo "127.0.0.1     registry.localhost" | sudo tee -a /etc/hosts > /dev/null
 
 # Only run APT during prebuilds (CODESPACE_NAME == "null")

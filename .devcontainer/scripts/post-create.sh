@@ -23,8 +23,9 @@ if ! grep -q 'direnv hook' "$TARGET_RC" 2>/dev/null; then
   echo 'eval "$(direnv hook bash)"' >> "$TARGET_RC"
 fi
 
-# Small quality-of-life alias (idempotent)
-grep -q "^alias l=" "$TARGET_RC" 2>/dev/null || echo "alias l='ls -hAlF'" >> "$TARGET_RC"
+# Always overwrite the default 'alias l=' in .bashrc or .zshrc
+sed -i '/^alias l=/d' "$TARGET_RC"
+echo "alias l='ls -hAlF'" >> "$TARGET_RC"
 
 # # Print-once token banner (idempotent, uses XDG state paths)
 # SNIP_GUARD="# --- print-dashboard-token (managed) ---"
@@ -45,6 +46,7 @@ grep -q "^alias l=" "$TARGET_RC" 2>/dev/null || echo "alias l='ls -hAlF'" >> "$T
 # fi
 
 # User-level bash completion for k3d (no writes to /etc)
+echo "Generating bash completion for k3d..."
 k3d completion bash > "$HOME/.local/share/bash-completion/completions/k3d" 2>/dev/null || true
 
 # # -----------------------------------------------------------------------------

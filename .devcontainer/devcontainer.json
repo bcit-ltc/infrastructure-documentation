@@ -5,16 +5,18 @@
   "features": {
     "ghcr.io/devcontainers/features/nix": {
       "packages": [
-        "kubectl",
-        "kustomize",
-        "kubernetes-helm",
-        "kubeval",
-        "kubeconform",
-        "k3d",
+        "container-structure-test",
         "direnv",
         "docker",
+        "k3d",
+        "kubectl",
+        "kubeconform",
+        "kubernetes-helm",
+        "kubeval",
+        "kustomize",
         "skaffold",
-        "xdg-utils"
+        "xdg-utils",
+        "yq"
       ]
     },
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}

@@ -23,7 +23,7 @@ deploy:
     releases:
       - name: app
         # If you want to allow overriding via env var CHART_PATH, fall back to a default:
-        chartPath: ../app-chart
+        chartPath: .devcontainer/app-chart
         namespace: app
         createNamespace: true
         setValueTemplates:

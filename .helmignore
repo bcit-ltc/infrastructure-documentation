@@ -1,0 +1,25 @@
+# Common Helm ignore patterns
+*.md
+*.txt
+*.bak
+*.swp
+*.tmp
+*.log
+*.out
+*.DS_Store
+.git/
+.gitignore
+.env
+node_modules/
+docs/
+test/
+tests/
+__pycache__/
+*.pyc
+*.lock
+*.tar.gz
+*.zip
+*.tgz
+.idea/
+.vscode/
+*.code-workspace
