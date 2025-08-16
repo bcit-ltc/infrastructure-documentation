@@ -1,26 +1,20 @@
 ## Build
-#
-FROM squidfunk/mkdocs-material as build
-
-WORKDIR /docs
+FROM squidfunk/mkdocs-material AS build
+WORKDIR /app
 
 RUN set -ex \
-    && pip install \
+    && pip install --no-cache-dir \
         Pygments \
         pymdown-extensions \
-        mkdocs-git-revision-date-localized-plugin \
-    ;
+        mkdocs-git-revision-date-localized-plugin
 
-COPY . ./
+COPY . /app
 
 RUN set -ex \
     && mkdocs build --site-dir /public
 
-
 ## Release
-#
-FROM nginxinc/nginx-unprivileged:1.24
-
-LABEL maintainer courseproduction@bcit.ca
+FROM nginxinc/nginx-unprivileged:alpine3.22-perl
+LABEL maintainer=courseproduction@bcit.ca
 
 COPY --from=build /public /usr/share/nginx/html/
