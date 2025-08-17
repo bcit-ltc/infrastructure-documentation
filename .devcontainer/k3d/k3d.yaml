@@ -6,7 +6,7 @@ servers: 1
 agents: 1
 network: k3d
 kubeAPI:
-  hostIP: "0.0.0.0"
+  hostIP: "127.0.0.1"
   hostPort: "6443"
 registries:
   create:
@@ -21,7 +21,7 @@ registries:
       "registry.localhost":
         tls:
           insecure_skip_verify: true
-hostAliases: # /etc/hosts style entries to be injected into /etc/hosts in the node containers and in the NodeHosts section in CoreDNS
+hostAliases:
   - ip: 172.18.0.1
     hostnames:
       - registry.localhost
@@ -30,15 +30,15 @@ hostAliases: # /etc/hosts style entries to be injected into /etc/hosts in the no
 #     nodeFilters:
 #       - server:0
 ports:
-  - port: 0.0.0.0:8080:80
+  - port: 127.0.0.1:8080:80
     nodeFilters:
       - loadbalancer
-  - port: 0.0.0.0:8443:443
+  - port: 127.0.0.1:8443:443
     nodeFilters:
       - loadbalancer
 options:
-  k3s: # options passed on to K3s itself
-    extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
+  k3s:
+    extraArgs:
       - arg: "--disable=metrics-server"
         nodeFilters:
           - server:*

@@ -8,7 +8,6 @@
       "packages": [
         "container-structure-test",
         "direnv",
-        "docker",
         "k3d",
         "kubectl",
         "kubeconform",
@@ -25,7 +24,7 @@
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
   "hostRequirements": { "cpus": 4 },
-  "forwardPorts": [8443, 8000, 8080],
+  "forwardPorts": [8080, 8443],
   "portsAttributes": { "8443": { "label": "kubernetes-dashboard" } },
 
   "customizations": {
@@ -46,7 +45,7 @@
     }
   },
 
-  "remoteUser": "root",
+  "remoteUser": "vscode",
   "onCreateCommand": "bash .devcontainer/scripts/on-create.sh",
   "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
   "postStartCommand":  "bash .devcontainer/scripts/post-start.sh"
