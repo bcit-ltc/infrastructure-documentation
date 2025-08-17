@@ -16,7 +16,7 @@ deploy:
   helm:
     releases:
       - name: app
-        chartPath: .devcontainer/app-chart
+        chartPath: app-chart
         namespace: app
         createNamespace: true
         setValueTemplates:
