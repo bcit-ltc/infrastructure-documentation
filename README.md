@@ -2,18 +2,35 @@
 
 Information about the architecture and makeup of the LTC's server infrastructure.
 
-## Developing
+## Developing using Codespaces
 
-1. Create an issue & checkout the branch in your code editor
+1. Create an issue & branch for your work
+1. [Open repo in Codespaces](https://codespaces.new/bcit-ltc/infrastructure-documentation) and checkout your branch
 1. Open a terminal and run
 
     docker compose up
 
 1. Browse to `http://localhost:8000` (for browser-based sessions: command palette: `>open port in browser`).
 
-## Confirm Deployment
+## Developing using your own environment
 
-1. Run `make cluster` (and optionally, `make dashboard`), followed by `skaffold dev`
+### Dependencies
+
+For basic development:
+
+- `docker` or `buildah`
+
+And to test cluster deployment:
+
+- `kubectl`
+- `helm`
+- `direnv`
+- `k3d`
+- `skaffold`
+
+## Testing cluster deployment
+
+1. Run `make cluster` (and optionally, `make dashboard` for the [Kubernetes-dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) app), followed by `skaffold dev`
 
 ## Cleanup
 
