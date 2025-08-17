@@ -1,8 +1,0 @@
-{
-  "name": "infrastructure-documentation",
-  "engineVersion": "v0.17",
-  "sdk": {
-    "source": "python"
-  },
-  "source": "dagger"
-}

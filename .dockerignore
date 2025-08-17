@@ -1,4 +1,11 @@
 .DS_Store
+.devcontainer/
+.github/
 .dockerignore
+.envrc
 .gitignore
-.gitlab-ci*
+.helmignore
+docker-compose.yml
+Dockerfile
+Makefile
+.git/

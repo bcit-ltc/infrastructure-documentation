@@ -1,4 +1,4 @@
-# Common Helm ignore patterns
+# Common Helm ignore patterns (used to speed up local repo loading with `skaffold dev`)
 *.md
 *.txt
 *.bak
