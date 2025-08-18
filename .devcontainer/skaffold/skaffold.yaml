@@ -9,7 +9,7 @@ build:
     - image: app
       sync:
         infer:
-        - 'docs/'
+          - 'docs/'
   local:
     useBuildkit: true
 deploy:

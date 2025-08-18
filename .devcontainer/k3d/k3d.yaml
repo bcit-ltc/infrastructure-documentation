@@ -14,28 +14,19 @@ registries:
     hostPort: "5000"
   config: |
     mirrors:
-      "registry.localhost":
+      "registry.localhost:5000":
         endpoint:
           - http://registry.localhost:5000
-    configs:
-      "registry.localhost":
-        tls:
-          insecure_skip_verify: true
-hostAliases:
-  - ip: 172.18.0.1
-    hostnames:
-      - registry.localhost
-# volumes:
-#   - volume: ${WORKSPACE_ROOT}/.devcontainer/k3d/kubernetes-dashboard/kubernetes-dashboard.yaml:/var/lib/rancher/k3s/server/manifests/kubernetes-dashboard.yaml
+# optionally map the registry into the cluster nodes if needed:
+#   use:
+#     - k3d-registry.localhost:5000
+# ports:
+#   - port: 127.0.0.1:8080:80
 #     nodeFilters:
-#       - server:0
-ports:
-  - port: 127.0.0.1:8080:80
-    nodeFilters:
-      - loadbalancer
-  - port: 127.0.0.1:8443:443
-    nodeFilters:
-      - loadbalancer
+#       - loadbalancer
+#   - port: 127.0.0.1:8443:443
+#     nodeFilters:
+#       - loadbalancer
 options:
   k3s:
     extraArgs:

@@ -1,52 +1,38 @@
 {
   "name": "review",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-
+  "remoteUser": "vscode",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    },
     "ghcr.io/devcontainers/features/nix": {
       "packages": [
-        "container-structure-test",
+        "zsh",
         "direnv",
         "k3d",
         "kubectl",
-        "kubeconform",
         "kubernetes-helm",
-        "kubeval",
-        "kustomize",
-        "skaffold",
-        "xdg-utils",
-        "yq"
+        "yq",
+        "skaffold"
       ]
     }
   },
-  "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-  ],
-  "hostRequirements": { "cpus": 4 },
-  "forwardPorts": [8080, 8443],
-  "portsAttributes": { "8443": { "label": "kubernetes-dashboard" } },
-
+  "postCreateCommand": ".devcontainer/scripts/post-create.sh",
+  "postStartCommand": ".devcontainer/scripts/post-start.sh",
   "customizations": {
     "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      },
       "extensions": [
         "ms-kubernetes-tools.vscode-kubernetes-tools",
         "ms-azuretools.vscode-containers",
         "redhat.vscode-yaml",
-				"davidanson.vscode-markdownlint",
+        "davidanson.vscode-markdownlint",
+        "github.vscode-github-actions",
         "mkhl.direnv"
-      ],
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash",
-        "files.trimTrailingWhitespace": true,
-        "files.trimFinalNewlines": true,
-        "files.insertFinalNewline": true
-      }
+      ]
     }
-  },
-
-  "remoteUser": "vscode",
-  "onCreateCommand": "bash .devcontainer/scripts/on-create.sh",
-  "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
-  "postStartCommand":  "bash .devcontainer/scripts/post-start.sh"
+  }
 }

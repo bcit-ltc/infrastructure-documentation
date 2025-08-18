@@ -1,80 +1,92 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env zsh
+emulate -L zsh
+set -o errexit
+set -o nounset
+set -o pipefail
 
-# Load shared env next to this script, even if called via a relative path or symlink
-SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+SCRIPT_DIR="${0:A:h}"
+ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
 . "$SCRIPT_DIR/env.sh"
+. "$SCRIPT_DIR/lib.sh"
 
-# Deploy kubernetes dashboard
-if helm repo list | grep -q '^kubernetes-dashboard'; then
-  echo "⚠️ Helm repo 'kubernetes-dashboard' already exists, skipping add."
-else
-  helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard
+NAMESPACE="kubernetes-dashboard"
+SA_NAME="admin-user"
+RELEASE="k8s-dashboard"
+
+need kubectl
+need helm
+
+: "${TOKEN_PATH:?TOKEN_PATH must point to where the dashboard token will be written}"
+umask 077   # protect the token file
+
+log "Adding/Updating kubernetes-dashboard Helm repo…"
+helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard --force-update >/dev/null
+helm repo update >/dev/null
+
+log "Installing/Upgrading dashboard…"
+# Optional: pin the chart version by exporting DASHBOARD_VERSION="v7.5.0" (example)
+helm upgrade --install "$RELEASE" kubernetes-dashboard/kubernetes-dashboard \
+  --namespace "$NAMESPACE" --create-namespace \
+  --set serviceAccount.create=true \
+  --set serviceAccount.name="$SA_NAME" \
+  --set service.type=ClusterIP \
+  ${DASHBOARD_VERSION:+--version "$DASHBOARD_VERSION"} \
+  --wait --timeout=5m
+
+log "Ensuring ServiceAccount + clusterrolebinding for ${SA_NAME}…"
+# Create SA explicitly if the chart did not create it under this name
+if ! kubectl -n "$NAMESPACE" get sa "$SA_NAME" >/dev/null 2>&1; then
+  kubectl -n "$NAMESPACE" create sa "$SA_NAME"
 fi
 
-# Ensure latest version
-helm repo update
-
-# Only upgrade/install the helm chart if it is not already deployed
-if helm list -n kubernetes-dashboard | grep -q '^kubernetes-dashboard\b'; then
-  echo "⚠️ Helm release 'kubernetes-dashboard' already exists in namespace 'kubernetes-dashboard', skipping upgrade/install."
-else
-  helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard \
-    --namespace kubernetes-dashboard --create-namespace
+# Create (idempotent) cluster-admin binding for the SA
+if ! kubectl get clusterrolebinding "$SA_NAME" >/dev/null 2>&1; then
+  kubectl create clusterrolebinding "$SA_NAME" \
+    --clusterrole=cluster-admin \
+    --serviceaccount="$NAMESPACE:$SA_NAME"
 fi
 
-# Create admin user and service account
-# - this could be charts that are automatically deployed via k3d, but csrf
-#   and RBAC deployment errors need solving first
-cat <<'EOF' | kubectl create -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: admin-user
-  namespace: kubernetes-dashboard
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: admin-user
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: admin-user
-    namespace: kubernetes-dashboard
----
+mkdir -p -- "$(dirname -- "$TOKEN_PATH")"
+
+# Prefer projected token on K8s 1.24+ (requires RBAC: create on serviceaccounts/token)
+if kubectl -n "$NAMESPACE" create token "$SA_NAME" --duration=24h > "$TOKEN_PATH" 2>/dev/null; then
+  log "Projected token created at $TOKEN_PATH"
+else
+  log "Projected token failed (RBAC or API setting). Creating annotated Secret token…"
+  cat <<EOF | kubectl -n "$NAMESPACE" apply -f - >/dev/null
 apiVersion: v1
 kind: Secret
 metadata:
-  name: admin-user
-  namespace: kubernetes-dashboard
+  name: ${SA_NAME}-token
   annotations:
-    kubernetes.io/service-account.name: "admin-user"
+    kubernetes.io/service-account.name: ${SA_NAME}
 type: kubernetes.io/service-account-token
 EOF
 
-# Store admin-user token; poll until secret exists
-MAX_ATTEMPTS=10
-ATTEMPT=1
-until kubectl get secret admin-user -n kubernetes-dashboard >/dev/null 2>&1; do
-  if (( ATTEMPT > MAX_ATTEMPTS )); then
-    echo "❌ Timed out waiting for admin-user secret."
+  # Wait for the controller to populate the token field
+  TOKEN_BASE64=""
+  for i in {1..30}; do
+    TOKEN_BASE64="$(kubectl -n "$NAMESPACE" get secret "${SA_NAME}-token" -o jsonpath='{.data.token}' 2>/dev/null || true)"
+    [[ -n "$TOKEN_BASE64" ]] && break
+    sleep 1
+  done
+  if [[ -z "$TOKEN_BASE64" ]]; then
+    echo "[kubernetes-dashboard.sh] ERROR: Failed to obtain a ServiceAccount token" >&2
     exit 1
   fi
-  echo "   ...still waiting for admin-user secret (attempt $ATTEMPT/$MAX_ATTEMPTS)..."
-  sleep 2
-  ((ATTEMPT++))
-done
-
-TOKEN="$(kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath='{.data.token}' | base64 -d)"
-if printf "%s" "$TOKEN" > "$TOKEN_PATH"; then
-  echo "📄 Token saved."
-else
-  echo "⚠️ Failed to save token to $TOKEN_PATH."
+  print -r -- "$TOKEN_BASE64" | base64 -d > "$TOKEN_PATH"
+  log "Secret-based token saved to $TOKEN_PATH"
 fi
 
-echo "🌐 Dashboard: https://localhost:8443"
-echo -e "📝 To access the dashboard, use the token from $TOKEN_PATH.\n"
+# Determine a sensible port-forward target (v7 uses Kong proxy)
+svc_target="svc/${RELEASE}-kong-proxy"
+if ! kubectl -n "$NAMESPACE" get "$svc_target" >/dev/null 2>&1; then
+  # Fallback to legacy service name
+  svc_target="svc/${RELEASE}-kubernetes-dashboard"
+fi
+
+log "To access the dashboard via port-forward:"
+echo "  kubectl -n $NAMESPACE port-forward $svc_target 8443:8443 2>/dev/null || kubectl -n $NAMESPACE port-forward $svc_target 8443:443"
+echo "Then open https://127.0.0.1:8443/ and paste the token from:"
+echo "  $TOKEN_PATH"
+log "✅ Kubernetes Dashboard setup complete."
