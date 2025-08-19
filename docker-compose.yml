@@ -1,7 +1,8 @@
-name: infrastructure-documentation
+name: ${APP_ID}
 services:
   app:
-    image: infrastructure-documentation
+    image: ${APP_ID}
+    command: ["serve", "--dev-addr=0.0.0.0:8080"]
     build:
       target: build
     environment:
@@ -10,4 +11,4 @@ services:
     volumes:
     - .:/app
     ports:
-      - "8000:8000"
+      - "8080:8080"

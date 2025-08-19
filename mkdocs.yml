@@ -3,6 +3,7 @@ site_url: https://infrastructure-documentation.ltc.bcit.ca/
 
 repo_name: infrastructure-documentation
 repo_url: https://issues.ltc.bcit.ca/web-apps/infrastructure-documentation.git
+dev_addr: "127.0.0.1:8000"
 
 theme:
   name: material

@@ -6,39 +6,20 @@ servers: 1
 agents: 1
 network: k3d
 kubeAPI:
-  hostIP: "0.0.0.0"
+  hostIP: "127.0.0.1"
   hostPort: "6443"
 registries:
   create:
-    name: registry.localhost
-    hostPort: "5000"
+    name: registry
+    # hostPort: "5000"
   config: |
     mirrors:
-      "registry.localhost":
+      "$SKAFFOLD_DEFAULT_REPO":
         endpoint:
-          - http://registry.localhost:5000
-    configs:
-      "registry.localhost":
-        tls:
-          insecure_skip_verify: true
-hostAliases: # /etc/hosts style entries to be injected into /etc/hosts in the node containers and in the NodeHosts section in CoreDNS
-  - ip: 172.18.0.1
-    hostnames:
-      - registry.localhost
-# volumes:
-#   - volume: ${WORKSPACE_ROOT}/.devcontainer/k3d/kubernetes-dashboard/kubernetes-dashboard.yaml:/var/lib/rancher/k3s/server/manifests/kubernetes-dashboard.yaml
-#     nodeFilters:
-#       - server:0
-ports:
-  - port: 0.0.0.0:8080:80
-    nodeFilters:
-      - loadbalancer
-  - port: 0.0.0.0:8443:443
-    nodeFilters:
-      - loadbalancer
+          - $SKAFFOLD_DEFAULT_REPO
 options:
-  k3s: # options passed on to K3s itself
-    extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
+  k3s:
+    extraArgs:
       - arg: "--disable=metrics-server"
         nodeFilters:
           - server:*

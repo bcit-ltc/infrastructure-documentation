@@ -1,80 +1,66 @@
-# Use bash with strict flags for all recipes
-SHELL := $(shell command -v bash 2>/dev/null)
-ifeq ($(SHELL),)
-  SHELL := /bin/sh
-  .SHELLFLAGS := -eu -c
-else
-  .SHELLFLAGS := -eu -o pipefail -c
-endif
-.ONESHELL:
-.SILENT:
-.NO_PRINT_DIRECTORY:
+# Use zsh for all recipes and auto-load env via ZDOTDIR
+SHELL := /usr/bin/env zsh
+export ZDOTDIR := $(CURDIR)/.devcontainer/scripts
 
-# ---------------- Project paths (XDG-ish) ----------------
-APP_STATE_DIR := $(shell bash -c '. .devcontainer/scripts/env.sh; printf "%s" "$$APP_STATE_DIR"')
-TOKEN_PATH    := $(shell bash -c '. .devcontainer/scripts/env.sh; printf "%s" "$$TOKEN_PATH"')
-PRINTED_FLAG  := $(shell bash -c '. .devcontainer/scripts/env.sh; printf "%s" "$$PRINTED_FLAG"')
-K3D_CFG_PATH  := $(shell bash -c '. .devcontainer/scripts/env.sh; printf "%s" "$$K3D_CFG_PATH"')
-# ---------------------------------------------------------
+# Tool discovery
+K3D      := $(shell command -v k3d)
+KUBECTL  := $(shell command -v kubectl)
+HELM     := $(shell command -v helm)
+SKAFFOLD := $(shell command -v skaffold)
+DOCKER   := $(shell command -v docker)
 
-.PHONY: help cluster token cluster.run _env-check dashboard get-app-chart
+# Files/paths
+ENVSH   := $(CURDIR)/.devcontainer/scripts/env.sh
+LIBSH   := $(CURDIR)/.devcontainer/scripts/lib.sh
+K3D_CFG := $(CURDIR)/.devcontainer/k3d/k3d.yaml
 
-.DEFAULT_GOAL := help
+# Targets
+.PHONY: help cluster dashboard chart delete
 
 help:
-	@echo ""
 	@echo "Targets:"
 	@echo ""
-	@echo " • make help          # this list"
-	@echo " • make cluster       # Create k3d cluster"
-	@echo " • make dashboard     # Setup Kubernetes Dashboard"
-	@echo " • make token         # Print saved Kubernetes Dashboard token"
+	@echo "  cluster     → create k3d cluster using $(K3D_CFG)"
+	@echo "  dashboard   → install Kubernetes Dashboard and print login token"
+	@echo "  chart       → pull/unpack app chart (clobbers existing files; set APP_CHART_URL to override default 'oci/{appName}')"
+	@echo "  delete      → delete all k3d clusters (local dev cleanup)"
 	@echo ""
 	@echo "Other devcontainer commands:"
 	@echo ""
-	@echo " • docker compose up                   # local dev"
-	@echo " • skaffold dev                        # dev + deploy to cluster (verify cluster deployment)"
-	@echo " • nix-shell -p {nixPackage}           # enter nix shell with specific package"
-	@echo " • helm repo add {repoName} {repoURL}  # add a helm repository"
-	@echo " • kubeval|kubeconform {file}          # validate Kubernetes YAML files"
-	@echo ""
+	@echo "  docker compose up                   → local dev"
+	@echo "  skaffold dev                        → dev + deploy to cluster (verify cluster deployment)"
+	@echo "  nix-shell -p {nixPackage}           → enter nix shell with specific package"
+	@echo "  helm repo add {repoName} {repoURL}  → add a helm repository"
+	@echo "  kubeconform {file}                  → validate Kubernetes YAML files"
 
-cluster: _env-check cluster.run get-app-chart   # aggregator target, no recipe
-
-cluster.run:
-	[ -x .devcontainer/scripts/cluster.sh ] || { echo "cluster.sh not found or not executable"; exit 1; }
-	.devcontainer/scripts/cluster.sh
-
-get-app-chart:
-	[ -x .devcontainer/scripts/app-chart.sh ] || { echo "app-chart.sh not found or not executable"; exit 1; }
-	.devcontainer/scripts/app-chart.sh
+cluster:
+	@. "$(ENVSH)"; . "$(LIBSH)"; \
+	"$(CURDIR)/.devcontainer/scripts/cluster.sh"
+	@. "$(ENVSH)"; . "$(LIBSH)"; \
+	"$(CURDIR)/.devcontainer/scripts/app-chart.sh"
 
 dashboard:
-	-@if ! kubectl cluster-info >/dev/null 2>&1; then \
-	  echo "❌ Cluster is not reachable. Please ensure your k3d cluster is running."; \
-	  exit 1; \
-	fi
-	[ -x .devcontainer/scripts/kubernetes-dashboard.sh ] || { echo "kubernetes-dashboard.sh not found or not executable"; exit 1; }
-	.devcontainer/scripts/kubernetes-dashboard.sh
-	$(MAKE) --no-print-directory token
+	@. "$(ENVSH)"; . "$(LIBSH)"; \
+	"$(CURDIR)/.devcontainer/scripts/kubernetes-dashboard.sh"
+
+chart:
+	@. "$(ENVSH)"; . "$(LIBSH)"; \
+	"$(CURDIR)/.devcontainer/scripts/app-chart.sh"
 
 token:
-	if [ -s "$(TOKEN_PATH)" ]; then \
-	  echo -e "\n======================== DASHBOARD ADMIN TOKEN ========================"; \
-	  cat "$(TOKEN_PATH)"; \
-	  echo -e "\n========================================================================"; \
-	  echo "📄 Saved to: $(TOKEN_PATH)"; \
-	  echo -e "\nTo access the dashboard, wait a moment, then run \n\nkubectl port-forward -n kubernetes-dashboard svc/kubernetes-dashboard-kong-proxy 8443:443\n"; \
+	@. "$(ENVSH)" && \
+	if [ -s "$$TOKEN_PATH" ]; then \
+	  echo "Token file: $$TOKEN_PATH"; \
+	  echo "---- TOKEN ----"; \
+	  cat "$$TOKEN_PATH"; echo; \
 	else \
-	  echo "❌ No token found at $(TOKEN_PATH)"; \
+	  echo "No token found. Run 'make dashboard' first."; \
+	  exit 1; \
 	fi
 
 delete:
 	@echo "❌ Deleting all k3d clusters..."
-	@if command -v k3d >/dev/null 2>&1; then \
-	  k3d cluster delete -a || true; \
-	else \
-	  echo "❌ k3d not found, skipping cluster deletion"; \
-	fi
-	@rm -f "$(TOKEN_PATH)"
-	@echo "✅ Cleanup complete."
+	@. "$(ENVSH)"; \
+	if [ -z "$(K3D)" ]; then echo "k3d not found"; exit 127; fi; \
+	$(K3D) cluster delete -a || true; \
+	rm -f "$$TOKEN_PATH"

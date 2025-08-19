@@ -1,18 +1,34 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env zsh
+# Create a k3d cluster using configuration file in "k3d/k3d.yaml"
+emulate -L zsh
+set -o errexit
+set -o nounset
+set -o pipefail
 
-# Load shared env next to this script, even if called via a relative path or symlink
-SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+# Resolve script dir and shared env/lib; load env
+SCRIPT_DIR="${0:A:h}"
+ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
 . "$SCRIPT_DIR/env.sh"
+. "$SCRIPT_DIR/lib.sh"
 
-# Create k3d cluster and verify connection
-echo "🚀 Creating k3d cluster..."
-k3d cluster create --config "$K3D_CFG_PATH/k3d.yaml"
+# Check dependencies
+need k3d
+need kubectl
 
-echo "📡 Fetching cluster info..."
-kubectl cluster-info | tee -a "$HOME/status"
+# Validate K3D_CFG_PATH
+: "${K3D_CFG_PATH:?K3D_CFG_PATH must point to a k3d config YAML}"
+[ -r "$K3D_CFG_PATH" ] || die "Config not readable: $K3D_CFG_PATH"
 
-echo "📦 Cluster nodes:"
-kubectl get nodes
+log "Creating k3d cluster from: $K3D_CFG_PATH"
+k3d cluster create --config "$K3D_CFG_PATH" --wait --timeout 180s
 
-echo -e "\n✅ Cluster setup complete.\n"
+log "Fetching cluster info..."
+kubectl cluster-info || true
+
+log "Waiting for nodes to be Ready..."
+kubectl wait node --all --for=condition=Ready --timeout=120s || true
+
+log "Cluster nodes:"
+kubectl get nodes -o wide
+
+log "✅ Cluster setup complete."

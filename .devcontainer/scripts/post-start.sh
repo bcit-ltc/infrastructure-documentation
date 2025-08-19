@@ -1,11 +1,22 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env zsh
+set -e
+set -o nounset
+set -o pipefail
 
-log() { printf '[post-start] %s\n' "$*" | tee -a "$HOME/status"; }
+ZDOTDIR="${ZDOTDIR:-$(cd -- "$(dirname "${0:A}")" && pwd -P)}"
+. "$ZDOTDIR/env.sh"
+. "$ZDOTDIR/lib.sh"
 
-log "=== post-start start ==="
+log "post-start start"
 
-# Trust .envrc (no-op if already allowed); avoid noisy output
-direnv allow . >/dev/null 2>&1 || true
+# Fix docker.sock permissions (DinD can set root:root)
+if [ -S /var/run/docker.sock ]; then
+  grp="$(stat -c '%G' /var/run/docker.sock)"
+  if [ "$grp" != "docker" ]; then
+    log "Fixing docker.sock group → docker"
+    chgrp docker /var/run/docker.sock || true
+    chmod g+rw /var/run/docker.sock || true
+  fi
+fi
 
-log "=== post-start complete ==="
+log "post-start complete"

@@ -10,7 +10,7 @@ Information about the architecture and makeup of the LTC's server infrastructure
 
     docker compose up
 
-1. Browse to `http://localhost:8000` (for browser-based sessions: command palette: `>open port in browser`).
+1. Browse to `http://localhost:8080` (for browser-based sessions: command palette: `>open port in browser`).
 
 ## Developing using your own environment
 
