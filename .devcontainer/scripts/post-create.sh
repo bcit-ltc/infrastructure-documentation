@@ -12,17 +12,14 @@ log "post-create start"
 # Prepare user-scoped dirs
 mkdir -p "$APP_STATE_DIR" "$HOME/.local/bin"
 
-#
 # Ensure the user is in the "docker" group so docker CLI works without sudo.
-# (Codespaces base images usually handle this, but we keep it idempotent for local use.)
-#
 if ! getent group docker >/dev/null 2>&1; then
   log "Creating 'docker' group"
-  sudo groupadd -f docker
+  groupadd -f docker
 fi
 if id -nG "$USER" | grep -qvw docker; then
   log "Adding user '$USER' to 'docker' group"
-  sudo usermod -aG docker "$USER" || true
+  usermod -aG docker "$USER" || true
   log "You may need to re-open the shell for group changes to take effect."
 fi
 

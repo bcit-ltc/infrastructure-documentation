@@ -10,23 +10,13 @@ kubeAPI:
   hostPort: "6443"
 registries:
   create:
-    name: registry.localhost
-    hostPort: "5000"
+    name: registry
+    # hostPort: "5000"
   config: |
     mirrors:
-      "registry.localhost:5000":
+      "$SKAFFOLD_DEFAULT_REPO":
         endpoint:
-          - http://registry.localhost:5000
-# optionally map the registry into the cluster nodes if needed:
-#   use:
-#     - k3d-registry.localhost:5000
-# ports:
-#   - port: 127.0.0.1:8080:80
-#     nodeFilters:
-#       - loadbalancer
-#   - port: 127.0.0.1:8443:443
-#     nodeFilters:
-#       - loadbalancer
+          - $SKAFFOLD_DEFAULT_REPO
 options:
   k3s:
     extraArgs:

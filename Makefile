@@ -2,9 +2,6 @@
 SHELL := /usr/bin/env zsh
 export ZDOTDIR := $(CURDIR)/.devcontainer/scripts
 
-# Optional: allow sudo outside the devcontainer (default empty inside)
-SUDO ?=
-
 # Tool discovery
 K3D      := $(shell command -v k3d)
 KUBECTL  := $(shell command -v kubectl)
@@ -22,10 +19,19 @@ K3D_CFG := $(CURDIR)/.devcontainer/k3d/k3d.yaml
 
 help:
 	@echo "Targets:"
-	@echo "  cluster         → create k3d cluster using $(K3D_CFG)"
-	@echo "  dashboard       → install Kubernetes Dashboard and print login token"
-	@echo "  chart           → pull/unpack app chart (set APP_CHART_URL to override default 'oci/{appName}')"
-	@echo "  delete          → delete all k3d clusters (local dev cleanup)"
+	@echo ""
+	@echo "  cluster     → create k3d cluster using $(K3D_CFG)"
+	@echo "  dashboard   → install Kubernetes Dashboard and print login token"
+	@echo "  chart       → pull/unpack app chart (clobbers existing files; set APP_CHART_URL to override default 'oci/{appName}')"
+	@echo "  delete      → delete all k3d clusters (local dev cleanup)"
+	@echo ""
+	@echo "Other devcontainer commands:"
+	@echo ""
+	@echo "  docker compose up                   → local dev"
+	@echo "  skaffold dev                        → dev + deploy to cluster (verify cluster deployment)"
+	@echo "  nix-shell -p {nixPackage}           → enter nix shell with specific package"
+	@echo "  helm repo add {repoName} {repoURL}  → add a helm repository"
+	@echo "  kubeconform {file}                  → validate Kubernetes YAML files"
 
 cluster:
 	@. "$(ENVSH)"; . "$(LIBSH)"; \
@@ -56,5 +62,5 @@ delete:
 	@echo "❌ Deleting all k3d clusters..."
 	@. "$(ENVSH)"; \
 	if [ -z "$(K3D)" ]; then echo "k3d not found"; exit 127; fi; \
-	$(SUDO) $(K3D) cluster delete -a || true; \
+	$(K3D) cluster delete -a || true; \
 	rm -f "$$TOKEN_PATH"

@@ -12,9 +12,11 @@
         "direnv",
         "k3d",
         "kubectl",
+        "kubeconform",
         "kubernetes-helm",
-        "yq",
-        "skaffold"
+        "kustomize",
+        "skaffold",
+        "yq"
       ]
     }
   },

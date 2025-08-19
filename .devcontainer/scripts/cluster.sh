@@ -1,28 +1,26 @@
 #!/usr/bin/env zsh
+# Create a k3d cluster using configuration file in "k3d/k3d.yaml"
 emulate -L zsh
 set -o errexit
 set -o nounset
 set -o pipefail
 
+# Resolve script dir and shared env/lib; load env
 SCRIPT_DIR="${0:A:h}"
 ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
 
+# Check dependencies
 need k3d
 need kubectl
 
+# Validate K3D_CFG_PATH
 : "${K3D_CFG_PATH:?K3D_CFG_PATH must point to a k3d config YAML}"
 [ -r "$K3D_CFG_PATH" ] || die "Config not readable: $K3D_CFG_PATH"
 
 log "Creating k3d cluster from: $K3D_CFG_PATH"
-
-# If you export K3D_CLUSTER_NAME in env.sh, this makes reruns safe.
-if [[ -n "${K3D_CLUSTER_NAME:-}" ]] && k3d cluster list --no-headers 2>/dev/null | awk '{print $1}' | grep -qx -- "$K3D_CLUSTER_NAME"; then
-  log "Cluster '$K3D_CLUSTER_NAME' already exists; skipping create."
-else
-  k3d cluster create --config "$K3D_CFG_PATH" --wait --timeout 180s
-fi
+k3d cluster create --config "$K3D_CFG_PATH" --wait --timeout 180s
 
 log "Fetching cluster info..."
 kubectl cluster-info || true

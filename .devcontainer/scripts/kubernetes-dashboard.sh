@@ -1,31 +1,37 @@
 #!/usr/bin/env zsh
+# Install and configure Kubernetes Dashboard with Helm
 emulate -L zsh
 set -o errexit
 set -o nounset
 set -o pipefail
 
+# Resolve script dir and shared env/lib; load env
 SCRIPT_DIR="${0:A:h}"
 ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
 
-NAMESPACE="kubernetes-dashboard"
-SA_NAME="admin-user"
+# Common variables
+DASHBOARD_NAME="kubernetes-dashboard"
+NAMESPACE="${NAMESPACE:-$DASHBOARD_NAME}"
 RELEASE="k8s-dashboard"
+SA_NAME="admin-user"
 
+# Check dependencies
 need kubectl
 need helm
 
+# Validate TOKEN_PATH
 : "${TOKEN_PATH:?TOKEN_PATH must point to where the dashboard token will be written}"
 umask 077   # protect the token file
 
-log "Adding/Updating kubernetes-dashboard Helm repo…"
-helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard --force-update >/dev/null
+log "Adding/Updating $DASHBOARD_NAME Helm repo…"
+helm repo add $DASHBOARD_NAME https://kubernetes.github.io/dashboard --force-update >/dev/null
 helm repo update >/dev/null
 
 log "Installing/Upgrading dashboard…"
 # Optional: pin the chart version by exporting DASHBOARD_VERSION="v7.5.0" (example)
-helm upgrade --install "$RELEASE" kubernetes-dashboard/kubernetes-dashboard \
+helm upgrade --install "$RELEASE" $NAMESPACE/$DASHBOARD_NAME \
   --namespace "$NAMESPACE" --create-namespace \
   --set serviceAccount.create=true \
   --set serviceAccount.name="$SA_NAME" \
@@ -65,7 +71,7 @@ EOF
 
   # Wait for the controller to populate the token field
   TOKEN_BASE64=""
-  for i in {1..30}; do
+  for i in {1..20}; do
     TOKEN_BASE64="$(kubectl -n "$NAMESPACE" get secret "${SA_NAME}-token" -o jsonpath='{.data.token}' 2>/dev/null || true)"
     [[ -n "$TOKEN_BASE64" ]] && break
     sleep 1
