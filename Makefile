@@ -23,6 +23,7 @@ help:
 	@echo ""
 	@echo "  cluster     → create k3d cluster using $(K3D_CFG)"
 	@echo "  dashboard   → install Kubernetes Dashboard and print login token"
+	@echo "  token       → print Kubernetes Dashboard login token (if you lose it somehow)"
 	@echo "  chart       → pull/unpack app chart (clobbers existing files; set APP_CHART_URL to override default \"oci/${APP_NAME}\")"
 	@echo "  delete      → delete all k3d clusters (local dev cleanup)"
 	@echo ""

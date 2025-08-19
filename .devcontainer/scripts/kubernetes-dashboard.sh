@@ -89,7 +89,7 @@ log "🌐 To access the dashboard:"
 
 # Show the exact port-forward command
 printf "\n%s\n\n" "kubectl -n ${NAMESPACE} port-forward svc/${RELEASE}-kong-proxy 8443:443"
-echo "Then open https://127.0.0.1:8443/"
+echo "Then open http://127.0.0.1:8443/"
 
 # Show the token (or guide if missing)
 if [[ -s "$TOKEN_PATH" ]]; then
