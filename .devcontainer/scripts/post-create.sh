@@ -31,6 +31,23 @@ SKAFFOLD_FILENAME=$SKAFFOLD_FILENAME
 EOF
 log "Wrote $SKAFFOLD_ENV_FILE"
 
+# ---- Install Dagger CLI (latest) ----
+install_dagger() {
+  set -euo pipefail
+  # Prefer a global install so all shells/users see it; fall back to user-local.
+  if command -v sudo >/dev/null 2>&1; then
+    curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=/usr/local/bin sudo -E sh
+  else
+    mkdir -p "$HOME/.local/bin"
+    curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR="$HOME/.local/bin" sh
+    case ":${PATH}:" in
+      *":$HOME/.local/bin:"*) ;; # already on PATH
+      *) echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$TARGET_RC" ;;
+    esac
+  fi
+}
+install_dagger
+
 # direnv hook (zsh)
 TARGET_RC="$HOME/.zshrc"
 if ! grep -q 'direnv hook zsh' "$TARGET_RC" 2>/dev/null; then

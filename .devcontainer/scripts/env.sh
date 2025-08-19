@@ -1,12 +1,15 @@
 # Shared environment for all scripts and Make recipes (shell-agnostic)
 
+# --- workspace root first (used by defaults below) ---
+export WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
+
 # --- IDs & names ---
-export APP_ID="${APP_ID}"
+# Default APP_ID to repo folder name if not provided (safe for strict shells)
+export APP_ID="${APP_ID:-$(basename "$WORKSPACE_ROOT")}"
 export CLUSTER_NAME="${CLUSTER_NAME:-review}"
 export ORG_NAME="${ORG_NAME:-bcit-ltc}"
 
 # --- workspace & state ---
-export WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
 export APP_STATE_DIR="${APP_STATE_DIR:-$HOME/.local/state/$APP_ID}"
 export TOKEN_PATH="${TOKEN_PATH:-$APP_STATE_DIR/k8s-dashboard-token}"
 export K3D_CFG_PATH="${K3D_CFG_PATH:-$WORKSPACE_ROOT/.devcontainer/k3d/k3d.yaml}"
@@ -15,10 +18,10 @@ export K3D_CFG_PATH="${K3D_CFG_PATH:-$WORKSPACE_ROOT/.devcontainer/k3d/k3d.yaml}
 export REGISTRY_HOST="${REGISTRY_HOST:-ghcr.io}"
 
 # --- skaffold defaults ---
-export SKAFFOLD_DEFAULT_REPO="registry.localhost:5000"
-export SKAFFOLD_PORT_FORWARD="true"
-export SKAFFOLD_FILENAME=".devcontainer/skaffold/skaffold.yaml"
-export SKAFFOLD_ENV_FILE="$WORKSPACE_ROOT/.devcontainer/skaffold/skaffold.env"
+export SKAFFOLD_DEFAULT_REPO="${SKAFFOLD_DEFAULT_REPO:-registry.localhost:5000}"
+export SKAFFOLD_PORT_FORWARD="${SKAFFOLD_PORT_FORWARD:-true}"
+export SKAFFOLD_FILENAME="${SKAFFOLD_FILENAME:-.devcontainer/skaffold/skaffold.yaml}"
+export SKAFFOLD_ENV_FILE="${SKAFFOLD_ENV_FILE:-$WORKSPACE_ROOT/.devcontainer/skaffold/skaffold.env}"
 
 # --- PATH for non-interactive shells (Make/CI) ---
 for _p in "$HOME/.nix-profile/bin" "/nix/var/nix/profiles/default/bin"; do
