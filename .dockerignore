@@ -3,6 +3,7 @@
 .github/
 .dockerignore
 .envrc
+.gitattributes
 .gitignore
 .helmignore
 docker-compose.yml

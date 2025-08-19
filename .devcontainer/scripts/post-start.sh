@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+# Post-start script for setting up the devcontainer environment
 set -e
 set -o nounset
 set -o pipefail

@@ -15,14 +15,15 @@ LIBSH   := $(CURDIR)/.devcontainer/scripts/lib.sh
 K3D_CFG := $(CURDIR)/.devcontainer/k3d/k3d.yaml
 
 # Targets
-.PHONY: help cluster dashboard chart delete
+.PHONY: help cluster dashboard chart token delete
 
 help:
+	@echo ""
 	@echo "Targets:"
 	@echo ""
 	@echo "  cluster     → create k3d cluster using $(K3D_CFG)"
 	@echo "  dashboard   → install Kubernetes Dashboard and print login token"
-	@echo "  chart       → pull/unpack app chart (clobbers existing files; set APP_CHART_URL to override default 'oci/{appName}')"
+	@echo "  chart       → pull/unpack app chart (clobbers existing files; set APP_CHART_URL to override default \"oci/${APP_ID}\")"
 	@echo "  delete      → delete all k3d clusters (local dev cleanup)"
 	@echo ""
 	@echo "Other devcontainer commands:"
@@ -32,6 +33,7 @@ help:
 	@echo "  nix-shell -p {nixPackage}           → enter nix shell with specific package"
 	@echo "  helm repo add {repoName} {repoURL}  → add a helm repository"
 	@echo "  kubeconform {file}                  → validate Kubernetes YAML files"
+	@echo ""
 
 cluster:
 	@. "$(ENVSH)"; . "$(LIBSH)"; \
