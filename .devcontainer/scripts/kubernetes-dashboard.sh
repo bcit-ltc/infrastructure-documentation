@@ -84,15 +84,21 @@ EOF
   log "Secret-based token saved to $TOKEN_PATH"
 fi
 
-# Determine a sensible port-forward target (v7 uses Kong proxy)
-svc_target="svc/${RELEASE}-kong-proxy"
-if ! kubectl -n "$NAMESPACE" get "$svc_target" >/dev/null 2>&1; then
-  # Fallback to legacy service name
-  svc_target="svc/${RELEASE}-kubernetes-dashboard"
-fi
+# --- access instructions & token display ---
+log "To access the dashboard:"
 
-log "To access the dashboard via port-forward:"
-echo "  kubectl -n $NAMESPACE port-forward $svc_target 8443:8443 2>/dev/null || kubectl -n $NAMESPACE port-forward $svc_target 8443:443"
-echo "Then open https://127.0.0.1:8443/ and paste the token from:"
-echo "  $TOKEN_PATH"
+# Show the exact port-forward command
+printf "\n%s\n\n" "kubectl -n ${NAMESPACE} port-forward svc/${RELEASE}-kong-proxy 8443:443"
+echo "Then open https://127.0.0.1:8443/"
+
+# Show the token (or guide if missing)
+if [[ -s "$TOKEN_PATH" ]]; then
+  echo "Token file: $TOKEN_PATH"
+  echo "---- TOKEN ----"
+  cat "$TOKEN_PATH"
+  echo
+else
+  echo "No token found at $TOKEN_PATH. Run 'make dashboard' first." >&2
+  exit 1
+fi
 log "✅ Kubernetes Dashboard setup complete."
