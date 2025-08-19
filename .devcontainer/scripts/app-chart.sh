@@ -16,19 +16,19 @@ ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
 # Check dependencies
 need helm
 
-log "Retrieving app chart into ./app-chart"
+log "🚀 Retrieving app chart into ./app-chart"
 
 # Determine chart reference and optional version
 chart_ref=""
 version="${APP_CHART_VERSION:-}"
 
-# If APP_CHART_URL is provided, use it directly; otherwise construct from REGISTRY_HOST/ORG_NAME/APP_ID
+# If APP_CHART_URL is provided, use it directly; otherwise construct from REGISTRY_HOST/ORG_NAME/APP_NAME
 if [[ -n "${APP_CHART_URL:-}" ]]; then
   chart_ref="${APP_CHART_URL}"
 else
-  : "${APP_ID:?APP_ID must be set when APP_CHART_URL is not set}"
+  : "${APP_NAME:?APP_NAME must be set when APP_CHART_URL is not set}"
   : "${ORG_NAME:?ORG_NAME must be set when APP_CHART_URL is not set}"
-  chart_ref="oci://${REGISTRY_HOST}/${ORG_NAME}/oci/${APP_ID}"
+  chart_ref="oci://${REGISTRY_HOST}/${ORG_NAME}/oci/${APP_NAME}"
 fi
 
 # Normalize reference (strip any trailing slash) so Helm gets a valid reference
@@ -59,8 +59,8 @@ tdir="$(mktemp -d -p . .chart.XXXXXX)"
 
   # The OCI layout places chart files under the chart name directory at the root of the tarball
   src_dir="$unpack/${CHART_NAME}"
-  [[ -d "$src_dir" ]] || die "Expected chart directory '$CHART_NAME' not found under $unpack"
-  [[ -f "$src_dir/Chart.yaml" ]] || die "Chart.yaml not found in $src_dir"
+  [[ -d "$src_dir" ]] || die "⚠️ Expected chart directory '$CHART_NAME' not found under $unpack"
+  [[ -f "$src_dir/Chart.yaml" ]] || die "⚠️ Chart.yaml not found in $src_dir"
 
   stage="$tdir/app-chart.tmp"
   mv -- "$src_dir" "$stage"
@@ -73,7 +73,7 @@ tdir="$(mktemp -d -p . .chart.XXXXXX)"
   mv -- "$stage" "app-chart"
 )
 
-[[ -d "app-chart" ]] || die "Chart directory not found: app-chart"
-[[ -f "app-chart/Chart.yaml" ]] || die "Chart.yaml missing in app-chart"
+[[ -d "app-chart" ]] || die "⚠️ Chart directory not found: app-chart"
+[[ -f "app-chart/Chart.yaml" ]] || die "⚠️ Chart.yaml missing in app-chart"
 
 log "✅ Chart ready at ./app-chart"

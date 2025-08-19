@@ -8,7 +8,7 @@ ZDOTDIR="${ZDOTDIR:-$(cd -- "$(dirname "${0:A}")" && pwd -P)}"
 . "$ZDOTDIR/env.sh"
 . "$ZDOTDIR/lib.sh"
 
-log "post-create start"
+log "=== post-create start ==="
 
 # Prepare user-scoped dirs
 mkdir -p "$APP_STATE_DIR" "$HOME/.local/bin"
@@ -49,11 +49,11 @@ install_dagger() {
 }
 install_dagger
 
-# direnv hook (zsh)
+# direnv hook (zsh) to load env vars
 TARGET_RC="$HOME/.zshrc"
 if ! grep -q 'direnv hook zsh' "$TARGET_RC" 2>/dev/null; then
   echo 'eval "$(direnv hook zsh)"' >> "$TARGET_RC"
   log "Added direnv hook to $TARGET_RC"
 fi
 
-log "post-create complete"
+log "=== post-create complete ==="

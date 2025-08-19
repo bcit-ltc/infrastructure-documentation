@@ -8,7 +8,7 @@ ZDOTDIR="${ZDOTDIR:-$(cd -- "$(dirname "${0:A}")" && pwd -P)}"
 . "$ZDOTDIR/env.sh"
 . "$ZDOTDIR/lib.sh"
 
-log "post-start start"
+log "=== post-start start ==="
 
 # Fix docker.sock permissions (DinD can set root:root)
 if [ -S /var/run/docker.sock ]; then
@@ -20,4 +20,4 @@ if [ -S /var/run/docker.sock ]; then
   fi
 fi
 
-log "post-start complete"
+log "=== post-start complete ==="

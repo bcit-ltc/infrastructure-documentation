@@ -19,19 +19,20 @@ Information about the architecture and makeup of the LTC's server infrastructure
 
 #### Dependencies
 
-For basic development:
+For basic local development:
 
-- `direnv`
+- set "APP_NAME" environment variable
 - `docker` or `buildah`
 
-And to test cluster deployment:
+To test cluster deployment:
 
+- `direnv`
 - `kubectl`
 - `helm`
 - `k3d`
 - `skaffold`
 
-Other tools in this devcontainer:
+### Other tools in this devcontainer
 
 - `dagger`
 - `nix`
@@ -48,4 +49,6 @@ To remove all cluster resources, run `make delete`.
 
 Mozilla Public License 2.0
 
-Developed in 🇨🇦 Canada at [BCIT's](https://www.bcit.ca/) [Learning and Teaching Centre](https://www.bcit.ca/learning-teaching-centre/).
+## About
+
+Developed in 🇨🇦 Canada at [BCIT's](https://www.bcit.ca/) [Learning and Teaching Centre](https://www.bcit.ca/learning-teaching-centre/). [Contact Us](mailto:courseproduction@bcit.ca).

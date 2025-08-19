@@ -1,3 +1,4 @@
+# Dockerfile
 ## Build
 FROM squidfunk/mkdocs-material AS build
 WORKDIR /app

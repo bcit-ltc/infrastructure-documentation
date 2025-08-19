@@ -4,13 +4,13 @@
 export WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
 
 # --- IDs & names ---
-# Default APP_ID to repo folder name if not provided (safe for strict shells)
-export APP_ID="${APP_ID:-$(basename "$WORKSPACE_ROOT")}"
+# Default APP_NAME to repo folder name if not provided (safe for strict shells)
+export APP_NAME="${APP_NAME:-$(basename "$WORKSPACE_ROOT")}"
 export CLUSTER_NAME="${CLUSTER_NAME:-review}"
 export ORG_NAME="${ORG_NAME:-bcit-ltc}"
 
 # --- workspace & state ---
-export APP_STATE_DIR="${APP_STATE_DIR:-$HOME/.local/state/$APP_ID}"
+export APP_STATE_DIR="${APP_STATE_DIR:-$HOME/.local/state/$APP_NAME}"
 export TOKEN_PATH="${TOKEN_PATH:-$APP_STATE_DIR/k8s-dashboard-token}"
 export K3D_CFG_PATH="${K3D_CFG_PATH:-$WORKSPACE_ROOT/.devcontainer/k3d/k3d.yaml}"
 
