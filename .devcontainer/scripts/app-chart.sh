@@ -1,17 +1,21 @@
-#!/usr/bin/env zsh
-# Retrieve app helm chart and store locally in "./app-chart"
-emulate -L zsh
-set -o errexit
+#!/usr/bin/env bash
+set -e
 set -o nounset
 set -o pipefail
-setopt NO_NOMATCH
-setopt EXTENDED_GLOB
 
-# Resolve script dir and shared env/lib; load env
-SCRIPT_DIR="${0:A:h}"
-ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
+if [ -n "${BASH_SOURCE:-}" ]; then
+  _this="${BASH_SOURCE[0]}"
+elif [ -n "${(%):-%N}" ] 2>/dev/null; then
+  _this="${(%):-%N}"
+else
+  _this="$0"
+fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
+
+# Load env + lib
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
+
 
 # Check dependencies
 need helm

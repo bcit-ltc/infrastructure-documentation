@@ -1,15 +1,22 @@
-#!/usr/bin/env zsh
-# Create a k3d cluster using configuration file in "k3d/k3d.yaml"
-emulate -L zsh
-set -o errexit
+#!/usr/bin/env bash
+set -e
 set -o nounset
 set -o pipefail
 
-# Resolve script dir and shared env/lib; load env
-SCRIPT_DIR="${0:A:h}"
-ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
+if [ -n "${BASH_SOURCE:-}" ]; then
+  _this="${BASH_SOURCE[0]}"
+elif [ -n "${(%):-%N}" ] 2>/dev/null; then
+  _this="${(%):-%N}"
+else
+  _this="$0"
+fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
+
+# Load env + lib
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
+
+
 
 # Check dependencies
 need k3d

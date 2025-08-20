@@ -1,12 +1,22 @@
-#!/usr/bin/env zsh
-# Post-create script for setting up the devcontainer environment
+#!/usr/bin/env bash
 set -e
 set -o nounset
 set -o pipefail
 
-ZDOTDIR="${ZDOTDIR:-$(cd -- "$(dirname "${0:A}")" && pwd -P)}"
-. "$ZDOTDIR/env.sh"
-. "$ZDOTDIR/lib.sh"
+if [ -n "${BASH_SOURCE:-}" ]; then
+  _this="${BASH_SOURCE[0]}"
+elif [ -n "${(%):-%N}" ] 2>/dev/null; then
+  _this="${(%):-%N}"
+else
+  _this="$0"
+fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
+
+# Load env + lib
+. "$SCRIPT_DIR/env.sh"
+. "$SCRIPT_DIR/lib.sh"
+
+
 
 log "=== post-create start ==="
 
@@ -49,11 +59,14 @@ install_dagger() {
 }
 install_dagger
 
-# direnv hook (zsh) to load env vars
-TARGET_RC="$HOME/.zshrc"
-if ! grep -q 'direnv hook zsh' "$TARGET_RC" 2>/dev/null; then
-  echo 'eval "$(direnv hook zsh)"' >> "$TARGET_RC"
-  log "Added direnv hook to $TARGET_RC"
+# direnv hook to load env vars
+if command -v direnv >/dev/null 2>&1; then
+  case "${SHELL:-}" in
+    *zsh)  grep -q 'direnv hook zsh'  "$HOME/.zshrc"  2>/dev/null || echo 'eval "$(direnv hook zsh)"'  >> "$HOME/.zshrc" ;;
+    *bash) grep -q 'direnv hook bash' "$HOME/.bashrc" 2>/dev/null || echo 'eval "$(direnv hook bash)"' >> "$HOME/.bashrc" ;;
+  esac
 fi
+
+
 
 log "=== post-create complete ==="

@@ -1,6 +1,11 @@
-# Use zsh for all recipes and auto-load env via ZDOTDIR
-SHELL := /usr/bin/env zsh
-export ZDOTDIR := $(CURDIR)/.devcontainer/scripts
+# Prefer zsh, fall back to bash
+SHELL := $(shell command -v zsh 2>/dev/null || command -v bash)
+
+# Only set ZDOTDIR if the Make shell is zsh
+ifeq ($(notdir $(SHELL)),zsh)
+  export ZDOTDIR := $(CURDIR)/.devcontainer/scripts
+endif
+
 
 # Tool discovery
 K3D      := $(shell command -v k3d)

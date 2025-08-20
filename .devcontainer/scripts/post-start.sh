@@ -1,12 +1,22 @@
-#!/usr/bin/env zsh
-# Post-start script for setting up the devcontainer environment
+#!/usr/bin/env bash
 set -e
 set -o nounset
 set -o pipefail
 
-ZDOTDIR="${ZDOTDIR:-$(cd -- "$(dirname "${0:A}")" && pwd -P)}"
-. "$ZDOTDIR/env.sh"
-. "$ZDOTDIR/lib.sh"
+if [ -n "${BASH_SOURCE:-}" ]; then
+  _this="${BASH_SOURCE[0]}"
+elif [ -n "${(%):-%N}" ] 2>/dev/null; then
+  _this="${(%):-%N}"
+else
+  _this="$0"
+fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
+
+# Load env + lib
+. "$SCRIPT_DIR/env.sh"
+. "$SCRIPT_DIR/lib.sh"
+
+
 
 log "=== post-start start ==="
 
