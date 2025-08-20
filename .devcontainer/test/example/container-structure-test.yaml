@@ -33,5 +33,5 @@ metadataTest:
   workdir: "/app"
   # user: "luke"
 
-# Run the container-structure-test:
+# To run the container-structure-test:
 # `container-structure-test test --image <your-image-name> --config container-structure-test.yaml`

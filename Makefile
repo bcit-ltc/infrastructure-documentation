@@ -35,7 +35,7 @@ help:
 	@echo "Other devcontainer commands:"
 	@echo ""
 	@echo "  docker compose up                   → local dev"
-	@echo "  skaffold dev                        → dev + deploy to cluster (verify cluster deployment)"
+	@echo "  skaffold dev                        → build + deploy to local cluster to verify deployment/helm release"
 	@echo "  nix-shell -p {nixPackage}           → enter nix shell with specific package"
 	@echo "  helm repo add {repoName} {repoURL}  → add a helm repository"
 	@echo "  kubeconform|kubeval {file}          → validate Kubernetes YAML files"

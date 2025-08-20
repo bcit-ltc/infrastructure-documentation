@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Retrieve app helm chart and store locally in "./app-chart"
 set -e
 set -o nounset
 set -o pipefail
@@ -13,7 +14,7 @@ else
 fi
 SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
 
-# Load env + lib
+# Load env vars + helpers
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
 
@@ -30,7 +31,7 @@ version="${APP_CHART_VERSION:-}"
 # 2) CHART_REF from env.sh (or env)
 # 3) Constructed fallback
 if [ -n "${APP_CHART_URL:-}" ]; then
-  log "APP_CHART_URL is set."
+  log "🪔 APP_CHART_URL is set."
   CHART_REF="$APP_CHART_URL"
 elif [ -n "${CHART_REF:-}" ]; then
   : # keep CHART_REF as provided/defaulted by env.sh
