@@ -16,9 +16,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
 
-
-
-# Common variables
+# Local variables
 DASHBOARD_NAME="kubernetes-dashboard"
 NAMESPACE="${NAMESPACE:-$DASHBOARD_NAME}"
 RELEASE="k8s-dashboard"

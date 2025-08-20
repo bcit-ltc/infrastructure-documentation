@@ -3,10 +3,11 @@ set -e
 set -o nounset
 set -o pipefail
 
+# Robust script path resolver (bash & zsh)
 if [ -n "${BASH_SOURCE:-}" ]; then
   _this="${BASH_SOURCE[0]}"
-elif [ -n "${(%):-%N}" ] 2>/dev/null; then
-  _this="${(%):-%N}"
+elif [ -n "${ZSH_VERSION:-}" ]; then
+  _this="${(%):-%N}"   # zsh-only; safe because we’re in zsh
 else
   _this="$0"
 fi
@@ -16,27 +17,36 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
 
-
 # Check dependencies
 need helm
 
 log "🚀 Retrieving app chart into ./app-chart"
 
 # Determine chart reference and optional version
-chart_ref=""
 version="${APP_CHART_VERSION:-}"
 
-# If APP_CHART_URL is provided, use it directly; otherwise construct from REGISTRY_HOST/ORG_NAME/APP_NAME
-if [[ -n "${APP_CHART_URL:-}" ]]; then
-  chart_ref="${APP_CHART_URL}"
+# Precedence for the effective chart ref:
+# 1) APP_CHART_URL (explicit override)
+# 2) CHART_REF from env.sh (or env)
+# 3) Constructed fallback
+if [ -n "${APP_CHART_URL:-}" ]; then
+  log "APP_CHART_URL is set."
+  CHART_REF="$APP_CHART_URL"
+elif [ -n "${CHART_REF:-}" ]; then
+  : # keep CHART_REF as provided/defaulted by env.sh
 else
-  : "${APP_NAME:?APP_NAME must be set when APP_CHART_URL is not set}"
-  : "${ORG_NAME:?ORG_NAME must be set when APP_CHART_URL is not set}"
-  chart_ref="oci://${REGISTRY_HOST}/${ORG_NAME}/oci/${APP_NAME}"
+  : "${APP_NAME:?APP_NAME must be set when no APP_CHART_URL/CHART_REF is present}"
+  : "${ORG_NAME:?ORG_NAME must be set when no APP_CHART_URL/CHART_REF is present}"
+  : "${REGISTRY_HOST:?REGISTRY_HOST must be set when no APP_CHART_URL/CHART_REF is present}"
+  CHART_REF="oci://${REGISTRY_HOST}/${ORG_NAME}/oci/${APP_NAME}"
 fi
 
-# Normalize reference (strip any trailing slash) so Helm gets a valid reference
-chart_ref="${chart_ref%/}"
+# Normalize (strip trailing slash), then export for child processes
+CHART_REF="${CHART_REF%/}"
+export CHART_REF
+
+# Lowercase convenience alias for local readability
+chart_ref="${CHART_REF}"
 
 # Derive the chart directory name from the normalized ref (last path component)
 temp_app_id="${chart_ref##*/}"
@@ -61,13 +71,23 @@ tdir="$(mktemp -d -p . .chart.XXXXXX)"
     helm pull "$chart_ref" --untar --untardir "$unpack"
   fi
 
-  # The OCI layout places chart files under the chart name directory at the root of the tarball
-  src_dir="$unpack/${CHART_NAME}"
-  [[ -d "$src_dir" ]] || die "⚠️ Expected chart directory '$CHART_NAME' not found under $unpack"
-  [[ -f "$src_dir/Chart.yaml" ]] || die "⚠️ Chart.yaml not found in $src_dir"
+  # Determine the chart directory:
+  # Prefer OCI layout (<unpack>/<CHART_NAME>), fall back to first dir with Chart.yaml
+  CHART_DIR="$unpack/${CHART_NAME}"
+  if [ ! -d "$CHART_DIR" ] || [ ! -f "$CHART_DIR/Chart.yaml" ]; then
+    CHART_DIR=""
+    for d in "$unpack"/*; do
+      if [ -d "$d" ] && [ -f "$d/Chart.yaml" ]; then
+        CHART_DIR="$d"
+        break
+      fi
+    done
+  fi
+
+  [ -n "$CHART_DIR" ] || die "⚠️ No chart directory with Chart.yaml found under $unpack"
 
   stage="$tdir/app-chart.tmp"
-  mv -- "$src_dir" "$stage"
+  mv -- "$CHART_DIR" "$stage"
 
   # Optional: resolve dependencies & lint (non-fatal)
   # ( cd "$stage" && helm dependency build >/dev/null 2>&1 || true )

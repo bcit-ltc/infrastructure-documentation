@@ -17,6 +17,19 @@ export K3D_CFG_PATH="${K3D_CFG_PATH:-$WORKSPACE_ROOT/.devcontainer/k3d/k3d.yaml}
 # --- registry / images ---
 export REGISTRY_HOST="${REGISTRY_HOST:-ghcr.io}"
 
+# CHART_REF precedence defaulting:
+# 1) If CHART_REF already set, keep it.
+# 2) Else if APP_CHART_URL provided, use it as CHART_REF.
+# 3) Else construct the default OCI ref.
+if [ -z "${CHART_REF:-}" ]; then
+  if [ -n "${APP_CHART_URL:-}" ]; then
+    CHART_REF="$APP_CHART_URL"
+  else
+    CHART_REF="oci://${REGISTRY_HOST}/${ORG_NAME}/oci/${APP_NAME}"
+  fi
+fi
+export CHART_REF
+
 # --- skaffold defaults ---
 export SKAFFOLD_DEFAULT_REPO="${SKAFFOLD_DEFAULT_REPO:-registry.localhost:5000}"
 export SKAFFOLD_PORT_FORWARD="${SKAFFOLD_PORT_FORWARD:-true}"
