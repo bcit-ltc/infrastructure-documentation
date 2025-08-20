@@ -1,13 +1,20 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # Create a k3d cluster using configuration file in "k3d/k3d.yaml"
-emulate -L zsh
-set -o errexit
+set -e
 set -o nounset
 set -o pipefail
 
-# Resolve script dir and shared env/lib; load env
-SCRIPT_DIR="${0:A:h}"
-ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
+# Robust script path resolver (bash & zsh)
+if [ -n "${BASH_SOURCE:-}" ]; then
+  _this="${BASH_SOURCE[0]}"
+elif [ -n "${ZSH_VERSION:-}" ]; then
+  _this="${(%):-%N}"   # zsh-only; safe because we’re in zsh
+else
+  _this="$0"
+fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
+
+# Load env vars + helpers
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
 

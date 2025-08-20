@@ -1,6 +1,10 @@
-# Use zsh for all recipes and auto-load env via ZDOTDIR
-SHELL := /usr/bin/env zsh
-export ZDOTDIR := $(CURDIR)/.devcontainer/scripts
+# Prefer zsh, fall back to bash
+SHELL := $(shell command -v zsh 2>/dev/null || command -v bash)
+
+# Only set ZDOTDIR if the Make shell is zsh
+ifeq ($(notdir $(SHELL)),zsh)
+  export ZDOTDIR := $(CURDIR)/.devcontainer/scripts
+endif
 
 # Tool discovery
 K3D      := $(shell command -v k3d)
@@ -21,19 +25,20 @@ help:
 	@echo ""
 	@echo "Targets:"
 	@echo ""
-	@echo "  cluster     → create k3d cluster using $(K3D_CFG)"
+	@echo "  cluster     → create k3d cluster using config \"$(K3D_CFG)\""
 	@echo "  dashboard   → install Kubernetes Dashboard and print login token"
-	@echo "  token       → print Kubernetes Dashboard login token (if you lose it somehow)"
-	@echo "  chart       → pull/unpack app chart (clobbers existing files; set APP_CHART_URL to override default \"oci/${APP_NAME}\")"
+	@echo "  token       → re-print Kubernetes Dashboard login token"
+	@echo "  chart       → pull/unpack app chart (clobbers existing files)"
+	@echo "                  - set APP_CHART_URL to override default \"oci://ghcr.io/$${ORG_NAME}/oci/$${APP_NAME}\""
 	@echo "  delete      → delete all k3d clusters (local dev cleanup)"
 	@echo ""
 	@echo "Other devcontainer commands:"
 	@echo ""
 	@echo "  docker compose up                   → local dev"
-	@echo "  skaffold dev                        → dev + deploy to cluster (verify cluster deployment)"
+	@echo "  skaffold dev                        → build + deploy to local cluster to verify deployment/helm release"
 	@echo "  nix-shell -p {nixPackage}           → enter nix shell with specific package"
 	@echo "  helm repo add {repoName} {repoURL}  → add a helm repository"
-	@echo "  kubeconform {file}                  → validate Kubernetes YAML files"
+	@echo "  kubeconform|kubeval {file}          → validate Kubernetes YAML files"
 	@echo ""
 
 cluster:

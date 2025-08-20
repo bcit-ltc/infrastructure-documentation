@@ -1,12 +1,22 @@
-#!/usr/bin/env zsh
-# Post-create script for setting up the devcontainer environment
+#!/usr/bin/env bash
+# Post-create: runs once after devcontainer is built
 set -e
 set -o nounset
 set -o pipefail
 
-ZDOTDIR="${ZDOTDIR:-$(cd -- "$(dirname "${0:A}")" && pwd -P)}"
-. "$ZDOTDIR/env.sh"
-. "$ZDOTDIR/lib.sh"
+# Robust script path resolver (bash & zsh)
+if [ -n "${BASH_SOURCE:-}" ]; then
+  _this="${BASH_SOURCE[0]}"
+elif [ -n "${ZSH_VERSION:-}" ]; then
+  _this="${(%):-%N}"   # zsh-only; safe because we’re in zsh
+else
+  _this="$0"
+fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
+
+# Load env vars + helpers
+. "$SCRIPT_DIR/env.sh"
+. "$SCRIPT_DIR/lib.sh"
 
 log "=== post-create start ==="
 
@@ -49,11 +59,26 @@ install_dagger() {
 }
 install_dagger
 
-# direnv hook (zsh) to load env vars
-TARGET_RC="$HOME/.zshrc"
-if ! grep -q 'direnv hook zsh' "$TARGET_RC" 2>/dev/null; then
-  echo 'eval "$(direnv hook zsh)"' >> "$TARGET_RC"
-  log "Added direnv hook to $TARGET_RC"
+# direnv hook to load env vars
+if command -v direnv >/dev/null 2>&1; then
+  case "${SHELL:-}" in
+    *zsh)  grep -q 'direnv hook zsh'  "$HOME/.zshrc"  2>/dev/null || echo 'eval "$(direnv hook zsh)"'  >> "$HOME/.zshrc" ;;
+    *bash) grep -q 'direnv hook bash' "$HOME/.bashrc" 2>/dev/null || echo 'eval "$(direnv hook bash)"' >> "$HOME/.bashrc" ;;
+  esac
 fi
+
+# Replace Codespaces banner (platform reads this path)
+NOTICE_WS="/workspaces/.codespaces/shared/first-run-notice.txt"
+cat > "$NOTICE_WS" <<'EOF'
+👋 Welcome!
+
+🛠  Commands:
+
+   docker compose up   → local dev
+   make cluster        → create k3d cluster using $(K3D_CFG)"
+   skaffold dev        → build + deploy to local cluster to verify deployment/helm release
+   make help           → additional commands
+
+EOF
 
 log "=== post-create complete ==="

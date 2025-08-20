@@ -1,33 +1,37 @@
 # Currently not used
 
 schemaVersion: '2.0.0'
-metadata:
-  name: Basic Container Structure Test
-  description: Checks for base image, files, and commands
 
-spec:
-  containers:
-    - name: app
-      image: <your-image-name>
-      tests:
-        - name: Check OS
-          commandTests:
-            - name: Check OS release
-              command: ['cat', '/etc/os-release']
-              expectedOutput: ['ID=ubuntu']
-        - name: Check required files
-          fileExistenceTests:
-            - name: App directory exists
-              path: /app
-              shouldExist: true
-            - name: Entrypoint script exists
-              path: /entrypoint.sh
-              shouldExist: true
-        - name: Check environment variables
-          envVarTests:
-            - name: APP_ENV is set
-              envVar: APP_ENV
-              expectedValue: production
+# commandTests:
+#   - name: Check OS release
+#     command: "cat"
+#     args: ["/etc/os-release"]
+#     expectedOutput: ['ID=ubuntu']
 
-# Run the container-structure-test
-# container-structure-test test --image <your-image-name> --config container-structure-test.yaml
+fileExistenceTests:
+  - name: App directory exists
+    path: /app
+    shouldExist: true
+  - name: Entrypoint script exists
+    path: /entrypoint.sh
+    shouldExist: true
+
+metadataTest:
+  UnboundEnvVars:
+    - key: APP_NAME
+      value: baz
+  labels:
+    - key: 'com.example.vendor'
+      value: 'ACME Incorporated'
+    - key: 'build-date'
+      value: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}$'
+      isRegex: true
+  exposedPorts: ["8080"]
+  # # volumes: ["/test"]
+  # entrypoint: []
+  # cmd: ["/bin/bash"]
+  workdir: "/app"
+  # user: "luke"
+
+# To run the container-structure-test:
+# `container-structure-test test --image <your-image-name> --config container-structure-test.yaml`

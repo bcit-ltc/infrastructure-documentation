@@ -1,17 +1,24 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # Install and configure Kubernetes Dashboard with Helm
-emulate -L zsh
-set -o errexit
+set -e
 set -o nounset
 set -o pipefail
 
-# Resolve script dir and shared env/lib; load env
-SCRIPT_DIR="${0:A:h}"
-ZDOTDIR="$SCRIPT_DIR" . "$SCRIPT_DIR/.zshenv" 2>/dev/null || true
+# Robust script path resolver (bash & zsh)
+if [ -n "${BASH_SOURCE:-}" ]; then
+  _this="${BASH_SOURCE[0]}"
+elif [ -n "${ZSH_VERSION:-}" ]; then
+  _this="${(%):-%N}"   # zsh-only; safe because we’re in zsh
+else
+  _this="$0"
+fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "$_this")" && pwd -P)"
+
+# Load env vars + helpers
 . "$SCRIPT_DIR/env.sh"
 . "$SCRIPT_DIR/lib.sh"
 
-# Common variables
+# Local variables
 DASHBOARD_NAME="kubernetes-dashboard"
 NAMESPACE="${NAMESPACE:-$DASHBOARD_NAME}"
 RELEASE="k8s-dashboard"
@@ -80,8 +87,8 @@ EOF
     echo "[kubernetes-dashboard.sh] ⚠️ ERROR: Failed to obtain a ServiceAccount token" >&2
     exit 1
   fi
-  print -r -- "$TOKEN_BASE64" | base64 -d > "$TOKEN_PATH"
-  log "🔑 Secret-based token saved to $TOKEN_PATH"
+printf '%s' "$TOKEN_BASE64" | base64 -d > "$TOKEN_PATH"
+log "🔑 Secret-based token saved to $TOKEN_PATH"
 fi
 
 # --- access instructions & token display ---

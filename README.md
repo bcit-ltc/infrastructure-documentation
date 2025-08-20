@@ -2,44 +2,32 @@
 
 Information about the architecture and makeup of the LTC's server infrastructure.
 
-## Developing
+## Develop using Codespaces
 
-### Using Codespaces
-
-1. Create an issue & branch for your work
-1. [Open repo in Codespaces](https://codespaces.new/bcit-ltc/infrastructure-documentation) and checkout your branch
-1. Open a terminal and run
+1. [Open your branch in Codespaces](https://codespaces.new/bcit-ltc/infrastructure-documentation).
+1. Open a terminal and run:
 
     direnv allow
     docker compose up
 
 1. Browse to `http://localhost:8080` (for browser-based sessions: command palette: `>open port in browser`).
 
-### Using your own environment
+## Develop using your own environment
 
-#### Dependencies
+For basic local development using `docker compose`:
 
-For basic local development:
+- install [docker](https://docs.docker.com/desktop/) or [orbstack](https://docs.orbstack.dev/install)
+- set `APP_NAME` environment variable: `export APP_NAME=myAwesomeApp`
+- run `docker compose up` and browse to `http://localhost:8080`
 
-- set "APP_NAME" environment variable
-- `docker` or `buildah`
+## Testing Deployment
 
-To test cluster deployment:
+The easiest way to load a working environment is to install Nix, and then hook `direnv` into your shell. The Codespaces environment is ready to go; if you're using your own environment, here's one way to do it:
 
-- `direnv`
-- `kubectl`
-- `helm`
-- `k3d`
-- `skaffold`
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
+    nix-shell -p direnv kubectl kubernetes-helm k3d skaffold
 
-### Other tools in this devcontainer
-
-- `dagger`
-- `nix`
-
-### Testing cluster deployment
-
-1. Run `make cluster` (and optionally, `make dashboard` for the [Kubernetes-dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) app), followed by `skaffold dev`
+1. Run `make cluster` (and optionally, `make dashboard` for the [Kubernetes-dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) app), followed by `skaffold dev`. `make help` shows other helpful commands for this environment.
 
 ### Cleanup
 

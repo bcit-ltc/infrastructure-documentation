@@ -1,5 +1,4 @@
-#!/usr/bin/env zsh
-# Common helpers (env is loaded by .zshenv via ZDOTDIR)
+# Common helpers (sourced by bash or zsh)
 set -e
 set -o nounset
 set -o pipefail
