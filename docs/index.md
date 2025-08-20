@@ -1,6 +1,6 @@
 # Home
 
-The Learning and Teaching Centre LTC has a collection of modern, highly-available systems that provide the capability to deliver agile software solutions to the BCIT community.
+The Learning and Teaching Centre has a collection of modern, highly-available systems that provide the capability to deliver agile software solutions to the BCIT community.
 
 * we deploy containerized workloads to Kubernetes
 * we use CI/CD pipelines to automate deployments
