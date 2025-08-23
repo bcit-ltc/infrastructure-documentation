@@ -33,20 +33,21 @@ jobs:
         env:
           OUTPUTS: ${{ toJson(steps.semantic.outputs) }}
 
-      - name: docker push version
-        if: steps.semantic.outputs.new-release-published == 'true'
-        run: |
-          docker tag some-image some-image:$TAG
-          docker push some-image:$TAG
-        env:
-          TAG: v$RELEASE_VERSION
-
       - run: |
           echo $GIT_TAG
           echo $RELEASE_VERSION
           echo $RELEASE_MAJOR
           echo $RELEASE_MINOR
           echo $RELEASE_PATCH
+
+      - name: docker push version
+        if: steps.semantic.outputs.new-release-published == 'true'
+        run: |
+          docker tag {{ github.repository }} {{ github.repository }}:$TAG
+          docker push {{ github.repository }}:$TAG
+        env:
+          TAG: v$RELEASE_VERSION
+
 
       - name: Describe Tags
         run: |
