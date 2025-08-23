@@ -37,13 +37,51 @@ jobs:
       #   with:
       #     release-version: ${{ steps.semantic.outputs.release-version }}
 
+      - name: docker push version
+        if: steps.semantic.outputs.new-release-published == 'true'
+        run: |
+          docker tag some-image some-image:$TAG
+          docker push some-image:$TAG
+        env:
+          TAG: v$RELEASE_VERSION
+
       - run: |
+          echo $GIT_TAG
           echo $RELEASE_VERSION
           echo $RELEASE_MAJOR
           echo $RELEASE_MINOR
           echo $RELEASE_PATCH
 
-
+      # - run: codfish/semantic-release-action@v4
+      #   with:
+      #     additional-packages: ['conventional-changelog-conventionalcommits@7']
+      #     plugins: |
+      #       [
+      #         '@semantic-release/commit-analyzer',
+      #         [
+      #           "@semantic-release/release-notes-generator",
+      #           {
+      #             "preset": "conventionalcommits",
+      #             "presetConfig": {
+      #               "types": [
+      #                 { type: 'feat', section: 'Features', hidden: false },
+      #                 { type: 'fix', section: 'Bug Fixes', hidden: false },
+      #                 { type: 'perf', section: 'Performance Improvements', hidden: false },
+      #                 { type: 'revert', section: 'Reverts', hidden: false },
+      #                 { type: 'docs', section: 'Other Updates', hidden: false },
+      #                 { type: 'style', section: 'Other Updates', hidden: false },
+      #                 { type: 'chore', section: 'Other Updates', hidden: false },
+      #                 { type: 'refactor', section: 'Other Updates', hidden: false },
+      #                 { type: 'test', section: 'Other Updates', hidden: false },
+      #                 { type: 'build', section: 'Other Updates', hidden: false },
+      #                 { type: 'ci', section: 'Other Updates', hidden: false }
+      #               ]
+      #             }
+      #           }
+      #         ],
+      #         '@semantic-release/npm',
+      #         '@semantic-release/github'
+      #       ]
 
 
 
