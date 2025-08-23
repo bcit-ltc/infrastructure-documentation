@@ -54,7 +54,7 @@ jobs:
 
       - name: Describe Tags
         run: |
-          git fetch --prune --unshallow
+          # git fetch --prune --unshallow
           latest_tag=$(git describe --tags --abbrev=0 HEAD~)
           echo "Latest Tag: $latest_tag"
 
