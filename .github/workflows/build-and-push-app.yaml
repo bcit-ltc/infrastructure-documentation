@@ -10,16 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # - run: codfish/semantic-release-action@v4
-      #   with:
-      #     dry-run: true
-      #     repository-url: https://github.com/bcit-ltc/infrastructure-documentation.git
-      #     plugins: |
-      #       ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
 
       - uses: actions/checkout@v5
 
@@ -29,6 +21,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        with:
+          dry-run: true
+          repository-url: https://github.com/bcit-ltc/infrastructure-documentation.git
+          plugins: |
+            ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
 
       - run: echo ${{ steps.semantic.outputs.release-version }}
 
