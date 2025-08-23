@@ -33,10 +33,6 @@ jobs:
         env:
           OUTPUTS: ${{ toJson(steps.semantic.outputs) }}
 
-      # - uses: codfish/some-other-action@v1
-      #   with:
-      #     release-version: ${{ steps.semantic.outputs.release-version }}
-
       - name: docker push version
         if: steps.semantic.outputs.new-release-published == 'true'
         run: |
