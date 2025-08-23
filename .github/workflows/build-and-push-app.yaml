@@ -36,11 +36,15 @@ jobs:
         env:
           OUTPUTS: ${{ toJson(steps.semantic.outputs) }}
 
-      - uses: codfish/some-other-action@v1
-        with:
-          release-version: ${{ steps.semantic.outputs.release-version }}
+      # - uses: codfish/some-other-action@v1
+      #   with:
+      #     release-version: ${{ steps.semantic.outputs.release-version }}
 
-
+      - run: |
+          echo $RELEASE_VERSION
+          echo $RELEASE_MAJOR
+          echo $RELEASE_MINOR
+          echo $RELEASE_PATCH
 
 
 
