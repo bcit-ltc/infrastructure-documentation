@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v5
 
       # you'll need to add an `id` in order to access output variables
-      - uses: codfish/semantic-release-action@v4
+      - uses: docker://ghcr.io/codfish/semantic-release-action@sha256:5d5447090feb2f9252aac2825ef14e244ecf53528fbe87d585b459adb547b914
         id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -52,12 +52,16 @@ jobs:
           echo $RELEASE_MINOR
           echo $RELEASE_PATCH
 
+      - name: Describe Tags
+        run: |
+          git fetch --prune --unshallow
+          latest_tag=$(git describe --tags --abbrev=0 HEAD~)
+          echo "Latest Tag: $latest_tag"
+
       # - run: codfish/semantic-release-action@v4
       #   with:
-      #     additional-packages: ['conventional-changelog-conventionalcommits@7']
       #     plugins: |
-      #       [
-      #         '@semantic-release/commit-analyzer',
+      #       [ '@semantic-release/commit-analyzer',
       #         [
       #           "@semantic-release/release-notes-generator",
       #           {
@@ -79,12 +83,8 @@ jobs:
       #             }
       #           }
       #         ],
-      #         '@semantic-release/npm',
       #         '@semantic-release/github'
       #       ]
-
-
-
 
       # - name: Docker meta
       #   id: meta
