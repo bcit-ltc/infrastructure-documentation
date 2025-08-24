@@ -59,13 +59,11 @@ jobs:
             VERSION="${BASE}-rc.${SHORT_SHA}.${TS}"
           fi
 
-          echo "Computed version is: ${VERSION}"
-
           {
             echo "image=${IMAGE}"
             echo "is_release=${IS_RELEASE}"
             echo "version=${VERSION}"
-          } >> "$GITHUB_OUTPUT"
+          } | tee -a "$GITHUB_OUTPUT"
 
   build-and-push-app-image:
     runs-on: ubuntu-latest
@@ -96,11 +94,11 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
         with:
-          images: ${{ needs.version.outputs.image }}
+          images: ${{ needs.get-version.outputs.image }}
           tags: |
-            type=raw,value=${{ needs.version.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},enable=${{ needs.version.outputs.is_release == 'true' }}
-            type=raw,value=stable,enable=${{ needs.version.outputs.is_release == 'true' }}
+            type=raw,value=${{ needs.get-version.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ needs.get-version.outputs.is_release == 'true' }}
+            type=raw,value=stable,enable=${{ needs.get-version.outputs.is_release == 'true' }}
           flavor: |
             latest=true
 
@@ -125,14 +123,14 @@ jobs:
 
       - name: Cosign sign (keyless, by digest)
         env:
-          IMAGE: ${{ needs.version.outputs.image }}
+          IMAGE: ${{ needs.get-version.outputs.image }}
           DIGEST: ${{ steps.build.outputs.digest }}
         run: cosign sign --yes "${IMAGE}@${DIGEST}"
 
       - name: Generate artifact attestation (provenance)
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ${{ needs.version.outputs.image }}
+          subject-name: ${{ needs.get-version.outputs.image }}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
@@ -145,8 +143,8 @@ jobs:
     env:
       CHART_NAME: ${{ github.event.repository.name }}
       OCI_PREFIX: oci://ghcr.io/${{ github.repository_owner }}
-      IS_RELEASE: ${{ needs.version.outputs.is_release }}
-      APP_VERSION: ${{ needs.version.outputs.version }}
+      IS_RELEASE: ${{ needs.get-version.outputs.is_release }}
+      APP_VERSION: ${{ needs.get-version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
