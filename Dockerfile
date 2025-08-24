@@ -18,4 +18,6 @@ RUN set -ex \
 FROM nginxinc/nginx-unprivileged:alpine3.22-perl
 LABEL maintainer=courseproduction@bcit.ca
 
+LABEL org.opencontainers.image.description="Infrastructure Documentation: Information about the architecture and makeup of the LTC's server infrastructure."
+
 COPY --from=build /public /usr/share/nginx/html/

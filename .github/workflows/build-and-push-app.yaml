@@ -3,17 +3,19 @@ name: build and push app image
 on:
   push:
     branches:
-      - '**'
+      - 'main'
 
 permissions:
   contents: write
   packages: write
+  id-token: write         # for cosign keyless
+  attestations: write     # for actions/attest-build-provenance
 
 env:
-  REGISTRY: ghcr.io
+  IMAGE_REPOSITORY: ghcr.io/${{ github.repository }}
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout (full history for tags)
@@ -21,50 +23,29 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: semantic-release (dry-run)
+      - name: semantic-release (publish)
         id: semrel
         uses: docker://ghcr.io/codfish/semantic-release-action@sha256:5d5447090feb2f9252aac2825ef14e244ecf53528fbe87d585b459adb547b914
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          dry-run: true
           plugins: |
             ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
 
-      - name: Compute tags & metadata
+      - name: Compute image & RC tag
         id: vars
         shell: bash
         run: |
           set -euo pipefail
-          IMAGE="${REGISTRY}/${GITHUB_REPOSITORY,,}"
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          IMAGE="${IMAGE_REPOSITORY,,}"              # lower-case for GHCR
           SHORT_SHA="${GITHUB_SHA::7}"
           TS="$(date -u +%Y%m%d%H%M%S)"
-          SOURCE_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-
-          NEW="${{ steps.semrel.outputs.new-release-published }}"
-          REL="${{ steps.semrel.outputs.release-version }}"
-
-          declare -a TAGS
-          if [[ "${NEW}" == "true" && -n "${REL}" ]]; then
-            VERSION="${REL}"
-            TAGS=("${IMAGE}:${VERSION}" "${IMAGE}:latest" "${IMAGE}:stable")
-          else
-            RAW="$(git describe --tags --abbrev=0 2>/dev/null || true)"
-            BASE="${RAW#v}"; [[ -z "${BASE}" ]] && BASE="0.0.0"
-            VERSION="${BASE}-rc.${SHORT_SHA}.${TS}"
-            TAGS=("${IMAGE}:${VERSION}" "${IMAGE}:latest")
-          fi
-
-          DESC="${REPO_NAME} ${VERSION} • ${GITHUB_REPOSITORY}@${GITHUB_SHA} • built ${TS}"
-
+          RAW="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+          BASE="${RAW#v}"; [[ -z "${BASE}" ]] && BASE="0.0.0"
+          RC_TAG="${BASE}-rc.${SHORT_SHA}.${TS}"
           {
-            echo "version=${VERSION}"
-            echo "description=${DESC}"
-            echo "source_url=${SOURCE_URL}"
-            echo "tags<<EOF"
-            printf '%s\n' "${TAGS[@]}"
-            echo "EOF"
+            echo "image=${IMAGE}"
+            echo "rc_tag=${RC_TAG}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Login to GHCR
@@ -77,16 +58,45 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
+      - name: Generate container metadata (tags & labels)
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
+          images: ${{ steps.vars.outputs.image }}
+          tags: |
+            # Release path: {semver}, stable, latest
+            type=raw,value=${{ steps.semrel.outputs['release-version'] }},enable=${{ steps.semrel.outputs['new-release-published'] == 'true' }}
+            type=raw,value=stable,enable=${{ steps.semrel.outputs['new-release-published'] == 'true' }}
+            # Non-release path: {base}-rc.{sha}.{ts}
+            type=raw,value=${{ steps.vars.outputs.rc_tag }},enable=${{ steps.semrel.outputs['new-release-published'] != 'true' }}
+            # Always latest
+            type=raw,value=latest
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v6
+        env:
+          DOCKER_BUILD_RECORD_UPLOAD: false
+        with:
+          context: .
           push: true
-          tags: ${{ steps.vars.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ steps.vars.outputs.description }}
-            org.opencontainers.image.version=${{ steps.vars.outputs.version }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.source=${{ steps.vars.outputs.source_url }}
-          provenance: mode=max
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: false     # we'll attach provenance with the next step to avoid duplicates
           sbom: false
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Cosign sign (keyless, by digest)
+        env:
+          IMAGE: ${{ steps.vars.outputs.image }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: cosign sign --yes --keyless "${IMAGE}@${DIGEST}"
+
+      - name: Generate artifact attestation (provenance)
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ steps.vars.outputs.image }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
