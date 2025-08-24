@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          IMAGE="${IMAGE_REPOSITORY,,}"              # lower-case for GHCR
+          IMAGE="${IMAGE_REPOSITORY,,}"
           SHORT_SHA="${GITHUB_SHA::7}"
           TS="$(date -u +%Y%m%d%H%M%S)"
           RAW="$(git describe --tags --abbrev=0 2>/dev/null || true)"
