@@ -9,11 +9,12 @@ permissions:
   contents: write
   packages: write
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   docker:
     runs-on: ubuntu-latest
-    env:
-      REGISTRY: ghcr.io
     steps:
       - name: Checkout (full history for tags)
         uses: actions/checkout@v4
@@ -21,7 +22,7 @@ jobs:
           fetch-depth: 0
 
       - name: semantic-release (dry-run)
-        id: semantic
+        id: semrel
         uses: docker://ghcr.io/codfish/semantic-release-action@sha256:5d5447090feb2f9252aac2825ef14e244ecf53528fbe87d585b459adb547b914
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,48 +31,39 @@ jobs:
           plugins: |
             ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
 
-      - name: Decide tags
-        id: plan
+      - name: Compute tags & metadata
+        id: vars
         shell: bash
         run: |
           set -euo pipefail
-
           IMAGE="${REGISTRY}/${GITHUB_REPOSITORY,,}"
-          SHORTSHA="${GITHUB_SHA::7}"
-          TS="$(date +%s)"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          SHORT_SHA="${GITHUB_SHA::7}"
+          TS="$(date -u +%Y%m%d%H%M%S)"
+          SOURCE_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
 
-          SEMREL_NEW="${{ steps.semantic.outputs.new-release-published }}"
-          SEMVER_REL="${{ steps.semantic.outputs.release-version }}"
+          NEW="${{ steps.semrel.outputs.new-release-published }}"
+          REL="${{ steps.semrel.outputs.release-version }}"
 
-          TAG_LINES=""
-          LABEL_VERSION=""
-
-          if [[ "${SEMREL_NEW}" == "true" && -n "${SEMVER_REL}" ]]; then
-            # New release with a concrete semantic version
-            TAG_LINES+="${IMAGE}:${SEMVER_REL}"$'\n'
-            TAG_LINES+="${IMAGE}:latest"$'\n'
-            TAG_LINES+="${IMAGE}:stable"$'\n'
-            LABEL_VERSION="${SEMVER_REL}"
-            echo "release_type=new" >> "$GITHUB_OUTPUT"
+          declare -a TAGS
+          if [[ "${NEW}" == "true" && -n "${REL}" ]]; then
+            VERSION="${REL}"
+            TAGS=("${IMAGE}:${VERSION}" "${IMAGE}:latest" "${IMAGE}:stable")
           else
-            # No new version -> RC build using latest tag from git
-            RAW_TAG="$(git describe --tags --abbrev=0)"
-            BASE="${RAW_TAG#v}"
-            RC_TAG="${BASE}-rc.${SHORTSHA}.${TS}"
-
-            TAG_LINES+="${IMAGE}:${RC_TAG}"$'\n'
-            TAG_LINES+="${IMAGE}:latest"$'\n'
-            LABEL_VERSION="${RC_TAG}"
-            echo "release_type=rc" >> "$GITHUB_OUTPUT"
-            echo "base_semver=${BASE}" >> "$GITHUB_OUTPUT"
+            RAW="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+            BASE="${RAW#v}"; [[ -z "${BASE}" ]] && BASE="0.0.0"
+            VERSION="${BASE}-rc.${SHORT_SHA}.${TS}"
+            TAGS=("${IMAGE}:${VERSION}" "${IMAGE}:latest")
           fi
 
+          DESC="${REPO_NAME} ${VERSION} • ${GITHUB_REPOSITORY}@${GITHUB_SHA} • built ${TS}"
+
           {
-            echo "image=${IMAGE}"
-            echo "label_version=${LABEL_VERSION}"
-            echo "tag_lines<<EOF"
-            printf '%s' "${TAG_LINES}"
-            echo
+            echo "version=${VERSION}"
+            echo "description=${DESC}"
+            echo "source_url=${SOURCE_URL}"
+            echo "tags<<EOF"
+            printf '%s\n' "${TAGS[@]}"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
@@ -79,7 +71,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
@@ -88,11 +80,13 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
-          platforms: linux/amd64
           push: true
-          tags: ${{ steps.plan.outputs.tag_lines }}
+          tags: ${{ steps.vars.outputs.tags }}
           labels: |
-            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.title=${{ github.event.repository.name }}
+            org.opencontainers.image.description=${{ steps.vars.outputs.description }}
+            org.opencontainers.image.version=${{ steps.vars.outputs.version }}
             org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.version=${{ steps.plan.outputs.label_version }}
+            org.opencontainers.image.source=${{ steps.vars.outputs.source_url }}
+          provenance: mode=max
+          sbom: false
