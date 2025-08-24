@@ -11,18 +11,18 @@ on:
 
 env:
   IMAGE_REPOSITORY: ghcr.io/${{ github.repository }}
+  HELM_CHARTS_REPO: https://bcit-ltc.github.io/helm-charts
 
 jobs:
+
   version:
     runs-on: ubuntu-latest
     permissions:
-      contents: write     # for semantic-release to create tags/releases
-      # packages: read
+      contents: write
     outputs:
       image: ${{ steps.vars.outputs.image }}
       is_release: ${{ steps.vars.outputs.is_release }}
-      release_version: ${{ steps.vars.outputs.release_version }}
-      rc_tag: ${{ steps.vars.outputs.rc_tag }}
+      version: ${{ steps.vars.outputs.version }}
     steps:
       - name: Checkout (full history for tags)
         uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
           plugins: |
             ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
 
-      - name: Compute image & RC tag
+      - name: Decide version (release or rc)
         id: vars
         shell: bash
         run: |
@@ -45,30 +45,35 @@ jobs:
           IMAGE="${IMAGE_REPOSITORY,,}"
           SHORT_SHA="${GITHUB_SHA::7}"
           TS="$(date -u +%Y%m%d%H%M%S)"
-          RAW="$(git describe --tags --abbrev=0 2>/dev/null || true)"
-          BASE="${RAW#v}"; [[ -z "${BASE}" ]] && BASE="0.0.0"
-          RC_TAG="${BASE}-rc.${SHORT_SHA}.${TS}"
+
+          # From semantic-release
+          IS_RELEASE="${{ steps.semrel.outputs.new-release-published || 'false' }}"
+          RELEASE_VERSION="${{ steps.semrel.outputs.release-version || '' }}"
+
+          if [[ "${IS_RELEASE}" == "true" && -n "${RELEASE_VERSION}" ]]; then
+            VERSION="${RELEASE_VERSION}"
+          else
+            # Base = latest tag (without 'v' prefix) or 0.0.0
+            RAW="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+            BASE="${RAW#v}"; [[ -z "${BASE}" ]] && BASE="0.0.0"
+            VERSION="${BASE}-rc.${SHORT_SHA}.${TS}"
+          fi
+
           {
             echo "image=${IMAGE}"
-            echo "rc_tag=${RC_TAG}"
-            echo "is_release=${{ steps.semrel.outputs.new-release-published }}"
-            echo "release_version=${{ steps.semrel.outputs.release-version }}"
+            echo "is_release=${IS_RELEASE}"
+            echo "version=${VERSION}"
           } >> "$GITHUB_OUTPUT"
+
 
   build:
     runs-on: ubuntu-latest
-    outputs:
-      is_release: ${{ steps.semrel.outputs['new-release-published'] }}
-      release_version: ${{ steps.semrel.outputs['release-version'] }}
-      image: ${{ steps.vars.outputs.image }}
-      rc_tag: ${{ steps.vars.outputs.rc_tag }}
-
     needs: version
     permissions:
       contents: read
       packages: write
-      id-token: write         # for cosign keyless
-      attestations: write     # for actions/attest-build-provenance
+      id-token: write
+      attestations: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -89,13 +94,11 @@ jobs:
         with:
           images: ${{ needs.version.outputs.image }}
           tags: |
-            # Release path: {semver}, stable, latest
-            type=raw,value=${{ needs.version.outputs.release_version }},enable=${{ needs.version.outputs.is_release == 'true' }}
+            # type=raw,value=${{ needs.version.outputs.version }}
+            type=semver,pattern={{version}}
             type=raw,value=stable,enable=${{ needs.version.outputs.is_release == 'true' }}
-            # Non-release path: {base}-rc.{sha}.{ts}
-            type=raw,value=${{ needs.version.outputs.rc_tag }},enable=${{ needs.version.outputs.is_release != 'true' }}
-            # Always latest
-            type=raw,value=latest
+          flavor: |
+            latest=true
 
       - name: Build and push Docker image
         id: build
@@ -107,9 +110,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          provenance: false    # avoid duplicate provenance; we'll attach next
+          provenance: false
           sbom: false
-          # Optional build cache to speed things up:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -129,20 +131,18 @@ jobs:
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
+
   helm_chart:
     runs-on: ubuntu-latest
-    needs: build
+    needs: version
     permissions:
       contents: read
       packages: write
     env:
-      CHART_NAME: ${{ github.event.repository.name }}             # matches the app repo name
-      OWNER: ${{ github.repository_owner }}
-      PAGES_REPO_URL: https://bcit-ltc.github.io/helm-charts
+      CHART_NAME: ${{ github.event.repository.name }}
       OCI_PREFIX: oci://ghcr.io/${{ github.repository_owner }}
-      IS_RELEASE: ${{ needs.build.outputs.is_release }}
-      APP_SEMVER: ${{ needs.build.outputs.release_version }}
-      APP_RC_TAG: ${{ needs.build.outputs.rc_tag }}
+      IS_RELEASE: ${{ needs.version.outputs.is_release }}
+      APP_VERSION: ${{ needs.version.outputs.version }}
     steps:
       - name: Checkout (optional)
         uses: actions/checkout@v4
@@ -150,105 +150,38 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v4
 
-      - name: Login to GHCR for Helm OCI
+      - name: Login to GHCR
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username "${{ github.actor }}" --password-stdin
 
-      - name: Pull current chart from Pages repo
+      - name: Pull latest chart
         run: |
           set -euo pipefail
-          helm repo add bcit-ltc "${PAGES_REPO_URL}" --force-update
+          helm repo add bcit-ltc "${HELM_CHARTS_REPO}" --force-update
           helm repo update
           mkdir -p "$RUNNER_TEMP/chart"
-          helm pull "bcit-ltc/${CHART_NAME}" --untar --untardir "$RUNNER_TEMP/chart"
+          helm pull "${OCI_PREFIX}/oci/${CHART_NAME}" --untar --untardir "$RUNNER_TEMP/chart"
           echo "CHART_DIR=$RUNNER_TEMP/chart/${CHART_NAME}" >> "$GITHUB_ENV"
 
-      - name: Read current chart version
-        id: readver
+      - name: Update image repository & tag in values.yaml
         run: |
           set -euo pipefail
-          cur="$(grep -E '^[[:space:]]*version:' "$CHART_DIR/Chart.yaml" | awk '{print $2}')"
-          if [[ -z "${cur:-}" ]]; then
-            echo "Could not read chart version from Chart.yaml"; exit 1
-          fi
-          echo "current=${cur}" >> "$GITHUB_OUTPUT"
-
-      - name: Compute next chart version & appVersion
-        id: plan
-        shell: bash
-        env:
-          CURRENT_CHART_VERSION: ${{ steps.readver.outputs.current }}
-          IS_RELEASE: ${{ env.IS_RELEASE }}
-          APP_SEMVER: ${{ env.APP_SEMVER }}
-          APP_RC_TAG: ${{ env.APP_RC_TAG }}
-        run: |
-          set -euo pipefail
-
-          bump_patch() {
-            IFS='.' read -r maj min pat <<< "$1"
-            [[ -z "$maj" || -z "$min" || -z "$pat" ]] && { echo "Invalid SemVer: $1" >&2; exit 1; }
-            echo "${maj}.${min}.$((pat+1))"
-          }
-
-          if [[ "${IS_RELEASE}" == "true" && -n "${APP_SEMVER}" ]]; then
-            # Real app release:
-            NEW_CHART_VERSION="$(bump_patch "${CURRENT_CHART_VERSION}")"
-            APP_VERSION="${APP_SEMVER}"
-          else
-            # RC: reuse the SAME -rc.<sha>.<ts> suffix as the app image tag
-            # Extract suffix after the first '-rc.' in APP_RC_TAG
-            if [[ "${APP_RC_TAG}" == *-rc.* ]]; then
-              SUFFIX="${APP_RC_TAG#*-rc.}"       # e.g., "abcdef1.1724456789"
-              RC_SUFFIX="-rc.${SUFFIX}"          # -> "-rc.abcdef1.1724456789"
-            else
-              # Fallback (shouldn't happen): synthesize a suffix
-              SHORT_SHA="${GITHUB_SHA::7}"
-              TS="$(date +%s)"
-              RC_SUFFIX="-rc.${SHORT_SHA}.${TS}"
-            fi
-            NEW_CHART_VERSION="${CURRENT_CHART_VERSION}${RC_SUFFIX}"
-            APP_VERSION="${APP_RC_TAG}"
-          fi
-
-          echo "chart_version=${NEW_CHART_VERSION}" >> "$GITHUB_OUTPUT"
-          echo "app_version=${APP_VERSION}"        >> "$GITHUB_OUTPUT"
-
-      - name: Update Chart.yaml (version & appVersion)
-        run: |
-          set -euo pipefail
-          CHV="${{ steps.plan.outputs.chart_version }}"
-          APV="${{ steps.plan.outputs.app_version }}"
-
-          # Update version:
-          if grep -qE '^[[:space:]]*version:' "$CHART_DIR/Chart.yaml"; then
-            sed -i.bak -E "s|^[[:space:]]*version:.*|version: ${CHV}|" "$CHART_DIR/Chart.yaml"
-          else
-            echo "version: ${CHV}" >> "$CHART_DIR/Chart.yaml"
-          fi
-
-          # Update appVersion:
-          if grep -qE '^[[:space:]]*appVersion:' "$CHART_DIR/Chart.yaml"; then
-            sed -i.bak -E "s|^[[:space:]]*appVersion:.*|appVersion: ${APV}|" "$CHART_DIR/Chart.yaml"
-          else
-            echo "appVersion: ${APV}" >> "$CHART_DIR/Chart.yaml"
-          fi
-
-          echo "Updated Chart.yaml:"
-          grep -E '^(version|appVersion):' "$CHART_DIR/Chart.yaml"
+          yq -i ".image.tag = \"${APP_VERSION}\"" "$CHART_DIR/values.yaml"
+          echo "Updated values.yaml image.tag to ${APP_VERSION}"
+          grep -E '^[[:space:]]*image:' -A2 "$CHART_DIR/values.yaml"
 
       - name: Package chart
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/pkg"
           helm package "$CHART_DIR" \
-            --version "${{ steps.plan.outputs.chart_version }}" \
-            --app-version "${{ steps.plan.outputs.app_version }}" \
+            --version "${APP_VERSION}" \
+            --app-version "${APP_VERSION}" \
             --destination "$RUNNER_TEMP/pkg"
           echo "PKG=$(ls "$RUNNER_TEMP/pkg"/*.tgz)" >> "$GITHUB_ENV"
 
       - name: Push chart to GHCR (OCI)
         run: |
           set -euo pipefail
-          helm push "${PKG}" "${OCI_PREFIX}/${CHART_NAME}"
-
+          helm push "${PKG}" "${OCI_PREFIX}/oci"
 
