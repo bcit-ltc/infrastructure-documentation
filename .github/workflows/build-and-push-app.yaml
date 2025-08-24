@@ -92,7 +92,7 @@ jobs:
         env:
           IMAGE: ${{ steps.vars.outputs.image }}
           DIGEST: ${{ steps.build.outputs.digest }}
-        run: cosign sign --yes --keyless "${IMAGE}@${DIGEST}"
+        run: cosign sign --yes "${IMAGE}@${DIGEST}"
 
       - name: Generate artifact attestation (provenance)
         uses: actions/attest-build-provenance@v2
