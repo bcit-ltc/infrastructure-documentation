@@ -73,10 +73,6 @@ jobs:
       packages: write
       id-token: write
       attestations: write
-    env:
-      IS_RELEASE: ${{ needs.get-version.outputs.is_release }}
-      IMAGE: ${{ needs.get-version.outputs.image }}
-      APP_VERSION: ${{ needs.get-version.outputs.version }}
     steps:
 
       - name: Checkout code
@@ -98,11 +94,11 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
         with:
-          images: ${IMAGE}
+          images: ${{ needs.get-version.outputs.image }}
           tags: |
-            type=raw,value=${APP_VERSION}
-            type=semver,pattern={{major}}.{{minor}},enable=${IS_RELEASE} == 'true' }
-            type=raw,value=stable,enable=${IS_RELEASE} == 'true' }
+            type=raw,value=${{ needs.get-version.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ needs.get-version.outputs.is_release == 'true' }}
+            type=raw,value=stable,enable=${{ needs.get-version.outputs.is_release == 'true' }}
           flavor: |
             latest=true
 
@@ -127,14 +123,14 @@ jobs:
 
       - name: Cosign sign (keyless, by digest)
         env:
-          IMAGE: ${IMAGE}
+          IMAGE: ${{ needs.get-version.outputs.image }}
           DIGEST: ${{ steps.build.outputs.digest }}
         run: cosign sign --yes "${IMAGE}@${DIGEST}"
 
       - name: Generate artifact attestation (provenance)
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ${IMAGE}
+          subject-name: ${{ needs.get-version.outputs.image }}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
@@ -190,3 +186,4 @@ jobs:
         run: |
           set -euo pipefail
           helm push "${PKG}" "${OCI_PREFIX}/oci"
+
