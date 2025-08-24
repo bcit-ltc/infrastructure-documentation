@@ -1,0 +1,37 @@
+name: Codespace Creation
+description: This workflow runs when a pull request is opened, reopened, or synchronized. It uses Dagger to create a codespace for the PR.
+
+on:
+  pull_request:
+    types: [synchronize, opened, reopened]
+
+jobs:
+  codespace-manager:
+    name: Codespace Manager
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # - name: Print all ENVS
+      #   run: printenv
+      - name: Create Codespace with Dagger
+        uses: dagger/dagger-for-github@8.0.0
+        env:
+          # setting tokens here so that it can be referenced below without exposing in dagger cloud logs
+          # should be referenced as env://GITHUB_TOKEN in the Dagger module
+          GITHUB_TOKEN: ${{ github.token }}
+          CODESPACE_TOKEN: ${{ secrets.CODESPACES_PAT }}
+        with:
+          module: github.com/BCIT-LTC/daggerverse/codespace-manager@40-codespace-manager-module
+          call: >-
+            create-codespace-by-pull-request
+            --source=.
+            --token=env://CODESPACE_TOKEN
+            --organization=${{ github.repository_owner }}
+            --repo_name=${{ github.event.repository.name }}
+            --branch_name=${{ github.event.pull_request.head.ref }}
+            --pull_request_number=${{ github.event.pull_request.number }}
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+          version: "latest"
+
+
