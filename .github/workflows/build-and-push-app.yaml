@@ -100,9 +100,9 @@ jobs:
         with:
           images: ${IMAGE}
           tags: |
-            type=raw,value=${{ env.APP_VERSION }}
-            type=semver,pattern={{major}}.{{minor}},enable=${{ env.IS_RELEASE == 'true' }}
-            type=raw,value=stable,enable=${{ env.IS_RELEASE == 'true' }}
+            type=raw,value=${APP_VERSION}
+            type=semver,pattern={{major}}.{{minor}},enable=${IS_RELEASE} == 'true' }
+            type=raw,value=stable,enable=${IS_RELEASE} == 'true' }
           flavor: |
             latest=true
 
@@ -190,4 +190,3 @@ jobs:
         run: |
           set -euo pipefail
           helm push "${PKG}" "${OCI_PREFIX}/oci"
-
