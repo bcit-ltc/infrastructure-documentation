@@ -93,6 +93,8 @@ jobs:
       - name: Generate container metadata (tags & labels)
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
         with:
           images: ${{ needs.version.outputs.image }}
           tags: |
@@ -112,6 +114,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           provenance: false
           sbom: false
           cache-from: type=gha
