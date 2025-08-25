@@ -107,7 +107,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          provenance: false
+          provenance: true
           sbom: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -119,11 +119,11 @@ jobs:
           DIGEST: ${{ steps.build.outputs.digest }}
         run: cosign sign --yes "${IMAGE}@${DIGEST}"
 
-      - uses: actions/attest-build-provenance@v2
-        with:
-          subject-name: ${{ env.IMAGE }}
-          subject-digest: ${{ steps.build.outputs.digest }}
-          push-to-registry: true
+      # - uses: actions/attest-build-provenance@v2
+      #   with:
+      #     subject-name: ${{ env.IMAGE }}
+      #     subject-digest: ${{ steps.build.outputs.digest }}
+      #     push-to-registry: true
 
   create-app-token:
     runs-on: ubuntu-latest
@@ -133,8 +133,8 @@ jobs:
       - id: app
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ secrets.ORG_APP_ID }}
-          private-key: ${{ secrets.ORG_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.ORG_HELM_CHART_UPDATER_ID }}
+          private-key: ${{ secrets.ORG_HELM_CHART_UPDATER_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: helm-charts
           permission-actions: write
