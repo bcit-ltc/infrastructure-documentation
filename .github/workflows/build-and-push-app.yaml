@@ -128,7 +128,7 @@ jobs:
     name: Bump versions in bcit-ltc/helm-charts
     needs: get-version
     if: ${{ needs.get-version.outputs.version != '' }}
-    uses: bcit-ltc/helm-charts/.github/workflows/bump-chart.yml@main
+    uses: bcit-ltc/helm-charts/.github/workflows/bump-chart.yaml@main
     permissions:
       contents: read
     with:
