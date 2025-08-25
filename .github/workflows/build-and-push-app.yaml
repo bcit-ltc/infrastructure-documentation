@@ -100,6 +100,7 @@ jobs:
         id: build
         env:
           DOCKER_BUILD_RECORD_UPLOAD: false
+          DOCKER_BUILD_SUMMARY: false
         with:
           context: .
           push: true
@@ -134,26 +135,25 @@ jobs:
         with:
           app-id: ${{ secrets.ORG_APP_ID }}
           private-key: ${{ secrets.ORG_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository.owner }}
+          owner: ${{ github.repository_owner }}
           repositories: helm-charts
-          permissions: |
-            actions: write
-            contents: read
+          permission-actions: write
+          permission-contents: read
 
   trigger-helm-chart-update:
-    needs: create-app-token
+    needs: [get-version, create-app-token]
+    if: ${{ needs.get-version.outputs.version != '' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger helm-charts workflow_dispatch
+      - name: Trigger helm-charts remote-bump via gh
         env:
-          TOKEN: ${{ needs.create-app-token.outputs.token }}
+          GH_TOKEN: ${{ needs.create-app-token.outputs.token }}
           CHART: ${{ github.event.repository.name }}
           VER:   ${{ needs.get-version.outputs.version }}
         run: |
-          curl -sS -X POST \
-            -H "Authorization: Bearer ${TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/bcit-ltc/helm-charts/actions/workflows/remote-bump.yaml/dispatches \
-            -d "$(jq -nc --arg r main --arg c "$CHART" --arg v "$VER" '{ref:$r, inputs:{chart_name:$c, version:$v}}')"
-
+          gh workflow run remote-bump.yaml \
+            -R bcit-ltc/helm-charts \
+            -r main \
+            -f chart_name="$CHART" \
+            -f version="$VER"
 
