@@ -112,6 +112,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Sign images to ensure authenticity
       - uses: sigstore/cosign-installer@v3
 
       - name: Cosign sign (keyless, by digest)
@@ -125,6 +126,7 @@ jobs:
       #     subject-digest: ${{ steps.build.outputs.digest }}
       #     push-to-registry: true
 
+  # Trigger helm-charts repo remote-bump workflow to update chart version
   dispatch-helm-charts:
     needs: [get-version]
     if: ${{ needs.get-version.outputs.version != '' }}
