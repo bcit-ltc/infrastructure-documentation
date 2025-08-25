@@ -130,7 +130,7 @@ jobs:
     if: ${{ needs.get-version.outputs.version != '' }}
     uses: bcit-ltc/helm-charts/.github/workflows/bump-chart.yaml@main
     permissions:
-      contents: read
+      contents: write
     with:
       chart_name: ${{ github.event.repository.name }}
       version: ${{ needs.get-version.outputs.version }}
