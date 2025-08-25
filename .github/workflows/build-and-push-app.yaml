@@ -124,14 +124,36 @@ jobs:
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
-  bump-helm-charts-repo:
-    name: Bump versions in bcit-ltc/helm-charts
-    needs: get-version
-    if: ${{ needs.get-version.outputs.version != '' }}
-    uses: bcit-ltc/helm-charts/.github/workflows/bump-chart.yaml@main
-    permissions:
-      contents: write
-    with:
-      chart_name: ${{ github.event.repository.name }}
-      version: ${{ needs.get-version.outputs.version }}
+  create-app-token:
+    runs-on: ubuntu-latest
+    outputs:
+      token: ${{ steps.app.outputs.token }}
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.ORG_APP_ID }}
+          private-key: ${{ secrets.ORG_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository.owner }}
+          repositories: helm-charts
+          permissions: |
+            actions: write
+            contents: read
+
+  trigger-helm-chart-update:
+    needs: create-app-token
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger helm-charts workflow_dispatch
+        env:
+          TOKEN: ${{ needs.create-app-token.outputs.token }}
+          CHART: ${{ github.event.repository.name }}
+          VER:   ${{ needs.get-version.outputs.version }}
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/bcit-ltc/helm-charts/actions/workflows/remote-bump.yaml/dispatches \
+            -d "$(jq -nc --arg r main --arg c "$CHART" --arg v "$VER" '{ref:$r, inputs:{chart_name:$c, version:$v}}')"
+
 
