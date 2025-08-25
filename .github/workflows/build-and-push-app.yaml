@@ -125,10 +125,10 @@ jobs:
       #     subject-digest: ${{ steps.build.outputs.digest }}
       #     push-to-registry: true
 
-  create-app-token:
+  dispatch-helm-charts:
+    needs: [get-version]
+    if: ${{ needs.get-version.outputs.version != '' }}
     runs-on: ubuntu-latest
-    outputs:
-      token: ${{ steps.app.outputs.token }}
     steps:
 
       - id: app
@@ -141,27 +141,16 @@ jobs:
           permission-actions: write
           permission-contents: read
 
-      - name: Verify token can see target repo (optional)
+      - name: Trigger helm-charts repo remote-bump
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
-        run: |
-          gh api repos/bcit-ltc/helm-charts -q '.full_name' >/dev/null
-          echo "App token can access bcit-ltc/helm-charts ✅"
-
-  trigger-helm-chart-update:
-    needs: [get-version, create-app-token]
-    if: ${{ needs.get-version.outputs.version != '' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger helm-charts remote-bump via gh
-        env:
-          GH_TOKEN: ${{ needs.create-app-token.outputs.token }}
           CHART: ${{ github.event.repository.name }}
           VER:   ${{ needs.get-version.outputs.version }}
         run: |
+          set -euo pipefail
           gh workflow run remote-bump.yaml \
             -R bcit-ltc/helm-charts \
             -r main \
             -f chart_name="$CHART" \
             -f version="$VER"
-
+          echo "Dispatched remote-bump.yaml for ${CHART} -> ${VER}"
