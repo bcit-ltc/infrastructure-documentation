@@ -146,7 +146,6 @@ jobs:
     env:
       CHART_NAME: ${{ github.event.repository.name }}
       OCI_PREFIX: oci://ghcr.io/${{ github.repository_owner }}
-      IS_RELEASE: ${{ needs.get-version.outputs.is_release }}
       APP_VERSION: ${{ needs.get-version.outputs.version }}
     steps:
       - name: Checkout code
@@ -182,7 +181,7 @@ jobs:
             echo "Primary helm pull missing. Trying git clone fallback…"
             workdir="$RUNNER_TEMP/fallback"
             mkdir -p "$workdir"
-            git clone --depth=1 https://github.com/bcit-ltc/helm-charts "$workdir/helm-charts"
+            git clone --depth=1 ${HELM_CHARTS_REPO} "$workdir/helm-charts"
             SRC="$workdir/helm-charts/charts/${CHART_NAME}"
             if [[ -d "$SRC" ]]; then
               mkdir -p "$(dirname "$CHART_DIR")"
