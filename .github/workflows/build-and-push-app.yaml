@@ -141,6 +141,13 @@ jobs:
           permission-actions: write
           permission-contents: read
 
+      - name: Verify token can see target repo (optional)
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          gh api repos/bcit-ltc/helm-charts -q '.full_name' >/dev/null
+          echo "App token can access bcit-ltc/helm-charts ✅"
+
   trigger-helm-chart-update:
     needs: [get-version, create-app-token]
     if: ${{ needs.get-version.outputs.version != '' }}
