@@ -1,159 +1,16 @@
+# Runs `.github/workflows/build-and-push-app.yaml`
 name: Build and push app/chart images
 
 on:
   push:
-    branches: [ 'main' ]
-
-env:
-  IMAGE_REPOSITORY: ghcr.io/${{ github.repository }}
+    branches: [ main ]
 
 jobs:
-
-  get-version:
-    runs-on: ubuntu-latest
+  build-and-ship:
+    uses: bcit-ltc/.github/.github/workflows/build-and-push-app.yaml@main
     permissions:
       contents: write
-    outputs:
-      image: ${{ steps.vars.outputs.image }}
-      is_release: ${{ steps.vars.outputs.is_release }}
-      version: ${{ steps.vars.outputs.version }}
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-
-      - name: Run Semantic Release
-        id: semrel
-        uses: docker://ghcr.io/codfish/semantic-release-action@sha256:5d5447090feb2f9252aac2825ef14e244ecf53528fbe87d585b459adb547b914
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          plugins: |
-            ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
-
-      - name: Compute version
-        id: vars
-        shell: bash
-        run: |
-          set -euo pipefail
-          IMAGE="${IMAGE_REPOSITORY,,}"
-          SHORT_SHA="${GITHUB_SHA::7}"
-          TS="$(date -u +%Y%m%d%H%M%S)"
-
-          # From semantic-release
-          IS_RELEASE="${{ steps.semrel.outputs.new-release-published || 'false' }}"
-          RELEASE_VERSION="${{ steps.semrel.outputs.release-version || '' }}"
-
-          if [[ "${IS_RELEASE}" == "true" && -n "${RELEASE_VERSION}" ]]; then
-            VERSION="${RELEASE_VERSION}"
-          else
-            # Base = latest tag (without 'v' prefix) or 0.0.0
-            RAW="$(git describe --tags --abbrev=0 2>/dev/null || true)"
-            BASE="${RAW#v}"; [[ -z "${BASE}" ]] && BASE="0.0.0"
-            VERSION="${BASE}-rc.${SHORT_SHA}.${TS}"
-          fi
-
-          {
-            echo "image=${IMAGE}"
-            echo "is_release=${IS_RELEASE}"
-            echo "version=${VERSION}"
-          } | tee -a "$GITHUB_OUTPUT"
-
-  build-and-push-app-image:
-    runs-on: ubuntu-latest
-    needs: get-version
-    permissions:
-      contents: read
       packages: write
       id-token: write
       attestations: write
-    env:
-      IS_RELEASE: ${{ needs.get-version.outputs.is_release }}
-      APP_VERSION: ${{ needs.get-version.outputs.version }}
-      IMAGE: ${{ needs.get-version.outputs.image }}
-    steps:
-
-      - uses: actions/checkout@v4
-
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: docker/setup-buildx-action@v3
-
-      - name: Generate container metadata
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        env:
-          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
-        with:
-          images: ${{ env.IMAGE }}
-          tags: |
-            type=raw,value=${{ env.APP_VERSION }}
-            type=semver,pattern={{major}}.{{minor}},enable=${{ env.IS_RELEASE == 'true' }}
-            type=raw,value=stable,enable=${{ env.IS_RELEASE == 'true' }}
-          flavor: |
-            latest=true
-
-      - uses: docker/build-push-action@v6
-        id: build
-        env:
-          DOCKER_BUILD_RECORD_UPLOAD: false
-          DOCKER_BUILD_SUMMARY: false
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          annotations: ${{ steps.meta.outputs.annotations }}
-          provenance: true    # or could use `attest-build-provenance`` step below
-          sbom: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # Sign images to ensure authenticity
-      - uses: sigstore/cosign-installer@v3
-
-      - name: Cosign sign (keyless, by digest)
-        env:
-          DIGEST: ${{ steps.build.outputs.digest }}
-        run: cosign sign --yes "${IMAGE}@${DIGEST}"
-
-      # - uses: actions/attest-build-provenance@v2
-      #   with:
-      #     subject-name: ${{ env.IMAGE }}
-      #     subject-digest: ${{ steps.build.outputs.digest }}
-      #     push-to-registry: true
-
-  # Trigger helm-charts repo remote-bump workflow to update chart version
-  dispatch-helm-charts:
-    needs: [get-version]
-    if: ${{ needs.get-version.outputs.version != '' }}
-    runs-on: ubuntu-latest
-    steps:
-
-      # Generate token to trigger remote workflow
-      - id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.ORG_HELM_CHART_UPDATER_ID }}
-          private-key: ${{ secrets.ORG_HELM_CHART_UPDATER_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: helm-charts
-          permission-actions: write
-          permission-contents: read
-
-      - name: Trigger `helm-charts` repo remote-bump
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          CHART: ${{ github.event.repository.name }}
-          VER:   ${{ needs.get-version.outputs.version }}
-        run: |
-          set -euo pipefail
-          gh workflow run remote-bump.yaml \
-            -R bcit-ltc/helm-charts \
-            -r main \
-            -f chart_name="$CHART" \
-            -f version="$VER"
-          echo "Dispatched remote-bump.yaml for ${CHART} -> ${VER}"
+    secrets: inherit
