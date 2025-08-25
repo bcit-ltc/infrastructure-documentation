@@ -73,6 +73,10 @@ jobs:
       packages: write
       id-token: write
       attestations: write
+    env:
+      IS_RELEASE: ${{ needs.get-version.outputs.is_release }}
+      APP_VERSION: ${{ needs.get-version.outputs.version }}
+      IMAGE: ${{ needs.get-version.outputs.image }}
     steps:
 
       - name: Checkout code
@@ -94,11 +98,11 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
         with:
-          images: ${{ needs.get-version.outputs.image }}
+          images: ${{ env.IMAGE }}
           tags: |
-            type=raw,value=${{ needs.get-version.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},enable=${{ needs.get-version.outputs.is_release == 'true' }}
-            type=raw,value=stable,enable=${{ needs.get-version.outputs.is_release == 'true' }}
+            type=raw,value=${{ env.APP_VERSION }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ env.IS_RELEASE == 'true' }}
+            type=raw,value=stable,enable=${{ env.IS_RELEASE == 'true' }}
           flavor: |
             latest=true
 
@@ -123,14 +127,13 @@ jobs:
 
       - name: Cosign sign (keyless, by digest)
         env:
-          IMAGE: ${{ needs.get-version.outputs.image }}
           DIGEST: ${{ steps.build.outputs.digest }}
         run: cosign sign --yes "${IMAGE}@${DIGEST}"
 
       - name: Generate artifact attestation (provenance)
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ${{ needs.get-version.outputs.image }}
+          subject-name: ${{ env.IMAGE }}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
@@ -157,6 +160,8 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username "${{ github.actor }}" --password-stdin
 
       - name: Pull latest chart
+        id: pull_chart
+        continue-on-error: true
         run: |
           set -euo pipefail
           helm repo add bcit-ltc "${HELM_CHARTS_REPO}" --force-update
@@ -164,6 +169,34 @@ jobs:
           mkdir -p "$RUNNER_TEMP/chart"
           helm pull "${OCI_PREFIX}/oci/${CHART_NAME}" --untar --untardir "$RUNNER_TEMP/chart"
           echo "CHART_DIR=$RUNNER_TEMP/chart/${CHART_NAME}" >> "$GITHUB_ENV"
+
+      - name: Ensure chart exists (fallback to git or create)
+        if: ${{ always() }}
+        run: |
+          set -euo pipefail
+          # If CHART_DIR wasn't exported (pull failed), define it now
+          : "${CHART_DIR:=$RUNNER_TEMP/chart/${CHART_NAME}}"
+
+          # If no chart pulled, try cloning the repo and copying the chart path
+          if [[ ! -f "$CHART_DIR/Chart.yaml" ]]; then
+            echo "Primary helm pull missing. Trying git clone fallback…"
+            workdir="$RUNNER_TEMP/fallback"
+            mkdir -p "$workdir"
+            git clone --depth=1 https://github.com/bcit-ltc/helm-charts "$workdir/helm-charts"
+            SRC="$workdir/helm-charts/charts/${CHART_NAME}"
+            if [[ -d "$SRC" ]]; then
+              mkdir -p "$(dirname "$CHART_DIR")"
+              cp -a "$SRC" "$CHART_DIR"
+              echo "Recovered chart from git path: $SRC"
+            else
+              echo "No chart found in repo; creating a fresh chart with 'helm create'."
+              mkdir -p "$(dirname "$CHART_DIR")"
+              helm create "$CHART_DIR"
+            fi
+          fi
+
+          # Ensure downstream steps see CHART_DIR
+          echo "CHART_DIR=$CHART_DIR" >> "$GITHUB_ENV"
 
       - name: Update image tag in values.yaml
         run: |
@@ -186,4 +219,3 @@ jobs:
         run: |
           set -euo pipefail
           helm push "${PKG}" "${OCI_PREFIX}/oci"
-
