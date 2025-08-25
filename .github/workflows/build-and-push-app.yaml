@@ -130,6 +130,7 @@ jobs:
     outputs:
       token: ${{ steps.app.outputs.token }}
     steps:
+
       - id: app
         uses: actions/create-github-app-token@v1
         with:
