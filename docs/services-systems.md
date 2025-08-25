@@ -9,28 +9,22 @@ The LTC manages its own systems and services to facilitate the research and deve
     * Install and run BCIT's myVPN
     * Membership in the `LTC Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to the ITS TechHelp desk](https://techhelp.bcit.ca/).
 
-## GitLab
+## GitHub
 
-> [https://issues.ltc.bcit.ca](https://issues.ltc.bcit.ca)
+> [https://github.com/bcit-ltc](https://github.com/bcit-ltc)
 
-GitLab is the LTC's code repository, CI/CD pipeline coordinator, and container registry. It is also used as an issue tracker and comes with a built-in version of [Mattermost](https://mattermost.com/) for chat-style team communication.
+GitHub is the LTC's code repository, CI/CD pipeline coordinator, and container registry. It is also used as an issue tracker and comes with a built-in project management tool.
 
-Use GitLab to:
+Use GitHub to:
 
-* record work using version controlled code repositories
+* record work using version controlled source code repositories
 * track issues related to projects
 * run CI/CD pipelines that automate building and deploying
-* store images in each project's private image registry
+* store images in the package registry
 
 ??? note "Starting a project"
 
-    Start a project by creating a code repository in GitLab:
-
-    `Apps`
-    :   Projects that have some front-end component; UI required.
-
-    `Utilities`
-    :   Tools, resources, and services (both local and server-based) that do not have a front-end
+    Start a project by creating a code repository in GitHub. Give your project a description and add a README.md to help the community understand what the project is and how they can start using it.
 
 ## Mattermost
 
