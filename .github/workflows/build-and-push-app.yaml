@@ -107,7 +107,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          provenance: true    # or could use attest-build-provenance step below
+          provenance: true    # or could use `attest-build-provenance`` step below
           sbom: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
