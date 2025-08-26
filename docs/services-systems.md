@@ -26,14 +26,6 @@ Use GitHub to:
 
     Start a project by creating a code repository in GitHub. Give your project a description and add a README.md to help the community understand what the project is and how they can start using it.
 
-## Mattermost
-
-> [https://mattermost.ltc.bcit.ca](https://mattermost.ltc.bcit.ca)
->
-> * Login by clicking on the **Login with GitLab** button using your BCIT credentials
-
-Mattermost is an open-source chat service that emulates the functionality of Slack. Mattermost comes bundled with GitLab and we use it for bantering and sharing ideas.
-
 ## Vault
 
 > [https://vault.ltc.bcit.ca](https://vault.ltc.bcit.ca)
@@ -49,11 +41,3 @@ Mattermost is an open-source chat service that emulates the functionality of Sla
 > * Login with your BCIT credentials
 
 We use Kubernetes to deliver our apps and services and Rancher is an easy-to-use UI for Kubernetes. Rancher helps us manage the workloads and services on our clusters.
-
-## Legacy Servers
-
-> **prod1.ltc.bcit.ca**: [http://ltc.bcit.ca](http://ltc.bcit.ca)
->
-> **prod4.ltc.bcit.ca**: [http://issues.ltc.bcit.ca](http://issues.ltc.bcit.ca)
-
-Several applications are still served from older virtual machines; work to migrate these workloads to Kubernetes is ongoing.
