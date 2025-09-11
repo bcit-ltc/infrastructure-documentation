@@ -1,6 +1,4 @@
-# -----------------
-# OS / Editor Junk
-# -----------------
+# OS / Editor junk
 .DS_Store
 Thumbs.db
 *.swp
@@ -8,54 +6,38 @@ Thumbs.db
 *.bak
 *.tmp
 
-# IDE settings
+# IDE
 .vscode/
 .idea/
 
-# -----------------
-# Node.js
-# -----------------
-node_modules
-npm-debug.log
-yarn-debug.log
-yarn-error.log
-pnpm-debug.log
-
-# Transpiled / built files
-dist
-build
-out
-coverage
-
-# -----------------
-# Docker
-# -----------------
-docker-compose.yml
-
-# -----------------
-# Kubernetes / Helm
-# -----------------
-charts/**/.tgz
-.helmignore
-
-# -----------------
-# Secrets / Env
-# -----------------
-.env
-.envrc
-.env.*
-!.env.example   # still allow the example to be copied if you want
-
-# -----------------
-# Git / GitHub
-# -----------------
+# VCS
 .git
 .gitignore
 .gitattributes
 .github/
 
-# -----------------
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist
+build
+out
+coverage
+
+# Kubernetes / Helm artifacts
+charts/**/.tgz
+.helmignore
+
+# Secrets / Env
+.env
+.env.*
+!.env.example   # keep template/example
+
 # Locally-retrieved app chart
-# -----------------
 app-chart
 app-chart/**

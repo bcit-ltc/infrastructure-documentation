@@ -1,7 +1,4 @@
-# Common Helm ignore patterns (used to speed up local repo loading with `skaffold dev`)
-# -----------------
 # OS / Editor Junk
-# -----------------
 .DS_Store
 Thumbs.db
 *.swp
@@ -9,55 +6,29 @@ Thumbs.db
 *.bak
 *.tmp
 
-# IDE settings
+# IDE
 .idea/
 .vscode/
 *.code-workspace
 
-# -----------------
 # VCS
-# -----------------
 .git/
-.gitignore
-.gitattributes
-.github/
 
-# -----------------
-# Node.js / App build
-# -----------------
-node_modules/
-dist/
-build/
-out/
-coverage/
-.nyc_output/
-
-# -----------------
-# Docker
-# -----------------
-.docker/
-docker-compose.override.yml
-docker-compose.local.yml
-
-# -----------------
-# Python
-# -----------------
-*.pyc
-*.pyo
-*.pyd
-__pycache__/
-
-# -----------------
 # Helm packaging artifacts
-# -----------------
 *.tgz
-*.zip
-*.tar.gz
-*.lock
 
-# -----------------
-# App-specific
-# -----------------
-docs/
-test/
-tests/
+# Keep dependency lock for reproducibility
+!Chart.lock
+
+# Secrets / Env
+.env
+.env.*
+!.env.example
+**/secrets*
+
+# Logs
+*.log
+
+# Values: keep only default
+values*.yaml
+!values.yaml

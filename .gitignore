@@ -1,6 +1,4 @@
-# -----------------
 # OS / Editor Junk
-# -----------------
 .DS_Store
 Thumbs.db
 *.swp
@@ -8,21 +6,16 @@ Thumbs.db
 *.bak
 *.tmp
 
-# IDE settings
+# IDE
 .vscode/
 .idea/
 
-# -----------------
 # Node.js
-# -----------------
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 # Build outputs
 dist/
@@ -30,39 +23,24 @@ build/
 out/
 coverage/
 
-# -----------------
-# Docker
-# -----------------
-docker-compose.yml
+# Local scratch / caches (scoped to repo root)
+tmp/
+.cache/
+.dockerignore-local
 
-# Ignore built images, cache, volumes
-**/tmp/
-**/.cache/
-**/.dockerignore-local
-
-# -----------------
 # Kubernetes
-# -----------------
 charts/**/.tgz
 
-# -----------------
-# Secrets / Env
-# -----------------
-.env
-.env.*
-!.env.example   # keep template/example file tracked
-secrets.yaml
-secrets/*.yaml
-secrets/*.json
-
-# -----------------
-# Logs
-# -----------------
-*.log
-logs/
-
-# -----------------
 # Locally-retrieved app chart
-# -----------------
 app-chart
 app-chart/**
+
+# Secrets / Env
+.env
+.env.*
+!.env.example    # keep template/example file tracked
+**/secrets*
+
+# Logs
+*.log
+logs/
