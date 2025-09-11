@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+
 # LTC Infrastructure Documentation
 
 Information about the architecture and makeup of the LTC's server infrastructure.
@@ -24,10 +26,14 @@ For basic local development using `docker compose`:
 
 The easiest way to load a working environment is to install Nix, and then hook `direnv` into your shell. The Codespaces environment is ready to go; if you're using your own environment, here's one way to do it:
 
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
-    nix-shell -p direnv kubectl kubernetes-helm k3d skaffold
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
+nix-shell -p direnv kubectl kubernetes-helm k3d skaffold
+```
 
-1. Run `make cluster` (and optionally, `make dashboard` for the [Kubernetes-dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) app), followed by `skaffold dev`. `make help` shows other helpful commands for this environment.
+Run `make cluster` (and optionally, `make dashboard` for the [Kubernetes-dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) app), followed by `skaffold dev`.
+
+`make help` shows other helpful commands for this environment.
 
 ### Cleanup
 
@@ -35,8 +41,8 @@ To remove all cluster resources, run `make delete`.
 
 ## License
 
-Mozilla Public License 2.0
+This Source Code Form is subject to the terms of the Mozilla Public License, v2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
 
 ## About
 
-Developed in 🇨🇦 Canada at [BCIT's](https://www.bcit.ca/) [Learning and Teaching Centre](https://www.bcit.ca/learning-teaching-centre/). [Contact Us](mailto:courseproduction@bcit.ca).
+Developed in 🇨🇦 Canada by the [Learning and Teaching Centre](https://www.bcit.ca/learning-teaching-centre/) at [BCIT](https://www.bcit.ca/).
