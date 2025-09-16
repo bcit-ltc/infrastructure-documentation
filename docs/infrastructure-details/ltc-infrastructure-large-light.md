@@ -5,4 +5,4 @@ hide:
 title: LTC Infrastructure
 ---
 
-![architecture](../assets/ltc-infrastructure-aug2023-light.png#only-light)
+![architecture](../assets/2025-08-ltc-infrastructure-light.png#only-light)
