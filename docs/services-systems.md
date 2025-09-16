@@ -28,15 +28,15 @@ Use GitHub to:
 
 ## Vault
 
-> [https://vault.ltc.bcit.ca](https://vault.ltc.bcit.ca)
+> [https://vault.ltc.bcit.ca:8200](https://vault.ltc.bcit.ca:8200)
 >
-> * Login with your BCIT credentials using the **LDAP** authentication method
+> * Login with your BCIT credentials using the **OIDC** authentication method
 
 [Hashicorp Vault](https://vaultproject.io) is the LTC's secrets management platform. It stores secrets used for apps, database credentials, certificates, etc..., and serves as an authentication middleware to secure communication between source code repositories and deployments.
 
 ## Rancher
 
-> [https://rancher2.ltc.bcit.ca](https://rancher2.ltc.bcit.ca)
+> [https://rancher3.ltc.bcit.ca](https://rancher3.ltc.bcit.ca)
 >
 > * Login with your BCIT credentials
 
