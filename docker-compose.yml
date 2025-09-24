@@ -2,13 +2,18 @@ name: ${APP_NAME}
 services:
   app:
     image: ${APP_NAME}
+
     command: ["serve", "--dev-addr=0.0.0.0:8080"]
+
     build:
       target: build
+
     environment:
       - DEBUG=true
       - CI=false
+
     volumes:
     - .:/app
+
     ports:
       - "8080:8080"
