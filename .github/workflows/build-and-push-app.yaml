@@ -13,4 +13,6 @@ jobs:
       packages: write
       id-token: write
       attestations: write
+      pull-requests: write
+      issues: write
     secrets: inherit
