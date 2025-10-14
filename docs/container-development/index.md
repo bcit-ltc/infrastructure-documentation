@@ -69,8 +69,6 @@ See [Docker Compose File Basics](https://takacsmark.com/docker-compose-tutorial-
 
     ```
     # Use postgres/example user/password credentials
-    version: '3.1'
-
     services:
 
       db:
