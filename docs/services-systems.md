@@ -13,7 +13,7 @@ The LTC manages its own systems and services to facilitate the research and deve
 
 > [https://github.com/bcit-ltc](https://github.com/bcit-ltc)
 
-GitHub is the LTC's code repository, CI/CD pipeline coordinator, and container registry. It is also used as an issue tracker and comes with a built-in project management tool.
+GitHub is the LTC's code repository, CI/CD pipeline coordinator, and package registry. It is also used as an issue tracker and comes with a built-in project management tool.
 
 Use GitHub to:
 
