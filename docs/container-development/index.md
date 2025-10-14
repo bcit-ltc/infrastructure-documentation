@@ -2,15 +2,7 @@
 
 Containerizing everything can present a challenge when developing locally unless you can also create up an environment that has all the components needed to run the app.
 
-!!! info inline end ""
-
-    ![Docker Logo](../assets/horizontal-logo-monochromatic-white.png)
-
-**[Docker](https://docs.docker.com/get-started/) to the rescue!**
-
-Docker makes it easier to containerize apps by providing a tool stack that builds and runs standardized ***images*** - small containers of executable code that can be deployed on any platform.
-
-Docker also helps avoid deployment trouble because of a mismatch between a local dev environment and the deployment server environment.
+Docker makes it easier to containerize apps by providing a tool stack that builds and runs standardized ***images*** - small containers of executable code that can be deployed on any platform. Docker also helps avoid deployment trouble because of a mismatch between a local dev environment and the deployment server environment.
 
 Building a single containerized app is pretty easy! Usually all you have to do is look for a good **base image** in the [Docker Hub](https://hub.docker.com/) and then copy your code into the container during the *build* stage. Let's take a look at how to get started.
 
