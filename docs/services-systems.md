@@ -38,6 +38,6 @@ Use GitHub to:
 
 > [https://rancher3.ltc.bcit.ca](https://rancher3.ltc.bcit.ca)
 >
-> * Login with your BCIT credentials
+> * Login using the **OIDC** auth method with your BCIT credentials
 
 We use Kubernetes to deliver our apps and services and Rancher is an easy-to-use UI for Kubernetes. Rancher helps us manage the workloads and services on our clusters.
