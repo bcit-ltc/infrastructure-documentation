@@ -6,7 +6,7 @@ The LTC manages its own systems and services to facilitate the research and deve
 
     Most systems and services have some basic access requirements:
     
-    * Install and run BCIT's myVPN
+    * Install and run a BCIT VPN solution
     * Membership in the `LTC Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to the ITS TechHelp desk](https://techhelp.bcit.ca/).
 
 ## GitHub
