@@ -86,4 +86,4 @@ See [Docker Compose File Basics](https://takacsmark.com/docker-compose-tutorial-
 
 ### GitHub Codespaces
 
-If the image works as expected locally, the next step is to verify that it can be deployed to a cluster.
+If the image works as expected locally, the next step is to verify that it can be deployed to a cluster. [GitHub Codespaces](https://github.com/features/codespaces) makes it easy to test whether the image can be deployed using a Helm chart.
