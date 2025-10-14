@@ -84,16 +84,6 @@ See [Docker Compose File Basics](https://takacsmark.com/docker-compose-tutorial-
           - 8080:8080
     ```
 
-### Publishing Images
+### GitHub Codespaces
 
-When you are ready to turn your app into an image and push it to a registry, navigate to the GitLab project page and look for the `Packages and Registries` menu link. Click on `Container Registry` and look for the CLI commands to login to the registry, build (and tag) the image, and push it.
-
-!!! example "Example CLI commands"
-
-    `$ docker login registry.ltc.bcit.ca`
-
-    `$ docker build -t registry.ltc.bcit.ca/web-apps/qcon/qcon-api .`
-
-    `$ docker push registry.ltc.bcit.ca/web-apps/qcon/qcon-api`
-
-When you have an image in a registry - either in the LTC's private registry or on a public site like [hub.docker.com](https://hub.docker.com) - it can be deployed to a Kubernetes cluster as a workload.
+If the image works as expected locally, the next step is to verify that it can be deployed to a cluster.
