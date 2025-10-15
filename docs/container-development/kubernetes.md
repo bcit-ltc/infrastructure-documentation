@@ -109,7 +109,3 @@ One of the best features of Skaffold is the `dev` mode, which automates the mund
 Try it out by running:
 
     skaffold dev
-
-### Kpt
-
-[`Kpt`](https://kpt.dev/) is a Kubernetes Resource Manifest (KRM) package manager. It simplifies the management of workloads by associating resources together as an "inventory". This inventory is associated with all KRM's that are deployed together so that they can be tracked, updated, and pruned as necessary.
