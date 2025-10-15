@@ -1,6 +1,6 @@
 # What is Kubernetes?
 
-Kubernetes is a workload orchestration system that administers services on a cluster of servers. Clusters are groups of virtual machines (VM's) working together to create services for users.
+Kubernetes is a workload orchestration system that manages services on a cluster of servers. Clusters are groups of virtual machines (VM's) working together to create services for users.
 
 Kubernetes monitors, schedules, and manages workloads so they are highly available.
 
