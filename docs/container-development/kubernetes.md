@@ -42,7 +42,7 @@ Deployments, services, ingresses, and other Kubernetes resources can be created 
 
 ### Cluster contexts
 
-The local cluster you launched previously creates a *context* that you can connect to. Contexts require authentication, and the way you authenticate depends on your OS. When you install `kubectl`, it should automatically detect your local cluster's context and configure the authentication. If it doesn't you may need to run a `kubectl config...` command to change the context. See the docs for more info.
+Local clusters create a *context* that you can connect to. Contexts require authentication, and the way you authenticate depends on your OS. When you install `kubectl`, it should automatically detect your local cluster's context and configure the authentication. If it doesn't you may need to run a `kubectl config...` command to change the context. Search Google for more info.
 
 With the CLI utilities installed, and with a local cluster running, check connectivity:
 
