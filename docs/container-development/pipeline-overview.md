@@ -82,4 +82,3 @@ This stage has two outcomes depending on the commit:
     Triggers a deployment to a **`review`** cluster
 
     * requires a deployment package with a **`review`** overlay
-
