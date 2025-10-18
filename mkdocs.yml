@@ -73,8 +73,8 @@ nav:
       - for-developers/semantic-versioning.md
       - for-developers/continuous-deployment-overview.md
       - Deployment details:
-          - for-developers/developing-deployment-packages.md
           - for-developers/continuous-deployment-details.md
+          - for-developers/developing-deployment-packages.md
     # - for-developers/pipeline-initial-run.md
   - Additional Details:
       - Container Development:
