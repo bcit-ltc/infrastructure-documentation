@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 # LTC Infrastructure Documentation
 
-Information about the architecture and makeup of the LTC's server infrastructure.
+Information about the architecture and makeup of the LTC's infrastructure.
 
 ## Develop using Codespaces
 
