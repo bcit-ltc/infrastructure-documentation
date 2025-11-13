@@ -35,10 +35,7 @@ charts/**/.tgz
 app-chart
 app-chart/**
 
-# Secrets / Env
-.env
-.env.*
-!.env.example    # keep template/example file tracked
+# Secrets
 **/secrets*
 
 # Logs
