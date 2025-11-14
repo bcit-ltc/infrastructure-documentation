@@ -1,17 +1,20 @@
-name: ${APP_NAME}
+name: ${APP_NAME:-infrastructure-documentation}
 services:
   app:
     build:
+      context: .
       target: build
+      platforms:
+        - linux/amd64
+        - linux/arm64
 
-    command: ["serve", "--dev-addr=0.0.0.0:8080"]
+    command: ["serve", "--dev-addr=0.0.0.0:8080", "--livereload"]
 
     environment:
       - DEBUG=true
       - CI=false
 
     volumes:
-      - .:/app
       - ./conf.d/default.conf:/etc/nginx/conf.d/default.conf
 
     ports:

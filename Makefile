@@ -29,19 +29,21 @@ help:
 	@echo ""
 	@echo "Targets:"
 	@echo ""
-	@echo "  check            	→ quick sanity checks (tools, env)"
+	@echo "  check       → quick sanity checks (tools, env)"
 	@echo ""
-	@echo "  docker compose up  → local dev"
-	@echo "  cluster           	→ create k3d cluster using config \"$(K3D_CFG)\""
+	@echo "  docker compose up	→ local dev"
+	@echo "  cluster     		→ create local k3d cluster"
 	@echo "  skaffold dev      	→ build + deploy to local cluster to verify deployment/helm release"
-	@echo "  delete           	→ delete all k3d clusters (local dev cleanup)"
+	@echo ""
 	@echo ""
 	@echo "Other devcontainer commands:"
 	@echo ""
-	@echo "  dashboard    → install Kubernetes Dashboard and print login token"
-	@echo "  token        → re-print Kubernetes Dashboard login token"
-	@echo "  chart        → pull/unpack app chart (clobbers existing files)"
+	@echo "  delete      → delete all k3d clusters (local dev cleanup)"
+	@echo "  dashboard   → install Kubernetes Dashboard and print login token"
+	@echo "  token       → re-print Kubernetes Dashboard login token"
+	@echo "  chart       → pull/unpack app chart (clobbers existing files)"
 	@echo "                  - set APP_CHART_URL to override default \"oci://ghcr.io/$${ORG_NAME}/oci/$${APP_NAME}\""
+	@echo ""
 	@echo "  nix-shell -p {nixPackage}           → enter nix shell with specific package"
 	@echo "  helm repo add {repoName} {repoURL}  → add a helm repository"
 	@echo "  kubeconform|kubeval {file}          → validate Kubernetes YAML files"
@@ -86,7 +88,9 @@ delete:
 .PHONY: check
 check:
 	-@/usr/bin/env sh -c ' \
+	  echo ""; \
 	  echo "🔍 Checking required tools..."; \
+	  echo ""; \
 	  missing=0; \
 	  for tool in $(TOOLS); do \
 	    if command -v "$$tool" >/dev/null 2>&1; then \
