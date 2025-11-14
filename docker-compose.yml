@@ -2,7 +2,11 @@ name: ${APP_NAME:-infrastructure-documentation}
 services:
   app:
     build:
+      context: .
       target: build
+      platforms:
+        - linux/amd64
+        - linux/arm64
 
     command: ["serve", "--dev-addr=0.0.0.0:8080", "--livereload"]
 
