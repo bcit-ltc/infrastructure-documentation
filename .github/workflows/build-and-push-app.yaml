@@ -24,16 +24,13 @@ jobs:
       APP_VERSION: ${{ needs.build-and-ship.outputs.app_version }}
       IMAGE: ${{ needs.build-and-ship.outputs.app_image }}
 
-      # App-specific static path inside container:
-      # for infrastructure-documentation this is correct:
       STATIC_ROOT: /usr/share/nginx/html
       STATIC_SUBDIR: assets
 
-      # CDN config (shared via org/repo vars + secret)
-      CDN_ACCOUNT_NAME: ${{ vars.COMMONCDN_ACCOUNT_NAME }}     # e.g. "commoncdnabcd1234"
-      CDN_CONTAINER: ${{ vars.COMMONCDN_CONTAINER_NAME }}      # e.g. "cdn"
-      CDN_NAMESPACE: ${{ github.repository_owner }}            # "bcit-ltc"
-      CDN_APP: ${{ github.event.repository.name }}             # "infrastructure-documentation"
+      CDN_ACCOUNT_NAME: ${{ vars.CDN_ACCOUNT_NAME }}
+      CDN_CONTAINER: ${{ vars.CDN_CONTAINER }}
+      CDN_NAMESPACE: ${{ github.repository_owner }}
+      CDN_APP: ${{ github.event.repository.name }}
     steps:
       - uses: docker/login-action@v3
         with:
@@ -58,14 +55,12 @@ jobs:
       - name: Upload assets to CDN
         uses: azure/CLI@v2
         env:
-          SAS_TOKEN: ${{ secrets.COMMONCDN_SAS_TOKEN }}
+          SAS_TOKEN: ${{ secrets.CDN_SAS_TOKEN }}
         with:
           inlineScript: |
             set -euo pipefail
 
-            # e.g. bcit-ltc/infrastructure-documentation/1.1.12
             PREFIX="${CDN_NAMESPACE}/${CDN_APP}/${APP_VERSION}"
-
             echo "Uploading site/${STATIC_SUBDIR} -> ${PREFIX}/${STATIC_SUBDIR} in container ${CDN_CONTAINER}"
 
             az storage blob upload-batch \
@@ -75,4 +70,5 @@ jobs:
               --destination-path "${PREFIX}/${STATIC_SUBDIR}" \
               --source "site/${STATIC_SUBDIR}" \
               --overwrite true
+
 
