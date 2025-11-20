@@ -15,6 +15,7 @@ Thumbs.db
 .gitignore
 .gitattributes
 .github/
+.devcontainer/
 
 # Node.js
 node_modules

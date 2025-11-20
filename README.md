@@ -3,6 +3,13 @@
 
 Information about the architecture and makeup of the LTC's infrastructure.
 
+## Getting Started
+
+For basic local development using `docker compose`:
+
+- install [docker](https://docs.docker.com/desktop/) or [orbstack](https://docs.orbstack.dev/install)
+- run `docker compose up` and browse to `http://localhost:8080`
+
 ## Develop using Codespaces
 
 1. [Open your branch in Codespaces](https://codespaces.new/bcit-ltc/infrastructure-documentation).
@@ -12,14 +19,6 @@ Information about the architecture and makeup of the LTC's infrastructure.
     docker compose up
 
 1. Browse to `http://localhost:8080` (for browser-based sessions: command palette: `>open port in browser`).
-
-## Develop using your own environment
-
-For basic local development using `docker compose`:
-
-- install [docker](https://docs.docker.com/desktop/) or [orbstack](https://docs.orbstack.dev/install)
-- set `APP_NAME` environment variable: `export APP_NAME=myAwesomeApp`
-- run `docker compose up` and browse to `http://localhost:8080`
 
 ## Testing Deployment
 
