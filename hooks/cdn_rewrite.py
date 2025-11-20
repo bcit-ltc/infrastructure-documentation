@@ -1,36 +1,37 @@
+# hooks/cdn_rewrite.py
 import os
 import re
+from pathlib import Path
+
+def _read_version():
+    root = Path(__file__).resolve().parent.parent
+    version_file = root / "VERSION"
+    try:
+        return version_file.read_text(encoding="utf-8").strip()
+    except FileNotFoundError:
+        return ""
 
 def on_post_page(output, page, config):
-    """
-    Rewrite asset URLs to CDN.
-    CDN is enabled by default.
-    Disable with MKDOCS_CDN_ENABLED=0 for local dev.
-    """
     if os.getenv("MKDOCS_CDN_ENABLED", "1") == "0":
-        return output  # local dev: no rewrite
+        return output
 
     extra = config.get("extra", {}) or {}
-
     base_url   = (extra.get("cdn_base_url") or "").rstrip("/")
     namespace  = (extra.get("cdn_namespace") or "").strip("/")
     app        = (extra.get("cdn_app") or "").strip("/")
-    version    = (extra.get("cdn_version") or "").strip("/")
+    version    = _read_version().strip("/")
 
-    # bcit-ltc/infrastructure-documentation/1.1.11
-    prefix = "/".join([namespace, app, version])
-
-    if not base_url or not prefix:
+    if not base_url or not namespace or not app or not version:
         return output
 
-    # Match any href/src pointing to an asset (relative URLs only)
+    prefix = "/".join([namespace, app, version])
+
     pattern = re.compile(r'(href|src)="(?!https?://)([^"]*assets/[^"]*)"')
 
     def repl(m):
         attr = m.group(1)
         original = m.group(2)
 
-        # Preserve fragments (#only-light)
         if "#" in original:
             path_part, fragment = original.split("#", 1)
             fragment = "#" + fragment
@@ -38,9 +39,7 @@ def on_post_page(output, page, config):
             path_part = original
             fragment = ""
 
-        # Remove ../ or ./ prefixes
         normalized = re.sub(r'^(\./|\.\./)+', '', path_part)
-
         new_url = f"{base_url}/{prefix}/{normalized}"
         return f'{attr}="{new_url}{fragment}"'
 
