@@ -6,6 +6,7 @@ repo_url: https://issues.ltc.bcit.ca/web-apps/infrastructure-documentation.git
 
 theme:
   name: material
+  custom_dir: overrides
   palette:
     - scheme: default
       primary: blue
@@ -47,6 +48,7 @@ extra:
   cdn_base_url: "https://bcit-ltc-cdn-h3aafscucgd4dvd3.z03.azurefd.net"
   cdn_namespace: "bcit-ltc"
   cdn_app: "infrastructure-documentation"
+  disable_plausible: false
 
 hooks:
   - hooks/cdn_rewrite.py

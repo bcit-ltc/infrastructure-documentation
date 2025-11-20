@@ -1,0 +1,4 @@
+INHERIT: mkdocs.yml
+
+extra:
+  disable_plausible: true  # dev: turn tracking off

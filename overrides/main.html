@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {% if not config.extra.disable_plausible %}
+    <script
+      defer
+      data-domain="infrastructure-documentation.ltc.bcit.ca"
+      data-api="/stats/api/event"
+      src="/stats/plausible.js">
+    </script>
+  {% endif %}
+{% endblock %}

@@ -17,6 +17,7 @@ jobs:
       issues: write
     secrets: inherit
 
+  # for static assets stored in cdn
   upload-cdn-assets:
     needs: build-and-ship
     runs-on: ubuntu-latest
@@ -69,6 +70,5 @@ jobs:
               --destination "${CDN_CONTAINER}" \
               --destination-path "${PREFIX}/${STATIC_SUBDIR}" \
               --source "site/${STATIC_SUBDIR}" \
-              --overwrite true
-
-
+              --overwrite true \
+              --content-cache-control "public, max-age=31536000, immutable"
