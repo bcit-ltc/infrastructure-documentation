@@ -1,4 +1,4 @@
-# Runs `.github/workflows/build-and-push-app.yaml`
+# Runs `.github/workflows/build-and-push-app.yaml` from bcit-ltc/.github
 name: Build and push app/chart images
 
 on:
@@ -17,7 +17,7 @@ jobs:
       issues: write
     secrets: inherit
 
-  # for static assets stored in cdn
+  # Upload static assets to CDN using CDN_ASSET_VERSION
   upload-cdn-assets:
     needs: build-and-ship
     runs-on: ubuntu-latest
@@ -31,8 +31,18 @@ jobs:
       CDN_ACCOUNT_NAME: ${{ vars.CDN_ACCOUNT_NAME }}
       CDN_CONTAINER: ${{ vars.CDN_CONTAINER }}
       CDN_NAMESPACE: ${{ github.repository_owner }}
-      CDN_APP: ${{ github.event.repository.name }}
+      APP_NAME: ${{ github.event.repository.name }}
+
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Read CDN_ASSET_VERSION
+        id: cdn_asset_version
+        run: |
+          set -euo pipefail
+          V="$(cat conf.d/cdn/CDN_ASSET_VERSION | tr -d '\r\n' | xargs)"
+          echo "cdn_asset_version=${V}" >> "$GITHUB_OUTPUT"
+
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -57,11 +67,12 @@ jobs:
         uses: azure/CLI@v2
         env:
           SAS_TOKEN: ${{ secrets.CDN_SAS_TOKEN }}
+          CDN_ASSET_VERSION: ${{ steps.cdn_asset_version.outputs.cdn_asset_version }}
         with:
           inlineScript: |
             set -euo pipefail
 
-            PREFIX="${CDN_NAMESPACE}/${CDN_APP}/${APP_VERSION}"
+            PREFIX="${CDN_NAMESPACE}/${APP_NAME}/${CDN_ASSET_VERSION}"
             echo "Uploading site/${STATIC_SUBDIR} -> ${PREFIX}/${STATIC_SUBDIR} in container ${CDN_CONTAINER}"
 
             az storage blob upload-batch \

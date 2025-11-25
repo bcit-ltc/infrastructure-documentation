@@ -44,15 +44,6 @@ plugins:
       enable_creation_date: true
       fallback_to_build_date: true
 
-extra:
-  cdn_base_url: "https://bcit-ltc-cdn-h3aafscucgd4dvd3.z03.azurefd.net"
-  cdn_namespace: "bcit-ltc"
-  cdn_app: "infrastructure-documentation"
-  disable_plausible: false
-
-hooks:
-  - hooks/cdn_rewrite.py
-
 markdown_extensions:
   - abbr
   - pymdownx.highlight
