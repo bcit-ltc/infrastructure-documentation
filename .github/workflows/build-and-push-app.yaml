@@ -43,10 +43,10 @@ jobs:
       APP_VERSION: ${{ needs.build-and-ship.outputs.app_version }}
       IMAGE: ${{ needs.build-and-ship.outputs.app_image }}
 
-      # Azure storage config (account + container); SAS token is a secret
+      # Azure storage config (account + container); CDN_SAS_TOKEN is a GitHub secret
       CDN_ACCOUNT_NAME: ${{ vars.CDN_ACCOUNT_NAME }}
-      CDN_CONTAINER: ${{ vars.CDN_CONTAINER }}
       CDN_BASE_URL: ${{ vars.CDN_BASE_URL }}
+      CDN_CONTAINER: ${{ vars.CDN_CONTAINER }}
       CDN_NAMESPACE: ${{ vars.CDN_NAMESPACE }}
       CDN_ENABLED: ${{ vars.CDN_ENABLED }}
 
