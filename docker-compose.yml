@@ -9,10 +9,8 @@ services:
         - linux/amd64
         - linux/arm64
       args:
-        # Only needed if you want to override the build output dir
         STATIC_ROOT: ${STATIC_ROOT:-/public}
 
-    # Use MkDocs dev server for local development
     command: ["serve", "--dev-addr=0.0.0.0:8080", "--livereload"]
 
     environment:
@@ -20,7 +18,6 @@ services:
       - CI=false
 
     volumes:
-      # Live-edit docs + config
       - .:/app
 
     ports:
