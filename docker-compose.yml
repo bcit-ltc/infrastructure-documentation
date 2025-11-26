@@ -8,6 +8,7 @@ services:
       platforms:
         - linux/amd64
         - linux/arm64
+
       args:
         STATIC_ROOT: ${STATIC_ROOT:-/public}
 
