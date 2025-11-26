@@ -36,7 +36,7 @@ jobs:
   # - Uploads those asset files to blob paths:
   #     <CDN_CONTAINER>/<CDN_NAMESPACE>/<app>/<CDN_ASSET_VERSION>/<relative-path>
   upload-cdn-assets:
-    if: ${{ vars.CDN_ENABLED == '0' }}
+    if: ${{ vars.CDN_ENABLED == '1' }}
     needs: build-and-ship
     runs-on: ubuntu-latest
     env:
@@ -48,6 +48,7 @@ jobs:
       CDN_CONTAINER: ${{ vars.CDN_CONTAINER }}
       CDN_BASE_URL: ${{ vars.CDN_BASE_URL }}
       CDN_NAMESPACE: ${{ vars.CDN_NAMESPACE }}
+      CDN_ENABLED: ${{ vars.CDN_ENABLED }}
 
       # Comma-separated list of asset extensions (no dots), e.g. "jpg,png,js,css,ico"
       ASSET_EXTS: "jpg,png,js,css,ico"
