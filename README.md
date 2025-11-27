@@ -31,9 +31,11 @@ Run `make help` within a Codespace to see options.
     nix-shell -p direnv kubectl kubernetes-helm k3d skaffold
     ```
 
-Run `make cluster` (and optionally, `make dashboard` for the [Kubernetes-dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) app), followed by `skaffold dev`.
+Run `make check` to confirm the environment is ready.
 
-`make help` shows other helpful commands for this environment.
+Run `make cluster` (and optionally, `make dashboard` for the [Kubernetes-dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) app)
+
+Test deployment with `skaffold dev`.
 
 ### Cleanup
 
