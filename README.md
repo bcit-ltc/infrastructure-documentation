@@ -20,14 +20,16 @@ For basic local development using `docker compose`:
 
 1. Browse to `http://localhost:8080` (for browser-based sessions: command palette: `>open port in browser`).
 
-## Testing Deployment
+### Testing Deployment
 
-The easiest way to load a working environment is to install Nix, and then hook `direnv` into your shell. The Codespaces environment is ready to go; if you're using your own environment, here's one way to do it:
+Run `make help` within a Codespace to see options.
 
-```bash
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
-nix-shell -p direnv kubectl kubernetes-helm k3d skaffold
-```
+- If you're using your own environment, here's one way to do it:
+
+    ```bash
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
+    nix-shell -p direnv kubectl kubernetes-helm k3d skaffold
+    ```
 
 Run `make cluster` (and optionally, `make dashboard` for the [Kubernetes-dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) app), followed by `skaffold dev`.
 
