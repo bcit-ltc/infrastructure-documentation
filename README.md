@@ -1,4 +1,5 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
+
 # LTC Infrastructure Documentation
 
 Information about the architecture and makeup of the LTC's infrastructure.
