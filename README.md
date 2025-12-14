@@ -5,7 +5,7 @@ Information about the architecture and makeup of the LTC's infrastructure.
 
 ## Getting Started
 
-For basic local development using `docker compose up`:
+For basic local development using `docker compose`:
 
 - install [docker](https://docs.docker.com/desktop/) or [orbstack](https://docs.orbstack.dev/install)
 - run `docker compose up` and browse to `http://localhost:8080`
