@@ -8,3 +8,4 @@ We:
 - use CI/CD pipelines to automate deployments
 - write infrastructure as code (IaC) to store and track configuration
 - monitor and log workloads to minimize service interruptions and effectively respond to incidents
+
