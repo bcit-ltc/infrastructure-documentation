@@ -1,19 +1,19 @@
 # Systems and Services
 
-The LTC manages its own systems and services to facilitate the research and development of educational solutions. We are careful about how we "operationalize" a system or service. Regardless of an application's audience or purpose, we adhere to the guidelines outlined in [Policy 3501: Acceptable Use of Information Technology](https://www.bcit.ca/files/pdf/policies/3501.pdf).
+The TLU manages its own systems and services to facilitate the research and development of educational solutions. We are careful about how we "operationalize" a system or service. Regardless of an application's audience or purpose, we adhere to the guidelines outlined in [Policy 3501: Acceptable Use of Information Technology](https://www.bcit.ca/files/pdf/policies/3501.pdf).
 
 !!! warning "Access Requirements"
 
     Most systems and services have some basic access requirements:
     
     * Install and run a BCIT VPN solution
-    * Membership in the `LTC Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to the ITS TechHelp desk](https://techhelp.bcit.ca/).
+    * Membership in the `TLU Users` Active Directory group. If you're not part of that group and you need access, please [submit a request to the ITS TechHelp desk](https://techhelp.bcit.ca/).
 
 ## GitHub
 
 > [https://github.com/bcit-ltc](https://github.com/bcit-ltc)
 
-GitHub is the LTC's code repository, CI/CD pipeline coordinator, and package registry. It is also used as an issue tracker and comes with a built-in project management tool.
+GitHub is the TLU's code repository, CI/CD pipeline coordinator, and package registry. It is also used as an issue tracker and comes with a built-in project management tool.
 
 Use GitHub to:
 
@@ -32,7 +32,7 @@ Use GitHub to:
 >
 > * Login with your BCIT credentials using the **OIDC** authentication method
 
-[Hashicorp Vault](https://vaultproject.io) is the LTC's secrets management platform. It stores secrets used for apps, database credentials, certificates, etc..., and serves as an authentication middleware to secure communication between source code repositories and deployments.
+[Hashicorp Vault](https://vaultproject.io) is the TLU's secrets management platform. It stores secrets used for apps, database credentials, certificates, etc..., and serves as an authentication middleware to secure communication between source code repositories and deployments.
 
 ## Rancher
 
