@@ -6,7 +6,6 @@ repo_url: https://issues.ltc.bcit.ca/web-apps/infrastructure-documentation.git
 
 theme:
   name: material
-  custom_dir: overrides
   palette:
     - scheme: default
       primary: blue
@@ -37,6 +36,10 @@ theme:
     - navigation.tracking
     # - navigation.top
     # - navigation.tabs
+
+extra_javascript:
+  - javascripts/site-init.js
+  - https://common.ltc.bcit.ca/js/utils.js
 
 plugins:
   - search
